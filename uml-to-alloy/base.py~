@@ -1,0 +1,57 @@
+class UMLToAlloyConverter:
+    def __init__(self, uml_text):
+        self.uml_text = uml_text
+
+    def convert_to_alloy(self):
+        alloy_code = "module UMLModel\n\n"
+        classes = self.extract_classes()
+        for class_name, attributes in classes.items():
+            alloy_code += f"abstract sig {class_name} {{\n"
+            for attr_name, attr_type in attributes.items():
+                alloy_code += f"\t{attr_name}: {attr_type},\n"
+            alloy_code += "}\n\n"
+        associations = self.extract_associations()
+        for association in associations:
+            alloy_code += f"{association}\n\n"
+        return alloy_code
+
+    def extract_classes(self):
+        classes = {}
+        lines = self.uml_text.split("\n")
+        current_class = None
+        for line in lines:
+            if line.strip().startswith("class"):
+                class_name = line.split(":")[0].strip().split()[1]
+                classes[class_name] = {}
+                current_class = class_name
+            elif line.strip().startswith("attr"):
+                if current_class:
+                    attr_name, attr_type = line.split(":")[0].strip().split()[1:]
+                    classes[current_class][attr_name] = attr_type
+        return classes
+
+    def extract_associations(self):
+        associations = []
+        lines = self.uml_text.split("\n")
+        for line in lines:
+            if line.strip().startswith("assoc"):
+                association = line.strip().split()[1:]
+                associations.append("".join(association))
+        return associations
+
+
+uml_text = """
+class Person:
+    attr name: string
+    attr age: int
+
+class Department:
+    attr name: string
+
+assoc WorksIn:
+    Person -> Department
+"""
+
+converter = UMLToAlloyConverter(uml_text)
+alloy_code = converter.convert_to_alloy()
+print(alloy_code)

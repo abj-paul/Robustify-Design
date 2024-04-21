@@ -1,0 +1,14 @@
+* About
+To evaluate robustification, run the following command.
+#+begin_src bash
+  java -jar bin/fortis.jar robustness -s examples/therac25/sys.lts -e examples/therac25/env0.lts -p examples/therac25/p.lts -d examples/therac25/env.lts
+#+end_src
+
+To robustify,
+#+begin_src bash
+cd examples/voting
+java -jar ../../bin/fortis.jar robustify config-pareto.json
+#+end_src
+
+Note: We extend the work from https://github.com/cmu-soda/fortis-core. We could not fork due to some issues.
+

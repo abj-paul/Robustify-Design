@@ -1,0 +1,33 @@
+* About
+To evaluate robustification, run the following command.
+#+begin_src bash
+  java -jar bin/fortis.jar robustness -s examples/therac25/sys.lts -e examples/therac25/env0.lts -p examples/therac25/p.lts -d examples/therac25/env.lts
+#+end_src
+
+To robustify,
+#+begin_src bash
+cd examples/voting
+java -jar ../../bin/fortis.jar robustify config-pareto.json
+#+end_src
+
+Note: We extend the work from https://github.com/cmu-soda/fortis-core. We could not fork due to some issues.
+
+** UML To Alloy
+I find no tool available for it like [[https://link.springer.com/chapter/10.1007/978-3-642-12261-3_16][UML to Alloy and back again]] but I can't find their implementation anywhere. So I will make it myself.
+
+[[file:misc/uml-to-alloy.png]]
+
+** STD to LTS
+We think that state transition diagrams are also automata so we should be able to easily convert state transition diagrams to LTS notation.
+
+[[file:misc/voting-std.png]]
+
+For the above STD, we have the following sys.lts
+#+begin_src LTS
+EM = (password -> P1),
+P1 = (select -> P2),
+P2 = (vote -> P3 | back -> P1),
+P3 = (confirm -> EM | back -> P2).
+#+end_src
+
+

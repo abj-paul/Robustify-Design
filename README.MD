@@ -6,7 +6,7 @@ We are attempting to convert UML diagrams to adapt to the Fortis robustification
 
 Unfortunately, we have found no existing tool for converting UML diagrams to Alloy, like [UML to Alloy and back again](https://link.springer.com/chapter/10.1007/978-3-642-12261-3_16). As a result, we have decided to develop our own solution.
 
-![UML Diagram](misc/uml-to-alloy.png)
+![](misc/uml-to-alloy.png)
 
 We will focus on UML diagrams that include OCL constraints.
 
@@ -14,7 +14,7 @@ We will focus on UML diagrams that include OCL constraints.
 
 Since state transition diagrams are a form of automata, we believe it should be straightforward to convert them to LTS notation.
 
-![STD Diagram](misc/voting-std.png)
+![](misc/voting-std.png)
 
 For the provided STD, we have the following `sys.lts` specification:
 

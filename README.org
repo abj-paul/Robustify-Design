@@ -1,12 +1,12 @@
 * About
-We are trying to convert state transition diagram to LTS format.
+We are trying to convert state transition diagram to FSP format. Our end goal is to enable robustification of UML designs using Fortis tool.
 ** UML To Alloy
 I find no tool available for it like [[https://link.springer.com/chapter/10.1007/978-3-642-12261-3_16][UML to Alloy and back again]] but I can't find their implementation anywhere. So I will make it myself.
 
 [[file:misc/uml-to-alloy.png]]
 We only consider UML diagrams with OCL constraints.
 
-** STD to LTS
+** STD to FSP
 We think that state transition diagrams are also automata so we should be able to easily convert state transition diagrams to LTS notation.
 
 [[file:misc/voting-std.png]]

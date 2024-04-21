@@ -27,4 +27,3 @@ P3 = (confirm -> EM | back -> P2).
 
 We have gathered several examples of LTS specifications from the [Concurrency: State Models & Java Programs Book](https://www.doc.ic.ac.uk/ltsa/samples/), and we are utilizing the [LTS tool](https://github.com/yylonly/LTSA) to validate our conversions.
 
-Please let me know if you need further details or modifications!

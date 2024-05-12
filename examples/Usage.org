@@ -1,0 +1,207 @@
+* Voting
+** Input
+*** sys.lts
+#+begin_src LTS
+EM = (password -> P1),
+P1 = (select -> P2),
+P2 = (vote -> P3 | back -> P1),
+P3 = (confirm -> EM | back -> P2).
+#+end_src
+
+*** env.lts
+#+begin_src LTS
+ENV = (v.enter -> VOTER | eo.enter -> EO),
+VOTER = (password -> VOTER1),
+VOTER1 = (select -> VOTER2),
+VOTER2 = (vote -> VOTER3 | back -> VOTER1),
+VOTER3 = (confirm -> v.exit -> ENV | omit_confirm -> v.exit -> ENV | back -> VOTER2),
+EO = (select -> EO | vote -> EO | confirm -> EO | back -> EO | eo.exit -> ENV).
+#+end_src
+
+*** p.lts
+#+begin_src LTS
+const NoBody = 0
+const Voter = 1
+const EO = 2
+range WHO = NoBody..EO
+
+P = VOTE[NoBody][NoBody][NoBody],
+VOTE[in:WHO][sel:WHO][v:WHO] = (
+      v.enter -> VOTE[Voter][sel][v] | eo.enter -> VOTE[EO][sel][v]
+    | password -> VOTE[in][sel][in]
+    | select -> VOTE[in][in][v]
+    | when (sel == v) confirm -> VOTE[in][NoBody][NoBody]
+).
+#+end_src
+
+*** cost
+#+begin_src json
+ "options": {
+    "progress": ["confirm"],
+    "preferredMap": {
+      "3": [
+        ["select", "back", "select", "vote", "confirm"]
+      ]
+    },
+    "controllableMap": {
+      "1": ["back", "confirm", "password", "select", "vote"],
+      "3": ["eo.enter", "eo.exit", "v.enter", "v.exit"]
+    },
+    "observableMap": {
+      "0": ["back", "confirm", "password", "select", "vote"],
+      "2": ["eo.enter", "eo.exit", "v.enter", "v.exit"]
+    },
+
+#+end_src
+** Output
+*** Process Output
+#+begin_src text
+SupervisoryRobustifier - Number of states of the system: 5
+SupervisoryRobustifier - Number of states of the environment: 9
+SupervisoryRobustifier - Number of states of the plant (S || E): 17
+SupervisoryRobustifier - Number of transitions of the plant: 26
+SolutionIterator - ==============================>
+SolutionIterator - Initializing search by using Pareto search...
+SolutionIterator - Number of preferred behaviors: 1
+SolutionIterator - Number of controllable events with cost: 9
+SolutionIterator - Number of observable events with cost: 4
+SolutionIterator - Maximum fulfilled preferred behavior:
+SolutionIterator -       select,back,select,vote,confirm
+SolutionIterator - Initialization completes, time: 00:00:00:221
+SolutionIterator - Start search from events:
+SolutionIterator - Controllable: [back, confirm, eo.enter, eo.exit, password, select, v.enter, v.exit, vote]
+SolutionIterator - Observable: [back, confirm, eo.enter, eo.exit, password, select, v.enter, v.exit, vote]
+SolutionIterator - ==============================>
+SolutionIterator - Start iteration 1...
+SolutionIterator - Try to weaken the preferred behavior by one of the 0 behavior sets:
+SolutionIterator - This iteration completes, time: 00:00:00:720
+SolutionIterator - Number of controller synthesis process invoked: 53
+SolutionIterator - New pareto-optimal found:
+SolutionIterator -       Size of the controller: 16 states and 20 transitions
+SolutionIterator -       Number of controllable events: 2
+SolutionIterator -       Controllable: [back, v.enter]
+SolutionIterator -       Number of observable events: 6
+SolutionIterator -       Observable: [back, confirm, password, select, v.enter, vote]
+SolutionIterator -       Number of preferred behavior: 1
+SolutionIterator -       Preferred Behavior:
+SolutionIterator -               select,back,select,vote,confirm
+SolutionIterator - Utility Preferred Behavior: 30
+SolutionIterator - Utility Cost: -37
+Robustify - Total number of controller synthesis invoked: 54
+Robustify - Total number of solutions: 1
+Robustify - Robustification completes, total time: 00:00:01:239
+#+end_src
+
+*** Solution
+#+begin_src LTS
+des (0, 20, 16)
+(13, "vote", 11)
+(11, "back", 13)
+(7, "vote", 4)
+(11, "confirm", 6)
+(0, "v.enter", 1)
+(1, "password", 2)
+(5, "select", 3)
+(4, "v.enter", 8)
+(2, "select", 10)
+(4, "back", 7)
+(6, "v.enter", 14)
+(15, "select", 3)
+(14, "password", 15)
+(3, "back", 5)
+(4, "confirm", 6)
+(12, "select", 10)
+(7, "v.enter", 9)
+(10, "vote", 11)
+(3, "vote", 4)
+(10, "back", 12)
+#+end_src
+* Personal Example
+** Input
+*** sys.lts
+#+begin_src LTS 
+BCR = (scan -> P1),
+P1 = (check_price -> BCR).
+
+BP = (check_price -> Q1),
+Q1 = (print_cmd -> BP).
+
+P = (print_cmd -> R1),
+R1 = (print -> P).
+#+end_src
+*** env.lts
+#+begin_src text
+  Same as sys.lts
+#+end_src
+*** p.lts
+#+begin_src LTS
+SAFETY = ( scan -> S1 ),
+S1 = ( check_price -> S2 ),
+S2 = ( print_cmd -> S3 ),
+S3 = ( print -> SAFETY).
+#+end_src
+
+*** cost
+#+begin_src json
+ "options": {
+    "progress": ["confirm"],
+    "preferredMap": {
+      "3": [
+        ["scan", "check_price", "print_cmd", "print"]
+      ]
+    },
+    "controllableMap": {
+      "1": ["check_price", "print_cmd" ],
+      "3": ["print", "scan"]
+    },
+    "observableMap": {
+      "0": ["check_price", "print_cmd" ],
+      "2": ["print", "scan"]
+    },
+
+#+end_src
+** Output
+*** process
+#+begin_src text
+SupervisoryRobustifier - Number of states of the system: 9
+SupervisoryRobustifier - Number of states of the environment: 9
+SupervisoryRobustifier - Number of states of the plant (S || E): 8
+SupervisoryRobustifier - Number of transitions of the plant: 12
+SolutionIterator - ==============================>
+SolutionIterator - Initializing search by using Pareto search...
+SolutionIterator - Number of preferred behaviors: 1
+SolutionIterator - Number of controllable events with cost: 4
+SolutionIterator - Number of observable events with cost: 2
+SolutionIterator - Maximum fulfilled preferred behavior:
+SolutionIterator -       scan,check_price,print_cmd,print
+SolutionIterator - Initialization completes, time: 00:00:00:151
+SolutionIterator - Start search from events:
+SolutionIterator - Controllable: [check_price, print, print_cmd, scan]
+SolutionIterator - Observable: [check_price, print, print_cmd, scan]
+SolutionIterator - ==============================>
+SolutionIterator - Start iteration 1...
+SolutionIterator - Try to weaken the preferred behavior by one of the 0 behavior sets:
+SolutionIterator - This iteration completes, time: 00:00:00:085
+SolutionIterator - Number of controller synthesis process invoked: 7
+SolutionIterator - New pareto-optimal found:
+SolutionIterator -       Size of the controller: 4 states and 3 transitions
+SolutionIterator -       Number of controllable events: 1
+SolutionIterator -       Controllable: [scan]
+SolutionIterator -       Number of observable events: 3
+SolutionIterator -       Observable: [check_price, print_cmd, scan]
+SolutionIterator -       Number of preferred behavior: 1
+SolutionIterator -       Preferred Behavior:
+SolutionIterator -               scan,check_price,print_cmd,print
+SolutionIterator - Utility Preferred Behavior: 9
+SolutionIterator - Utility Cost: -12
+Robustify - Total number of controller synthesis invoked: 8
+Robustify - Total number of solutions: 1
+Robustify - Robustification completes, total time: 00:00:00:483
+#+end_src
+*** solution
+#+begin_src LTS
+des (0, 3, 4)
+(2, "print_cmd", 3)
+(0, "scan", 1)
+(1, "check_price", 2)
+#+end_src

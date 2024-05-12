@@ -1,0 +1,4 @@
+SAFETY = ( scan -> S1 ),
+S1 = ( check_price -> S2 ),
+S2 = ( print_cmd -> S3 ),
+S3 = ( print -> SAFETY).

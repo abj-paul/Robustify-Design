@@ -1,0 +1,12 @@
+BCR = (scan -> P1),
+P1 = (check_price -> BCR).
+
+BP = (check_price -> Q1),
+Q1 = (print_cmd -> BP).
+
+P = (print_cmd -> R1),
+R1 = (print -> P).
+
+SAFETY = ( scan -> S1 ),
+S1 = ( check_price -> S2 ),
+S3 = ( print -> SAFETY).

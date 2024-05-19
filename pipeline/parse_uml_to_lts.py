@@ -47,7 +47,7 @@ def uml_to_lts(uml_file):
             if j == 0: lts+= f"( "
             lts += f"{action} -> {end_state}"
             if j < len(transition)-1: lts += " | "
-            elif i==len(lts_transition.items())-1: lts += " )."
+            elif i==len(lts_transition.items())-1: lts += " ).\n"
             else: lts += " ),\n"
         i+=1
     return lts
@@ -59,8 +59,8 @@ def write_in_file(filename, content, content_name):
     print(f"{content_name} saved in {filename}")
 
 # Example usage
-uml_file = 'data/vending_machine.xml'  # Path to your UML XML file
-lts = uml_to_lts(uml_file)
+base_path = 'data/vending_machine' 
+lts = uml_to_lts(f"{base_path}/barcode-reader.xml") + uml_to_lts(f"{base_path}/booking-program.xml") + uml_to_lts(f"{base_path}/printer.xml")
 write_in_file("data/execution_area/sys.lts", lts, "System LTS Model")
 write_in_file("data/execution_area/env.lts", lts, "Environment LTS Model")
 write_in_file("data/execution_area/p.lts", lts, "Property LTS Model")

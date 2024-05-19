@@ -1,6 +1,5 @@
-BCR = ( scan -> P1 ),
-BP = ( check_price -> Q1 ),
-P = ( print_cmd -> R1 ),
-P1 = ( check_price -> BCR ),
-Q1 = ( print_cmd -> BP ),
-R1 = ( print -> P ).
+SAFETY = ( scan -> S1 ),
+S1 = ( check_price -> S2 ),
+S2 = ( print_cmd -> S3 ),
+S3 = ( print -> SAFETY).
+

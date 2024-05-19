@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <uml:Model xmlns:uml="http://www.omg.org/spec/UML/20090901">
+    <uml:State name="s0"/>
+<uml:State name="s1"/>
+<uml:State name="s2"/>
+
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s0"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s1"/>
+            </uml:Target>
+            <uml:Effect name="scan"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s2"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s3"/>
+            </uml:Target>
+            <uml:Effect name="print_cmd"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s1"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s2"/>
+            </uml:Target>
+            <uml:Effect name="check_price"/>
+        </uml:Transition>
+    </uml:Model>

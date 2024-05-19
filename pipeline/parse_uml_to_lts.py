@@ -63,9 +63,10 @@ def write_in_file(filename, content, content_name):
     print(f"{content_name} saved in {filename}")
 
 # Example usage
+'''
 base_path = 'data/vending_machine' 
 lts = uml_to_lts(f"{base_path}/barcode-reader.xml") + uml_to_lts(f"{base_path}/booking-program.xml") + uml_to_lts(f"{base_path}/printer.xml")
 write_in_file("data/execution_area/sys.lts", lts, "System LTS Model")
 write_in_file("data/execution_area/env.lts", lts, "Environment LTS Model")
 write_in_file("data/execution_area/p.lts", uml_to_lts(f"{base_path}/safety.xml"), "Property LTS Model")
-
+'''

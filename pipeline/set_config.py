@@ -24,12 +24,15 @@ config = {
     }
 }
 
-#config["options"]["algorithm"] = "CustomAlgorithm"
-#config["options"]["controllableMap"]["1"].append("new_action")
-#config["env"].append("new_env.lts")
+def set_config(project_path, progress_list, preferredMap, controllableMap, observableMap):
+    config["options"]["progress"] = progress_list
+    config["options"]["preferredMap"] = preferredMap
+    config["options"]["controllableMap"] = controllableMap
+    config["options"]["observableMap"] = observableMap
 
-filename = "data/execution_area/config-pareto.json"
-with open(filename, 'w') as json_file:
-    json.dump(config, json_file, indent=4)
+    filename = f'{project_path}/config-pareto.json' 
 
-print(f"Configuration written to {filename}")
+    with open(filename, 'w') as json_file:
+        json.dump(config, json_file, indent=4)
+
+    print(f"Configuration written to {filename}")

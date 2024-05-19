@@ -40,7 +40,7 @@
             <uml:State name="S3"/>
         </uml:Source>
         <uml:Target>
-            <uml:State name="S4"/>
+            <uml:State name="SAFETY"/>
         </uml:Target>
         <uml:Effect name="print"/>
     </uml:Transition>

@@ -41,7 +41,11 @@ def uml_to_lts(uml_file):
     lts = ""
     i = 0
     for state, transition in lts_transition.items():
-        lts += f"{state} = "
+        if len(transition)!=0: lts += f"{state} = "
+        else: 
+            if i==len(lts_transition.items())-1 and lts[-2]==',': 
+                lts = lts[:-2] + '.' + lts[-1]
+                
         for j, temp in enumerate(transition):
             action, end_state = temp[0], temp[1]
             if j == 0: lts+= f"( "
@@ -63,5 +67,5 @@ base_path = 'data/vending_machine'
 lts = uml_to_lts(f"{base_path}/barcode-reader.xml") + uml_to_lts(f"{base_path}/booking-program.xml") + uml_to_lts(f"{base_path}/printer.xml")
 write_in_file("data/execution_area/sys.lts", lts, "System LTS Model")
 write_in_file("data/execution_area/env.lts", lts, "Environment LTS Model")
-write_in_file("data/execution_area/p.lts", lts, "Property LTS Model")
+write_in_file("data/execution_area/p.lts", uml_to_lts(f"{base_path}/safety.xml"), "Property LTS Model")
 

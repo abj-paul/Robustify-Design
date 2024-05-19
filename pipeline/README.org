@@ -1,14 +1,15 @@
 We will first build a simple pipeline.
 * Convert UML to FSP.
-- [ ] Complete basic conversion
-- [ ] Pass basic to Fortis 
+- [X] Complete basic conversion
+- [X] Pass basic to Fortis 
 - [ ] Map safety properties as UML 
 * Pass FSP to Fortis.
-- [ ] Run fortis, get result
+- [X] Run fortis, get result
 * Get output.
-- [ ] Convert output to UML 
+- [X] Convert output to UML 
 * Prepare test cases
 - [ ] Create 10 example with safety properties 
+* Frontend
 * Simulate deviation
 
 

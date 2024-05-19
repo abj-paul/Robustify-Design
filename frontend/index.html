@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate System Diagrams</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .form-container {
+            margin-bottom: 20px;
+        }
+        .system-diagrams, .final-solution {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .system-diagrams img, .final-solution img {
+            margin: 10px;
+            border: 2px solid #000;
+            max-width: 150px;
+            height: auto;
+        }
+        .plus {
+            font-size: 24px;
+            margin: 0 10px;
+        }
+        .equal {
+            font-size: 24px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Generate System Diagrams</h1>
+    <div class="form-container">
+        <form id="projectForm">
+            <label for="projectName">Enter Project Name:</label>
+            <input type="text" id="projectName" name="projectName" required>
+            <button type="submit">Generate</button>
+        </form>
+    </div>
+    <div id="content"></div>
+
+    <script>
+        document.getElementById('projectForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var projectName = document.getElementById('projectName').value;
+            generateContent(projectName);
+        });
+
+        function generateContent(projectName) {
+            var contentDiv = document.getElementById('content');
+            contentDiv.innerHTML = `
+                <div class="system-diagrams">
+                    <img src="../pipeline/data/${projectName}/printer.png" alt="Printer">
+                    <img src="../pipeline/data/${projectName}/barcode-reader.png" alt="Barcode Reader">
+                    <img src="../pipeline/data/${projectName}/booking-progra.png" alt="Booking Program">
+                </div>
+                <div class="plus">+</div>
+                <div class="safety-diagram">
+                    <img src="../pipeline/data/${projectName}/safety.png" alt="Safety">
+                </div>
+                <div class="equal">=</div>
+                <div class="final-solution">
+                    <img src="../pipeline/data/${projectName}/solution.png" alt="Solution">
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

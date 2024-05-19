@@ -1,0 +1,49 @@
+{
+    "sys": [
+        "sys.lts"
+    ],
+    "env": [],
+    "dev": [
+        "env.lts"
+    ],
+    "safety": [
+        "p.lts"
+    ],
+    "method": "supervisory",
+    "options": {
+        "progress": [
+            "confirm"
+        ],
+        "preferredMap": {
+            "3": [
+                [
+                    "scan",
+                    "check_price",
+                    "print_cmd",
+                    "print"
+                ]
+            ]
+        },
+        "controllableMap": {
+            "1": [
+                "check_price",
+                "print_cmd"
+            ],
+            "3": [
+                "print",
+                "scan"
+            ]
+        },
+        "observableMap": {
+            "0": [
+                "check_price",
+                "print_cmd"
+            ],
+            "2": [
+                "print",
+                "scan"
+            ]
+        },
+        "algorithm": "Pareto"
+    }
+}

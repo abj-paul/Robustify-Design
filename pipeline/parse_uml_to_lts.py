@@ -29,18 +29,39 @@ def parse_uml_model(uml_file):
     return states, transitions
 
 def uml_to_lts(uml_file):
-    lts = {}
+    lts_transition = {}
     states, transitions = parse_uml_model(uml_file)
     
     for state in states:
-        lts[state] = []
+        lts_transition[state] = []
     
     for source, target, action in transitions:
-        lts[source].append((action, target))
+        lts_transition[source].append((action, target))
     
+    lts = ""
+    i = 0
+    for state, transition in lts_transition.items():
+        lts += f"{state} = "
+        for j, temp in enumerate(transition):
+            action, end_state = temp[0], temp[1]
+            if j == 0: lts+= f"( "
+            lts += f"{action} -> {end_state}"
+            if j < len(transition)-1: lts += " | "
+            elif i==len(lts_transition.items())-1: lts += " )."
+            else: lts += " ),\n"
+        i+=1
     return lts
 
+def write_in_file(filename, content, content_name):
+    file = open(filename, 'w')
+    file.write(content)
+    file.close()
+    print(f"{content_name} saved in {filename}")
+
 # Example usage
-uml_file = 'data/test_uml.xml'  # Path to your UML XML file
+uml_file = 'data/vending_machine.xml'  # Path to your UML XML file
 lts = uml_to_lts(uml_file)
-print(lts)
+write_in_file("data/execution_area/sys.lts", lts, "System LTS Model")
+write_in_file("data/execution_area/env.lts", lts, "Environment LTS Model")
+write_in_file("data/execution_area/p.lts", lts, "Property LTS Model")
+

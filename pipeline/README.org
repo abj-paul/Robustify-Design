@@ -1,9 +1,15 @@
 We will first build a simple pipeline.
-1. Convert UML to FSP.
-2. Pass FSP to Fortis.
-3. Get output.
-4. Prepare test cases
-5. Simulate deviation
+* Convert UML to FSP.
+- [ ] Complete basic conversion
+- [ ] Pass basic to Fortis 
+- [ ] Map safety properties as UML 
+* Pass FSP to Fortis.
+- [ ] Run fortis, get result
+* Get output.
+- [ ] Convert output to UML 
+* Prepare test cases
+- [ ] Create 10 example with safety properties 
+* Simulate deviation
 
 
 We will try to use [[https://d1wqtxts1xzle7.cloudfront.net/47102934/Mapping_UML_to_Labeled_Transition_System20160708-8237-13of1sz-libre.pdf?1467974416=&response-content-disposition=inline%3B+filename%3DMapping_UML_to_Labeled_Transition_System.pdf&Expires=1716092144&Signature=CPVXZpmfFQ9UXjJMNAwea9DxI9xKooL9EhBqNmAVMR5-qk6VozHEt6DAwpCf356TeZ4ey75pBKwiTskoCc5C708fknRRq2DkpzYSH7D7stuHsqQ9lDBVzk~vXVLVT9ie0Yf6B6wtjfRsVOIyfa5iVkSUzz3a-YlCLwrOVn33wzplCG32mlr~ziXduFa2uBAe9dhrpWvoyF88wNDFxONU2BB3yo681wznVGMc3PZMhyslqsj-3O0uWo5-ya2H6ZYc58fVIxP3u3UaZxuH4zUZootG0sqCaK0OErW7CNmcKehPKdefyPTcIzf9bLhPQvlDGQ0~MndHB9hWu4coKYhM4Q__&Key-Pair-Id=APKAJLOHF5GGSLRBV4ZA][this algorithm]] for translation.

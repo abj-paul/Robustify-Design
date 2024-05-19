@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmlns:uml="http://www.omg.org/spec/UML/20090901">
+    <uml:State name="BCR"/>
+    <uml:State name="BP"/>
+    <uml:State name="P"/>
+    <uml:State name="P1"/>
+    <uml:State name="Q1"/>
+    <uml:State name="R1"/>
+
+    <uml:Transition>
+        <uml:Source>
+            <uml:State name="BCR"/>
+        </uml:Source>
+        <uml:Target>
+            <uml:State name="P1"/>
+        </uml:Target>
+        <uml:Effect name="scan"/>
+    </uml:Transition>
+    <uml:Transition>
+        <uml:Source>
+            <uml:State name="P1"/>
+        </uml:Source>
+        <uml:Target>
+            <uml:State name="BCR"/>
+        </uml:Target>
+        <uml:Effect name="check_price"/>
+    </uml:Transition>
+
+    <uml:Transition>
+        <uml:Source>
+            <uml:State name="BP"/>
+        </uml:Source>
+        <uml:Target>
+            <uml:State name="Q1"/>
+        </uml:Target>
+        <uml:Effect name="check_price"/>
+    </uml:Transition>
+    <uml:Transition>
+        <uml:Source>
+            <uml:State name="Q1"/>
+        </uml:Source>
+        <uml:Target>
+            <uml:State name="BP"/>
+        </uml:Target>
+        <uml:Effect name="print_cmd"/>
+    </uml:Transition>
+
+    <uml:Transition>
+        <uml:Source>
+            <uml:State name="P"/>
+        </uml:Source>
+        <uml:Target>
+            <uml:State name="R1"/>
+        </uml:Target>
+        <uml:Effect name="print_cmd"/>
+    </uml:Transition>
+    <uml:Transition>
+        <uml:Source>
+            <uml:State name="R1"/>
+        </uml:Source>
+        <uml:Target>
+            <uml:State name="P"/>
+        </uml:Target>
+        <uml:Effect name="print"/>
+    </uml:Transition>
+</uml:Model>

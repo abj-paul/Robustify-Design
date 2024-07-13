@@ -46,12 +46,14 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="text-center mb-5">System Specification Upload</h1>
-
+        <h1 class="text-center mt-5" id="project-name">Project: Untitled..</h1>
         <!-- Nav tabs -->
         <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" id="system-tab" data-toggle="tab" href="#system" role="tab" aria-controls="system" aria-selected="true">System Specification</a>
+                <a class="nav-link active" id="metadata-tab" data-toggle="tab" href="#metadata" role="tab" aria-controls="metadata" aria-selected="true">Project Details</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="system-tab" data-toggle="tab" href="#system" role="tab" aria-controls="system" aria-selected="false">System Specification</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="user-tab" data-toggle="tab" href="#user" role="tab" aria-controls="user" aria-selected="false">User Environment</a>
@@ -63,9 +65,31 @@
 
         <!-- Tab panes -->
         <div class="tab-content" id="myTabContent">
+            <!-- Project Details Tab -->
+            <div class="tab-pane fade show active" id="metadata" role="tabpanel" aria-labelledby="metadata-tab">
+                <div class="row mt-5">
+                    <div class="col-md-6 offset-md-3">
+                        <form id="create-project-form">
+                            <div class="form-group">
+                                <label for="project-name">Project Name</label>
+                                <input type="text" class="form-control" id="project-name" name="project_name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="project-description">Project Description</label>
+                                <textarea class="form-control" id="project-description" name="project_description" rows="4" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="project-image">Project Image</label>
+                                <input type="file" class="form-control-file" id="project-image" name="project_image">
+                            </div>
+                            <button type="button" class="btn btn-primary btn-block" onclick="createProject()">Create Project</button>                        </form>
+                    </div>
+                </div>
+            </div>
+
             <!-- System Specification Tab -->
-            <div class="tab-pane fade show active" id="system" role="tabpanel" aria-labelledby="system-tab">
-                <div class="row">
+            <div class="tab-pane fade" id="system" role="tabpanel" aria-labelledby="system-tab">
+                <div class="row mt-5">
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-body">
@@ -109,7 +133,7 @@
 
             <!-- User Environment Tab -->
             <div class="tab-pane fade" id="user" role="tabpanel" aria-labelledby="user-tab">
-                <div class="row">
+                <div class="row mt-5">
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-body">
@@ -153,7 +177,7 @@
 
             <!-- Safety Property Tab -->
             <div class="tab-pane fade" id="safety" role="tabpanel" aria-labelledby="safety-tab">
-                <div class="row">
+                <div class="row mt-5">
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-body">
@@ -202,21 +226,24 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
+        let project_folder = "NOT SET";
         function clearForm(formId, responseId) {
             document.getElementById(formId).reset();
             document.getElementById(responseId).innerText = ''; // Clear the response content
         }
 
-        for(let i=1; i<=3; i++){
+        // Adding event listeners for each form submission
+        for(let i = 1; i <= 3; i++) {
             document.getElementById(`upload-form-files-${i}`).addEventListener('submit', async function(event) {
                 event.preventDefault();
 
                 const formData = new FormData();
                 const fileFields = document.querySelector(`#files-${i}`).files;
 
-                for (let i = 0; i < fileFields.length; i++) {
-                    formData.append('files', fileFields[i]);
+                for (let j = 0; j < fileFields.length; j++) {
+                    formData.append('files', fileFields[j]);
                 }
+                formData.append("project_folder",project_folder);
 
                 const response = await fetch('http://localhost:8000/upload/files/', {
                     method: 'POST',
@@ -224,7 +251,7 @@
                 });
 
                 const result = await response.json();
-                document.getElementById('response-files-3').innerText = JSON.stringify(result, null, 2);
+                document.getElementById(`response-files-${i}`).innerText = JSON.stringify(result, null, 2);
             });
 
             document.getElementById(`upload-form-spec-${i}`).addEventListener('submit', async function(event) {
@@ -236,6 +263,8 @@
 
                 formData.append('filename', filename);
                 formData.append('specification', specification);
+                formData.append("project_folder",project_folder);
+
 
                 const response = await fetch('http://localhost:8000/upload/specification/', {
                     method: 'POST',
@@ -245,8 +274,32 @@
                 const result = await response.json();
                 document.getElementById(`response-spec-${i}`).innerText = JSON.stringify(result, null, 2);
             });
+
+            function createProject() {
+                const form = document.getElementById('create-project-form');
+                const formData = new FormData(form);
+                console.log(formData);
+                fetch('http://localhost:8000/create_project/', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    project_folder = data.project_folder;
+                    document.getElementById("project-name").innerText = data.project_name;
+                    // Optionally, you can redirect or show a success message here
+                    alert('Project created successfully!');
+                    // Reset the form after successful submission
+                    form.reset();
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    // Handle errors or show an error message
+                    alert('An error occurred while creating the project.');
+                });
+            }
         }
-        
     </script>
 </body>
 </html>

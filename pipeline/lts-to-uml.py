@@ -1,5 +1,6 @@
 import xml.etree.ElementTree as ET
 import pygraphviz as pgv
+import os
 
 test = '''ENV = (v.enter -> VOTER | eo.enter -> EO),
 VOTER = (password -> VOTER | select -> VOTER | vote -> VOTER | confirm -> VOTER | back -> VOTER | v.exit -> ENV),
@@ -7,7 +8,8 @@ EO = (select -> EO | vote -> EO | confirm -> EO | back -> EO | eo.exit -> ENV).
 '''
 
 def save_output_as_uml_single_file(filename):
-    output = test
+    f = open(filename,"r")
+    output = f.read()
     states = set()
     transitions = []
 
@@ -55,11 +57,11 @@ def save_output_as_uml_single_file(filename):
     </uml:Transition>'''
     uml += UML_EXIT
 
-    with open(f"{filename}.xml", "w") as file:
+    with open(f"{os.path.splitext(filename)[0]}.xml", "w") as file:
         file.write(uml)
 
     print("Converted output to UML.")
-    convert_xml_to_image(f"{filename}.xml")
+    convert_xml_to_image(f"{os.path.splitext(filename)[0]}.xml")
 
 def convert_xml_to_image(filename):
     # Parse the XML
@@ -79,9 +81,19 @@ def convert_xml_to_image(filename):
 
     # Set layout and render the graph to an image file
     G.layout(prog='dot')
-    output_file = f"{filename.rstrip('.xml')}.png"
+    output_file = f"{os.path.splitext(filename)[0]}.png"
     G.draw(output_file, format='png', prog='dot')
     print(f"UML diagram saved as {output_file}")
 
 # Call the function to generate UML and convert to image
-save_output_as_uml_single_file("test")
+save_output_as_uml_single_file("../examples/voting/sys.lts")
+save_output_as_uml_single_file("../examples/voting/env0.lts")
+save_output_as_uml_single_file("../examples/voting/env1.lts")
+save_output_as_uml_single_file("../examples/voting/env2.lts")
+#save_output_as_uml_single_file("../examples/voting/p.lts")
+
+
+
+
+
+

@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <uml:Model xmlns:uml="http://www.omg.org/spec/UML/20090901">
-<uml:State name="EO"/>
 <uml:State name="ENV"/>
+<uml:State name="VOTER3"/>
 <uml:State name="VOTER"/>
+<uml:State name="vexit"/>
+<uml:State name="EO"/>
+<uml:State name="VOTER2"/>
+<uml:State name="VOTER1"/>
 
     <uml:Transition>
         <uml:Source>
@@ -27,54 +31,63 @@
             <uml:State name="VOTER"/>
         </uml:Source>
         <uml:Target>
-            <uml:State name="VOTER"/>
+            <uml:State name="VOTER1"/>
         </uml:Target>
         <uml:Effect name="(password"/>
     </uml:Transition>
     <uml:Transition>
         <uml:Source>
-            <uml:State name="VOTER"/>
+            <uml:State name="VOTER1"/>
         </uml:Source>
         <uml:Target>
-            <uml:State name="VOTER"/>
+            <uml:State name="VOTER2"/>
         </uml:Target>
-        <uml:Effect name="select"/>
+        <uml:Effect name="(select"/>
     </uml:Transition>
     <uml:Transition>
         <uml:Source>
-            <uml:State name="VOTER"/>
+            <uml:State name="VOTER2"/>
         </uml:Source>
         <uml:Target>
-            <uml:State name="VOTER"/>
+            <uml:State name="VOTER3"/>
         </uml:Target>
-        <uml:Effect name="vote"/>
+        <uml:Effect name="(vote"/>
     </uml:Transition>
     <uml:Transition>
         <uml:Source>
-            <uml:State name="VOTER"/>
+            <uml:State name="VOTER2"/>
         </uml:Source>
         <uml:Target>
-            <uml:State name="VOTER"/>
-        </uml:Target>
-        <uml:Effect name="confirm"/>
-    </uml:Transition>
-    <uml:Transition>
-        <uml:Source>
-            <uml:State name="VOTER"/>
-        </uml:Source>
-        <uml:Target>
-            <uml:State name="VOTER"/>
+            <uml:State name="VOTER1"/>
         </uml:Target>
         <uml:Effect name="back"/>
     </uml:Transition>
     <uml:Transition>
         <uml:Source>
-            <uml:State name="VOTER"/>
+            <uml:State name="VOTER3"/>
         </uml:Source>
         <uml:Target>
-            <uml:State name="ENV"/>
+            <uml:State name="vexit"/>
         </uml:Target>
-        <uml:Effect name="vexit"/>
+        <uml:Effect name="(confirm"/>
+    </uml:Transition>
+    <uml:Transition>
+        <uml:Source>
+            <uml:State name="VOTER3"/>
+        </uml:Source>
+        <uml:Target>
+            <uml:State name="vexit"/>
+        </uml:Target>
+        <uml:Effect name="omit_confirm"/>
+    </uml:Transition>
+    <uml:Transition>
+        <uml:Source>
+            <uml:State name="VOTER3"/>
+        </uml:Source>
+        <uml:Target>
+            <uml:State name="VOTER2"/>
+        </uml:Target>
+        <uml:Effect name="back"/>
     </uml:Transition>
     <uml:Transition>
         <uml:Source>

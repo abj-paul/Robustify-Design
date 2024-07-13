@@ -1,7 +1,7 @@
 import os
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
-from typing import List
+from typing import List, Optional
 
 app = FastAPI()
 
@@ -17,7 +17,7 @@ app.add_middleware(
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-@app.post("/upload/")
+@app.post("/upload/files")
 async def upload_files(files: List[UploadFile] = File(...)):
     file_details = []
     for file in files:
@@ -30,6 +30,15 @@ async def upload_files(files: List[UploadFile] = File(...)):
             "size": os.path.getsize(file_location)
         })
     return file_details
+
+
+@app.post("/upload/specification/")
+async def upload_specification(filename: str = Form(...), specification: str = Form(...)):
+    file_location = os.path.join(UPLOAD_DIR, filename)
+    with open(file_location, "w") as f:
+        f.write(specification)
+
+    return {"filename": filename, "size": os.path.getsize(file_location)}
 
 # Run the application with the command:
 # uvicorn main:app --reload

@@ -1,0 +1,14 @@
+// Process P1
+P1 = N1,
+N1 = (try1 -> T1),
+T1 = (enter1 -> C1 | back1 -> N1),
+C1 = (exit1 -> N1).
+
+// Process P2
+P2 = N2,
+N2 = (try2 -> T2),
+T2 = (enter2 -> C2 | back2 -> N2),
+C2 = (exit2 -> N2).
+
+// Combined System
+||SYSTEM = (P1 || P2).

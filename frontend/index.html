@@ -3,77 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generate System Diagrams</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 0;
-            padding: 20px;
-        }
-        .form-container {
-            margin-bottom: 20px;
-        }
-        .system-diagrams, .final-solution {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .system-diagrams img, .final-solution img {
-            margin: 10px;
-            border: 2px solid #000;
-            max-width: 150px;
-            height: auto;
-        }
-        .plus {
-            font-size: 24px;
-            margin: 0 10px;
-        }
-        .equal {
-            font-size: 24px;
-            margin-top: 10px;
-        }
-    </style>
+    <title>Upload UML Files</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Generate System Diagrams</h1>
-    <div class="form-container">
-        <form id="projectForm">
-            <label for="projectName">Enter Project Name:</label>
-            <input type="text" id="projectName" name="projectName" required>
-            <button type="submit">Generate</button>
-        </form>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="card mt-5">
+                    <div class="card-header">
+                        <h2 class="card-title">Upload UML Files</h2>
+                    </div>
+                    <div class="card-body">
+                        <form id="upload-form">
+                            <div class="form-group">
+                                <label for="files">Choose UML files</label>
+                                <input type="file" class="form-control-file" id="files" name="files" multiple required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Upload</button>
+                        </form>
+                        <div id="response" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card mt-5">
+                    <div class="card-header">
+                        <h2 class="card-title">Upload UML Files</h2>
+                    </div>
+                    <div class="card-body">
+                        <form id="upload-form">
+                            <div class="form-group">
+                                <label for="files">Choose UML files</label>
+                                <input type="file" class="form-control-file" id="files" name="files" multiple required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Upload</button>
+                        </form>
+                        <div id="response" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card mt-5">
+                    <div class="card-header">
+                        <h2 class="card-title">Upload UML Files</h2>
+                    </div>
+                    <div class="card-body">
+                        <form id="upload-form">
+                            <div class="form-group">
+                                <label for="files">Choose UML files</label>
+                                <input type="file" class="form-control-file" id="files" name="files" multiple required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Upload</button>
+                        </form>
+                        <div id="response" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div id="content"></div>
 
     <script>
-        document.getElementById('projectForm').addEventListener('submit', function(event) {
+        document.getElementById('upload-form').addEventListener('submit', async function(event) {
             event.preventDefault();
-            var projectName = document.getElementById('projectName').value;
-            generateContent(projectName);
-        });
 
-        function generateContent(projectName) {
-            var contentDiv = document.getElementById('content');
-            contentDiv.innerHTML = `
-                <div class="system-diagrams">
-                    <img src="../pipeline/data/${projectName}/printer.png" alt="Printer">
-                    <img src="../pipeline/data/${projectName}/barcode-reader.png" alt="Barcode Reader">
-                    <img src="../pipeline/data/${projectName}/booking-progra.png" alt="Booking Program">
-                </div>
-                <div class="plus">+</div>
-                <div class="safety-diagram">
-                    <img src="../pipeline/data/${projectName}/safety.png" alt="Safety">
-                </div>
-                <div class="equal">=</div>
-                <div class="final-solution">
-                    <img src="../pipeline/data/${projectName}/solution.png" alt="Solution">
-                </div>
-            `;
-        }
+            const formData = new FormData();
+            const fileFields = document.querySelector('input[type="file"]').files;
+
+            for (let i = 0; i < fileFields.length; i++) {
+                formData.append('files', fileFields[i]);
+            }
+
+            const response = await fetch('http://localhost:8000/upload/', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            document.getElementById('response').innerText = JSON.stringify(result, null, 2);
+        });
     </script>
 </body>
 </html>

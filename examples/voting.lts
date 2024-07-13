@@ -4,10 +4,7 @@ P2 = (vote -> P3 | back -> P1),
 P3 = (confirm -> EM | back -> P2).
 
 ENV = (v.enter -> VOTER | eo.enter -> EO),
-VOTER = (password -> VOTER1),
-VOTER1 = (select -> VOTER2),
-VOTER2 = (vote -> VOTER3 | back -> VOTER1),
-VOTER3 = (confirm -> v.exit -> ENV | omit_confirm -> v.exit -> ENV | back -> VOTER2),
+VOTER = (password -> VOTER | select -> VOTER | vote -> VOTER | confirm -> VOTER | back -> VOTER | v.exit -> ENV),
 EO = (select -> EO | vote -> EO | confirm -> EO | back -> EO | eo.exit -> ENV).
 
 const NoBody = 0
@@ -22,3 +19,5 @@ VOTE[in:WHO][sel:WHO][v:WHO] = (
     | select -> VOTE[in][in][v]
     | when (sel == v) confirm -> VOTE[in][NoBody][NoBody]
 ).
+    
+||SYS = (EM || ENV ).

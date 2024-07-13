@@ -1,8 +1,8 @@
-from parse_uml_to_lts import uml_to_lts, write_in_file
-from set_config import set_config
-from execute_fortis import run_fortis
-from output_to_uml import save_output_as_uml
-from convert_xml_to_image import convert_xml_to_image
+from libs.parse_uml_to_lts import uml_to_lts, write_in_file
+from libs.set_config import set_config
+from libs.execute_fortis import run_fortis
+from libs.output_to_uml import save_output_as_uml
+from libs.convert_xml_to_image import convert_xml_to_image
 import os 
 
 def convert_to_lts(base_path, parallel_sysfile_names, NO_ENV_FLAG):

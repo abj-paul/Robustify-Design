@@ -80,15 +80,14 @@ async def create_project(
 
 @app.post("/configuration")
 async def upload_configuration(
-    progress: str = Form(...),
-    preferredMap: str = Form(...),
-    controllableMap: str = Form(...),
-    observableMap: str = Form(...),
+    configuration: str = Form(...),
     project_folder: str = Form(...)
 ):
     try:
-        print("Reached here.")
-        set_config(project_folder, progress, preferredMap, controllableMap, observableMap)
+        file_location = os.path.join(project_folder, "config-pareto.json")
+        with open(file_location, "w") as f:
+            f.write(configuration)
+
         return {"status": "Configuration Saved"}
 
     except Exception as e:

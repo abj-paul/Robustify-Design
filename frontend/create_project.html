@@ -230,21 +230,35 @@
                     <div class="card-body">
                         <form id="additional-inputs-form">
                             <div class="form-group">
-                                <label for="progress">Progress</label>
-                                <input type="text" class="form-control" id="progress" name="progress" placeholder='["confirm"]'>
+                                <label for="configuration">Configuration</label>
+                                <textarea class="form-control" id="configuration" name="configuration" rows="20" style="white-space: pre;">
+                            {
+                                "sys": ["sys.lts"],
+                                "env": [],
+                                "dev": ["env.lts"],
+                                "safety": ["p.lts"],
+                                "method": "supervisory",
+                                "options": {
+                                    "progress": ["confirm"],
+                                    "preferredMap": {
+                                        "3": [
+                                            ["select", "back", "select", "vote", "confirm"]
+                                        ]
+                                    },
+                                    "controllableMap": {
+                                        "1": ["back", "confirm", "password", "select", "vote"],
+                                        "3": ["eo.enter", "eo.exit", "v.enter", "v.exit"]
+                                    },
+                                    "observableMap": {
+                                        "0": ["back", "confirm", "password", "select", "vote"],
+                                        "2": ["eo.enter", "eo.exit", "v.enter", "v.exit"]
+                                    },
+                                    "algorithm": "Pareto"
+                                }
+                            }
+                                </textarea>
                             </div>
-                            <div class="form-group">
-                                <label for="preferredMap">Preferred Map (JSON)</label>
-                                <input type="text" class="form-control" id="preferredMap" name="preferredMap" placeholder='{ "3": [["scan", "check_price", "print_cmd", "print"]] }'>
-                            </div>
-                            <div class="form-group">
-                                <label for="controllableMap">Controllable Map (JSON)</label>
-                                <input type="text" class="form-control" id="controllableMap" name="controllableMap" placeholder='{ "1": ["check_price", "print_cmd"], "3": ["print", "scan"] }'>
-                            </div>
-                            <div class="form-group">
-                                <label for="observableMap">Observable Map (JSON)</label>
-                                <input type="text" class="form-control" id="observableMap" name="observableMap" placeholder='{ "0": ["check_price", "print_cmd"], "2": ["print", "scan"] }'>
-                            </div>
+                            
                             <div class="form-buttons">
                                 <button type="submit" class="btn btn-primary btn-block">Save Configurations</button>
                                 <button type="button" class="btn btn-secondary btn-block btn-clear" onclick="clearForm('additional-inputs-form')">Clear</button>
@@ -364,17 +378,10 @@
         event.preventDefault();
 
         const formData = new FormData();
-        const progress = document.getElementById('progress').value;
-        const preferredMap = document.getElementById('preferredMap').value;
-        const controllableMap = document.getElementById('controllableMap').value;
-        const observableMap = document.getElementById('observableMap').value;
+        const configuration = document.getElementById('configuration').value;
 
-        formData.append('progress', progress);
-        formData.append('preferredMap', preferredMap);
-        formData.append('controllableMap', controllableMap);
-        formData.append('observableMap', observableMap);
+        formData.append('configuration', configuration);
         formData.append('project_folder', project_folder);
-
         console.log(formData);
 
         const response = await fetch('http://localhost:8000/configuration', {

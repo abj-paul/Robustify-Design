@@ -3,6 +3,15 @@ from fastapi import FastAPI, File, UploadFile, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from typing import List, Optional
+from pydantic import BaseModel
+from typing import List, Dict, Any
+
+from libs.parse_uml_to_lts import uml_to_lts, write_in_file
+from libs.set_config import set_config
+from libs.execute_fortis import run_fortis
+from libs.output_to_uml import save_output_as_uml
+from libs.convert_xml_to_image import convert_xml_to_image
+from wrapper import convert_to_lts
 
 app = FastAPI()
 
@@ -14,6 +23,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 
 @app.post("/upload/files")
@@ -66,6 +76,42 @@ async def create_project(
     except Exception as e:
         print(e)
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/configuration")
+async def upload_configuration(
+    progress: str = Form(...),
+    preferredMap: str = Form(...),
+    controllableMap: str = Form(...),
+    observableMap: str = Form(...),
+    project_folder: str = Form(...)
+):
+    try:
+        print("Reached here.")
+        set_config(project_folder, progress, preferredMap, controllableMap, observableMap)
+        return {"status": "Configuration Saved"}
+
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+    
+
+@app.post("/execute")
+async def upload_additional( project_folder: str = Form(...), class_list: List[str] = Form(...)): # class_list = ["barcode-reader.xml","booking-program.xml","printer.xml"]
+    if len(class_list[0])!=0: 
+        convert_to_lts(project_folder, class_list, not os.path.isfile(f"{project_folder}/env.xml"))
+        for class_name in class_list:
+            convert_xml_to_image(project_folder,class_name)
+
+    run_fortis(project_folder)
+
+    save_output_as_uml(project_folder)
+
+    solution_index = 1
+    for filename in os.listdir(f"{project_folder}/solutions/"):
+        if filename.endswith(".aut"):
+            convert_xml_to_image(f"{project_folder}",f"solution_{solution_index}.xml")
+            solution_index+=1
+
+    return {"status": "Fortis executed."}
 
 
 # Run the application with the command:

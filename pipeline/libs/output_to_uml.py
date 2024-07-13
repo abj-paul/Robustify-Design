@@ -8,8 +8,17 @@
 NEW_LINE="\n"
 EMPTY_LINE = ""
 
+import os
 def save_output_as_uml(project_path):
-    f = open(f"{project_path}/solutions/sol1.aut","r")
+    index = 1
+    for filename in os.listdir(f"{project_path}/solutions"):
+        if filename.endswith(".aut"):
+            save_output_as_uml_single_file(project_path,index)
+            index += 1
+
+
+def save_output_as_uml_single_file(project_path, solution_index):
+    f = open(f"{project_path}/solutions/sol{solution_index}.aut","r")
     output = f.read()
     states = [f"s{i}" for i in range(int(output.split("\n")[0].split(",")[1]))]
     transitions = []
@@ -50,7 +59,7 @@ def save_output_as_uml(project_path):
     print(states)
     print(transitions)
 
-    file = open(f"{project_path}/solution.xml", "w")
+    file = open(f"{project_path}/solution_{solution_index}.xml", "w")
     file.write(uml)
     file.close()
     print("Converted output to UML.")

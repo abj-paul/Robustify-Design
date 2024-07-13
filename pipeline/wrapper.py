@@ -17,6 +17,7 @@ def convert_to_lts(base_path, parallel_sysfile_names, NO_ENV_FLAG):
     write_in_file(f"{base_path}/p.lts", uml_to_lts(f"{base_path}/safety.xml"), "Property LTS Model")
 
 # Test
+'''
 input_path = "data/vending_machine"
 progress = ["confirm"]
 preferredMap = {
@@ -42,3 +43,4 @@ convert_xml_to_image(input_path,"solution.xml")
 convert_xml_to_image(input_path,"safety.xml")
 for parallel in ["barcode-reader.xml","booking-program.xml","printer.xml"]:
     convert_xml_to_image(input_path,parallel)
+'''

@@ -12,6 +12,7 @@ from libs.execute_fortis import run_fortis
 from libs.output_to_uml import save_output_as_uml
 from libs.convert_xml_to_image import convert_xml_to_image
 from wrapper import convert_to_lts
+from generate_pdf import generate_output_document
 
 app = FastAPI()
 
@@ -110,8 +111,9 @@ async def upload_additional( project_folder: str = Form(...), class_list: List[s
         if filename.endswith(".aut"):
             convert_xml_to_image(f"{project_folder}",f"solution_{solution_index}.xml")
             solution_index+=1
+    generate_output_document(project_folder)
 
-    return {"status": "Fortis executed."}
+    return {"status": f"Fortis executed. Report in {os.getcwd()}"}
 
 
 # Run the application with the command:

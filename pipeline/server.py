@@ -100,6 +100,7 @@ async def upload_additional( project_folder: str = Form(...), class_list: List[s
         convert_to_lts(project_folder, class_list, not os.path.isfile(f"{project_folder}/env.xml"))
         for class_name in class_list:
             convert_xml_to_image(project_folder,class_name)
+        
     else:
         try:
             write_in_file(f"{project_folder}/sys.lts", uml_to_lts(f"{project_folder}/sys.xml"), "System LTS Model")
@@ -115,6 +116,9 @@ async def upload_additional( project_folder: str = Form(...), class_list: List[s
         if filename.endswith(".aut"):
             convert_xml_to_image(f"{project_folder}",f"solution_{solution_index}.xml")
             solution_index+=1
+
+    convert_xml_to_image(project_folder,"sys.xml")
+    convert_xml_to_image(project_folder,"env.xml")
     generate_output_document(project_folder)
 
     return {"status": f"Fortis executed. Report in {os.getcwd()}"}

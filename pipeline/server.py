@@ -100,7 +100,12 @@ async def upload_additional( project_folder: str = Form(...), class_list: List[s
         convert_to_lts(project_folder, class_list, not os.path.isfile(f"{project_folder}/env.xml"))
         for class_name in class_list:
             convert_xml_to_image(project_folder,class_name)
-
+    else:
+        try:
+            write_in_file(f"{project_folder}/sys.lts", uml_to_lts(f"{project_folder}/sys.xml"), "System LTS Model")
+            write_in_file(f"{project_folder}/env.lts", uml_to_lts(f"{project_folder}/env.xml"), "Environment LTS Model")
+        except:
+            print("Found no file and stuffs")
     run_fortis(project_folder)
 
     save_output_as_uml(project_folder)

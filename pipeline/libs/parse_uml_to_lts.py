@@ -12,21 +12,23 @@ class Transition:
 
 
 def parse_uml_model(uml_file):
+    # Parse the UML XML file to extract states and transitions
     tree = ET.parse(uml_file)
     root = tree.getroot()
-    
-    ns = {'uml': 'http://www.omg.org/spec/UML/20090901'}  # Define the namespace
 
-    states = [elem.get('name') for elem in root.findall(".//uml:State", ns)]
+    states = set()
     transitions = []
-    
-    for trans in root.findall(".//uml:Transition", ns):
-        source = trans.find(".//uml:Source/uml:State", ns).get('name')
-        target = trans.find(".//uml:Target/uml:State", ns).get('name')
-        action = trans.find(".//uml:Effect", ns).get('name', 'no_action')
-        transitions.append((source, target, action))
 
-    return states, transitions
+    for state in root.findall('.//{http://www.omg.org/spec/UML/20090901}State'):
+        states.add(state.attrib['name'])
+
+    for transition in root.findall('.//{http://www.omg.org/spec/UML/20090901}Transition'):
+        source_state = transition.find('.//{http://www.omg.org/spec/UML/20090901}Source/{http://www.omg.org/spec/UML/20090901}State').attrib['name']
+        target_state = transition.find('.//{http://www.omg.org/spec/UML/20090901}Target/{http://www.omg.org/spec/UML/20090901}State').attrib['name']
+        effect = transition.find('.//{http://www.omg.org/spec/UML/20090901}Effect').attrib['name']
+        transitions.append((source_state, target_state, effect))
+
+    return sorted(states), transitions
 
 def uml_to_lts(uml_file):
     lts_transition = {}
@@ -39,22 +41,26 @@ def uml_to_lts(uml_file):
         lts_transition[source].append((action, target))
     
     lts = ""
-    i = 0
-    for state, transition in lts_transition.items():
-        if len(transition)!=0: lts += f"{state} = "
+    for i, (state, transition) in enumerate(lts_transition.items()):
+        if len(transition) != 0: 
+            lts += f"{state} = "
         else: 
-            if i==len(lts_transition.items())-1 and lts[-2]==',': 
+            if i == len(lts_transition.items()) - 1 and lts[-2] == ',':
                 lts = lts[:-2] + '.' + lts[-1]
                 
         for j, temp in enumerate(transition):
             action, end_state = temp[0], temp[1]
-            if j == 0: lts+= f"( "
+            if j == 0: 
+                lts += f"( "
             lts += f"{action} -> {end_state}"
-            if j < len(transition)-1: lts += " | "
-            elif i==len(lts_transition.items())-1: lts += " ).\n"
-            else: lts += " ),\n"
-        i+=1
+            if j < len(transition) - 1: 
+                lts += " | "
+            elif i == len(lts_transition.items()) - 1: 
+                lts += " ).\n"
+            else: 
+                lts += " ),\n"
     return lts
+
 
 def write_in_file(filename, content, content_name):
     file = open(filename, 'w')

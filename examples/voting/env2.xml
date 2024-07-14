@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <uml:Model xmlns:uml="http://www.omg.org/spec/UML/20090901">
-<uml:State name="EO"/>
-<uml:State name="VOTER"/>
 <uml:State name="ENV"/>
+<uml:State name="VOTER"/>
+<uml:State name="EO"/>
 
     <uml:Transition>
         <uml:Source>

@@ -14,6 +14,11 @@ def convert_to_lts(base_path, parallel_sysfile_names, NO_ENV_FLAG):
     if NO_ENV_FLAG: write_in_file(f"{base_path}/env.lts", sys_lts, "Environment LTS Model")
     else: write_in_file(f"{base_path}/env.lts", uml_to_lts(f"{base_path}/env.xml"), "Environment LTS Model")
 
+    try:
+        write_in_file(f"{base_path}/sys.lts", uml_to_lts(f"{base_path}/sys.xml"), "System LTS Model")
+    except:
+        print("uwu")
+
     write_in_file(f"{base_path}/p.lts", uml_to_lts(f"{base_path}/safety.xml"), "Property LTS Model")
 
 # Test

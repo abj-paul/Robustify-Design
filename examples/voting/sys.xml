@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <uml:Model xmlns:uml="http://www.omg.org/spec/UML/20090901">
+<uml:State name="P2"/>
 <uml:State name="P1"/>
 <uml:State name="P3"/>
-<uml:State name="P2"/>
 <uml:State name="EM"/>
 
     <uml:Transition>
@@ -12,7 +12,7 @@
         <uml:Target>
             <uml:State name="P1"/>
         </uml:Target>
-        <uml:Effect name="(password"/>
+        <uml:Effect name="password"/>
     </uml:Transition>
     <uml:Transition>
         <uml:Source>
@@ -21,7 +21,7 @@
         <uml:Target>
             <uml:State name="P2"/>
         </uml:Target>
-        <uml:Effect name="(select"/>
+        <uml:Effect name="select"/>
     </uml:Transition>
     <uml:Transition>
         <uml:Source>
@@ -30,7 +30,7 @@
         <uml:Target>
             <uml:State name="P3"/>
         </uml:Target>
-        <uml:Effect name="(vote"/>
+        <uml:Effect name="vote"/>
     </uml:Transition>
     <uml:Transition>
         <uml:Source>
@@ -48,7 +48,7 @@
         <uml:Target>
             <uml:State name="EM"/>
         </uml:Target>
-        <uml:Effect name="(confirm"/>
+        <uml:Effect name="confirm"/>
     </uml:Transition>
     <uml:Transition>
         <uml:Source>

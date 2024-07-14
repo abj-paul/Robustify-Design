@@ -7,3 +7,5 @@ We need to convert UML to LTL. A parser would be hard. So we had this inspiratio
 - [ ] Take LTL as input
 - [ ] Show output
 - [ ] Take UML as input
+
+Prompt: https://chatgpt.com/share/44c07d0d-ef32-4595-9e79-474abdc61acf

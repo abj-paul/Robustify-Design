@@ -2,6 +2,7 @@ import os
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse
 from typing import List, Optional
 from pydantic import BaseModel
 from typing import List, Dict, Any
@@ -122,6 +123,14 @@ async def upload_additional( project_folder: str = Form(...), class_list: List[s
     generate_output_document(project_folder)
 
     return {"status": f"Fortis executed. Report in {os.getcwd()}"}
+
+@app.get("/get-file-content/")
+async def get_file_content(file_path: str):
+    if os.path.exists(file_path) and os.path.isfile(file_path):
+        return FileResponse(file_path)
+    else:
+        raise HTTPException(status_code=404, detail="File not found")
+
 
 
 # Run the application with the command:

@@ -6,6 +6,7 @@ from fastapi.responses import FileResponse
 from typing import List, Optional
 from pydantic import BaseModel
 from typing import List, Dict, Any
+from datetime import datetime
 
 from libs.parse_uml_to_lts import uml_to_lts, write_in_file
 from libs.set_config import set_config
@@ -124,11 +125,19 @@ async def upload_additional( project_folder: str = Form(...), class_list: List[s
 
     return {"status": f"Fortis executed. Report in {os.getcwd()}"}
 
+
+
 @app.get("/get-file-content/")
 async def get_file_content(file_path: str):
+    now = datetime.now()
+    time_format = "%I:%M %p"  # 12-hour format with AM/PM
+    formatted_time = now.strftime(time_format)
+    print(f"Recieved request at {formatted_time}")
     if os.path.exists(file_path) and os.path.isfile(file_path):
+        print(f"Serving request at {formatted_time}")
         return FileResponse(file_path)
     else:
+        print(f"Failed to process request at {formatted_time}")
         raise HTTPException(status_code=404, detail="File not found")
 
 

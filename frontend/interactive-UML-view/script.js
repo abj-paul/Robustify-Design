@@ -23,7 +23,7 @@ function handleFetch() {
 
 function parse_automata(output) {
   const lines = output.split('\n');
-  const stateCount = parseInt(lines[0].split(',')[1], 10);
+  const stateCount = parseInt(lines[0].split(',')[2], 10);
   const states = Array.from({ length: stateCount }, (_, i) => `s${i}`);
   const transitions = [];
 
@@ -42,82 +42,107 @@ function parse_automata(output) {
   visualize_automata(states, transitions);
 }
 
-function isOverlap(x1, y1, w1, h1, x2, y2, w2, h2) {
-  return !(x2 > x1 + w1 || 
-           x2 + w2 < x1 || 
-           y2 > y1 + h1 || 
-           y2 + h2 < y1);
-}
-
 function visualize_automata(states, transitions) {
+  console.log(states);
+  console.log(transitions);
   const automataContainer = document.getElementById('automata-container');
   automataContainer.innerHTML = '';
 
   const stateWidth = 40;
   const stateHeight = 40;
 
-  const margin = 20;
+  const margin = 60;
   const padding = 10;
 
-  // Calculate the required container dimensions
-  const numStates = states.length;
-  const containerWidth = Math.max(automataContainer.offsetWidth, numStates/4 * (stateWidth + margin) + padding);
-  const containerHeight = Math.max(automataContainer.offsetHeight, numStates/4 * (stateHeight + margin) + padding);
+  const numColumns = Math.ceil(Math.sqrt(states.length));
+  const containerWidth = Math.max(automataContainer.offsetWidth, numColumns * (stateWidth + margin) + padding);
+  const containerHeight = Math.max(automataContainer.offsetHeight, numColumns * (stateHeight + margin) + padding);
 
   automataContainer.style.width = `${containerWidth}px`;
   automataContainer.style.height = `${containerHeight}px`;
 
-
   const positions = [];
 
-  states.forEach(state => {
+  states.forEach((state, index) => {
     const stateDiv = document.createElement('div');
     stateDiv.className = 'state';
     stateDiv.textContent = state;
+    stateDiv.id = `state-${state}`;
   
-    let randomLeft, randomTop;
-    let isOverlapping;
+    const row = Math.floor(index / numColumns);
+    const col = index % numColumns;
+
+    const left = col * (stateWidth + margin) + padding;
+    const top = row * (stateHeight + margin) + padding;
   
-    do {
-      isOverlapping = false;
-      randomLeft = Math.random() * (containerWidth - stateWidth - padding);
-      randomTop = Math.random() * (containerHeight - stateHeight - padding);
+    positions.push({ left, top });
   
-      for (let pos of positions) {
-        if (isOverlap(randomLeft, randomTop, stateWidth, stateHeight, pos.left, pos.top, stateWidth, stateHeight)) {
-          isOverlapping = true;
-          break;
-        }
-      }
-    } while (isOverlapping);
-  
-    // Save the position
-    positions.push({ left: randomLeft, top: randomTop });
-  
-    // Set the position
     stateDiv.style.position = 'absolute';
-    stateDiv.style.left = `${randomLeft}px`;
-    stateDiv.style.top = `${randomTop}px`;
+    stateDiv.style.left = `${left}px`;
+    stateDiv.style.top = `${top}px`;
   
     automataContainer.appendChild(stateDiv);
   });
-  console.log("Created states");
 
-  /*
   // Create transitions
+  const svgNamespace = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(svgNamespace, 'svg');
+  svg.style.position = 'absolute';
+  svg.style.width = '100%';
+  svg.style.height = '100%';
+  svg.style.top = '0';
+  svg.style.left = '0';
+  automataContainer.appendChild(svg);
+
+  // Define arrowhead marker
+  const defs = document.createElementNS(svgNamespace, 'defs');
+  const marker = document.createElementNS(svgNamespace, 'marker');
+  marker.setAttribute('id', 'arrowhead');
+  marker.setAttribute('markerWidth', '10');
+  marker.setAttribute('markerHeight', '7');
+  marker.setAttribute('refX', '10');
+  marker.setAttribute('refY', '3.5');
+  marker.setAttribute('orient', 'auto');
+
+  const arrowHead = document.createElementNS(svgNamespace, 'polygon');
+  arrowHead.setAttribute('points', '0 0, 10 3.5, 0 7');
+  arrowHead.setAttribute('fill', 'black');
+
+  marker.appendChild(arrowHead);
+  defs.appendChild(marker);
+  svg.appendChild(defs);
+
   transitions.forEach(({ startState, action, endState }) => {
-    const startStateDiv = document.querySelector(`.state[data-state="${startState}"]`);
-    const endStateDiv = document.querySelector(`.state[data-state="${endState}"]`);
+    const startStateDiv = document.getElementById(`state-${startState}`);
+    const endStateDiv = document.getElementById(`state-${endState}`);
+  
+    const startX = startStateDiv.offsetLeft + stateWidth / 2;
+    const startY = startStateDiv.offsetTop + stateHeight / 2;
+    const endX = endStateDiv.offsetLeft + stateWidth / 2;
+    const endY = endStateDiv.offsetTop + stateHeight / 2;
 
-    const transitionDiv = document.createElement('div');
-    transitionDiv.className = 'transition';
-    transitionDiv.textContent = action;
-    startStateDiv.appendChild(transitionDiv);
+    const arrowLine = document.createElementNS(svgNamespace, 'path');
+    const path = `M ${startX} ${startY} Q ${(startX + endX) / 2} ${(startY + endY) / 2 - 30}, ${endX} ${endY}`;
+    arrowLine.setAttribute('d', path);
+    arrowLine.setAttribute('stroke', 'black');
+    arrowLine.setAttribute('stroke-width', '2');
+    arrowLine.setAttribute('fill', 'none');
+    arrowLine.setAttribute('marker-end', 'url(#arrowhead)');
+  
+    svg.appendChild(arrowLine);
 
-    // Adjust arrow position (not a real arrow, just styling)
-    const arrowDiv = document.createElement('div');
-    arrowDiv.className = 'arrow';
-    startStateDiv.appendChild(arrowDiv);
-});
-*/
+    // Add action text along the arrow using SVG text element
+    const textElement = document.createElementNS(svgNamespace, 'text');
+    const midX = (startX + endX) / 2;
+    const midY = (startY + endY) / 2 - 30; // Offset to avoid overlap with the curve
+    textElement.setAttribute('x', midX);
+    textElement.setAttribute('y', midY);
+    textElement.setAttribute('fill', 'black');
+    textElement.setAttribute('font-size', '12px');
+    textElement.setAttribute('text-anchor', 'middle');
+    textElement.setAttribute('dy', '-5'); // Slightly adjust vertical position
+    textElement.textContent = action;
+  
+    svg.appendChild(textElement);
+  });
 }

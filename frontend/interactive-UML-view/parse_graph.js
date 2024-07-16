@@ -1,7 +1,11 @@
-function saveOutputAsUMLSingleFile(filepath) {
+const fs = require('fs');
+const path = require('path');
+
+function saveOutputAsUMLSingleFile(filePath) {
     const output = fs.readFileSync(filePath, 'utf8');
     const lines = output.split('\n');
-    const stateCount = parseInt(lines[0].split(',')[1], 10);
+    console.log(lines[0])
+    const stateCount = parseInt(lines[0].split(',')[2], 10);
     const states = Array.from({ length: stateCount }, (_, i) => `s${i}`);
     const transitions = [];
 

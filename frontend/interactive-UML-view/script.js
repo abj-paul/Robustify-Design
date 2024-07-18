@@ -48,17 +48,13 @@ function parse_automata(output) {
 }
 
 function visualize_automata(states, transitions) {
-  console.log(states);
-  console.log(transitions);
   const automataContainer = document.getElementById('automata-container');
   automataContainer.innerHTML = '';
 
   const stateWidth = 40;
   const stateHeight = 40;
-
   const margin = 60;
   const padding = 10;
-
   const numColumns = Math.ceil(Math.sqrt(states.length));
   const containerWidth = Math.max(automataContainer.offsetWidth, numColumns * (stateWidth + margin) + padding);
   const containerHeight = Math.max(automataContainer.offsetHeight, numColumns * (stateHeight + margin) + padding);
@@ -68,27 +64,28 @@ function visualize_automata(states, transitions) {
 
   const positions = [];
 
+  // Create states
   states.forEach((state, index) => {
     const stateDiv = document.createElement('div');
     stateDiv.className = 'state';
     stateDiv.textContent = state;
     stateDiv.id = `${state}`;
-  
+
     const row = Math.floor(index / numColumns);
     const col = index % numColumns;
     const left = col * 2 * (stateWidth + margin) + padding;
     const top = row * 2 * (stateHeight + margin) + padding;
-  
+
     positions.push({ left, top });
-  
+
     stateDiv.style.position = 'absolute';
     stateDiv.style.left = `${left}px`;
     stateDiv.style.top = `${top}px`;
-  
+
     automataContainer.appendChild(stateDiv);
   });
 
-  // Create transitions
+  // Create SVG for transitions
   const svgNamespace = "http://www.w3.org/2000/svg";
   const svg = document.createElementNS(svgNamespace, 'svg');
   svg.style.position = 'absolute';
@@ -98,69 +95,80 @@ function visualize_automata(states, transitions) {
   svg.style.left = '0';
   automataContainer.appendChild(svg);
 
+  // Create paths for transitions
   transitions.forEach(({ startState, action, endState }) => {
     const startStateDiv = document.getElementById(`${startState}`);
     const endStateDiv = document.getElementById(`${endState}`);
-  
+
     const startX = startStateDiv.offsetLeft + stateWidth / 2;
     const startY = startStateDiv.offsetTop + stateHeight / 2;
     const endX = endStateDiv.offsetLeft + stateWidth / 2;
     const endY = endStateDiv.offsetTop + stateHeight / 2;
 
-    // Creating space between edges randomly
-    const controlPointOffsetX = (Math.random() - 0.5) * 100;
-    const controlPointOffsetY = (Math.random() - 0.5) * 100;
+     // Creating space between edges randomly
+     const controlPointOffsetX = (Math.random()) * 100;
+     const controlPointOffsetY = (Math.random()) * 100;
+ 
+     const controlPoint1X = (startX + endX) / 2 + controlPointOffsetX;
+     const controlPoint1Y = (startY + endY) / 2 + controlPointOffsetY;
+ 
 
-    const controlPoint1X = (startX + endX) / 2 + controlPointOffsetX;
-    const controlPoint1Y = (startY + endY) / 2 + controlPointOffsetY;
+    // Create a path element for the transition
+    const pathId = `${startState}-${endState}-path`;
+    const path = document.createElementNS(svgNamespace, 'path');
+    let pathData = `M ${startX} ${startY} C ${controlPoint1X},${controlPoint1Y} ${controlPoint1X},${controlPoint1Y} ${endX},${endY}`;
 
-    const arrowLine = document.createElementNS(svgNamespace, 'path');
-    let path = `M ${startX} ${startY} C ${controlPoint1X} ${controlPoint1Y}, ${controlPoint1X} ${controlPoint1Y}, ${endX} ${endY}`;
-    if (startState==endState) {
+    if (startState === endState) {
       const loopRadius = 70;
       const loopOffsetX = startX + loopRadius;
       const loopOffsetY = startY - loopRadius;
 
-      path = `M ${startX} ${startY} C ${loopOffsetX} ${loopOffsetY}, ${loopOffsetX} ${loopOffsetY + 2 * loopRadius}, ${startX} ${startY}`;
+      pathData = `M ${startX} ${startY} C ${loopOffsetX} ${loopOffsetY}, ${loopOffsetX} ${loopOffsetY + 2 * loopRadius}, ${startX} ${startY}`;
     }
-    
-    arrowLine.setAttribute('d', path);
-    arrowLine.setAttribute('stroke', 'black');
-    arrowLine.setAttribute('stroke-width', '2');
-    arrowLine.setAttribute('fill', 'none');
-    arrowLine.setAttribute('marker-end', 'url(#arrowhead)');
-  
-    svg.appendChild(arrowLine);
 
-    // Add action text along the arrow using SVG text element
+    path.setAttribute('d', pathData);
+    path.setAttribute('id', pathId);
+    path.setAttribute('stroke', 'black');
+    path.setAttribute('stroke-width', '2');
+    path.setAttribute('fill', 'none');
+    path.setAttribute('marker-end', 'url(#arrowhead)');
+
+    svg.appendChild(path);
+
+    // Create text element along the path
     const textElement = document.createElementNS(svgNamespace, 'text');
-    textElement.setAttribute('x', controlPoint1X);
-    textElement.setAttribute('y', controlPoint1Y);
+    const textPath = document.createElementNS(svgNamespace, 'textPath');
+    textPath.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', `#${pathId}`);
+    textPath.setAttribute('startOffset', '50%'); // Adjust as needed
+
+    textPath.textContent = action;
     textElement.setAttribute('fill', 'black');
     textElement.setAttribute('font-size', '12px');
     textElement.setAttribute('text-anchor', 'middle');
     textElement.setAttribute('dy', '-5'); // Slightly adjust vertical position
-    textElement.textContent = action;
-  
+
+    textElement.appendChild(textPath);
     svg.appendChild(textElement);
   });
 }
 
 function filterNodes() {
   let connectionCounts = [];
-  for(let i=0; i<SERVER_STATES.length; i++) connectionCounts.push(0);
-  for(let i=0; i<SERVER_TRANSITIONS.length; i++){
-    connectionCounts[SERVER_TRANSITIONS[i].startState.split("s")[1]] += 1;
-    connectionCounts[SERVER_TRANSITIONS[i].endState.split("s")[1]] += 1
+  for(let i = 0; i < SERVER_STATES.length; i++) connectionCounts.push(0);
+  for(let i = 0; i < SERVER_TRANSITIONS.length; i++) {
+    connectionCounts[parseInt(SERVER_TRANSITIONS[i].startState.split("s")[1])] += 1;
+    connectionCounts[parseInt(SERVER_TRANSITIONS[i].endState.split("s")[1])] += 1;
   }
-  const sortedConnectionCounts = connectionCounts.toSorted();
+  const sortedConnectionCounts = connectionCounts.toSorted(); // Descendeding
+  sortedConnectionCounts.reverse();
 
   let topNStates = [], N=5;
   for(let i=0; i<N; i++){
     for(j=0; j<connectionCounts.length; j++){
       if(connectionCounts[j]==sortedConnectionCounts[i]) topNStates.push(`s${j}`);
     }
-  }
+  }  
+  console.log(`Connection counts = ${connectionCounts}`);
 
   console.log(`Top ${N} states = ${topNStates}`);
 
@@ -168,50 +176,69 @@ function filterNodes() {
   const transitions = document.querySelectorAll('path');
   const labels = document.querySelectorAll('text');
 
-
   states.forEach(state => {
-    if (topNStates.includes(state.id)) {
+    if (!topNStates.includes(state.id)) {
       state.style.display = 'none';
     } else {
-      state.style.display = 'block';
+      //state.style.display = 'block';
       state.onclick = () => toggleConnections(state.id);
     }
   });
 
   transitions.forEach(transition => {
-    const stateMatches = transition.getAttribute('d').match(/(s\d+)/g);
-    const startState = stateMatches ? stateMatches[0] : null;
-    const endState = stateMatches ? stateMatches[1] : null;
-
-    if (!topNStates.includes(startState) && !topNStates.includes(endState)) {
-      transition.style.display = 'none';
-    } else {
-      transition.style.display = 'block';
-    }
-  });
-
-  labels.forEach(label => {
-    const labelPosition = { x: parseFloat(label.getAttribute('x')), y: parseFloat(label.getAttribute('y')) };
-    const labelMatchedTransition = Array.from(transitions).find(transition => {
-      const d = transition.getAttribute('d');
-      const stateMatches = d.match(/state-(s\d+)/g);
-      const startState = stateMatches ? stateMatches[0] : null;
-      const endState = stateMatches ? stateMatches[1] : null;
-      const controlPoint1X = parseFloat(d.match(/C\s+([\d.]+)\s+/)[1]);
-      const controlPoint1Y = parseFloat(d.match(/C\s+[\d.]+\s+([\d.]+),/)[1]);
+    const dAttr = transition.getAttribute('d');
+    const startMatch = dAttr.match(/M\s(\d+)\s(\d+)/);
+    const endMatch = dAttr.match(/C\s(\d+)\s(\d+),\s(\d+)\s(\d+),\s(\d+)\s(\d+)/);
+    if (startMatch && endMatch) {
+      const startX = startMatch[1];
+      const startY = startMatch[2];
+      const endX = endMatch[5];
+      const endY = endMatch[6];
       
-      return controlPoint1X === labelPosition.x && controlPoint1Y === labelPosition.y && (mostConnectedNodes.includes(startState) || mostConnectedNodes.includes(endState));
-    });
-    
-    if (!labelMatchedTransition) {
-      label.style.display = 'none';
-    } else {
-      label.style.display = 'block';
+      const startState = getStateIdByPosition(startX, startY);
+      const endState = getStateIdByPosition(endX, endY);
+      
+      if (!topNStates.includes(startState) && !topNStates.includes(endState)) {
+        transition.style.display = 'none';
+      } else {
+        transition.style.display = 'block';
+      }
     }
   });
+
+  /*labels.forEach(label => {
+    label.style.display = 'none';
+    transitions.forEach(transition => {
+      if (transition.style.display === 'block') {
+        const dAttr = transition.getAttribute('d');
+        const controlPointMatch = dAttr.match(/C\s(\d+)\s(\d+)/);
+        if (controlPointMatch) {
+          const controlPointX = parseFloat(controlPointMatch[1]);
+          const controlPointY = parseFloat(controlPointMatch[2]);
+          if (parseFloat(label.getAttribute('x')) === controlPointX && parseFloat(label.getAttribute('y')) === controlPointY) {
+            label.style.display = 'block';
+          }
+        }
+      }
+    });
+  });*/
 }
 
+function getStateIdByPosition(x, y) {
+  const states = document.querySelectorAll('.state');
+  for (const state of states) {
+    const stateX = parseFloat(state.style.left) + state.offsetWidth / 2;
+    const stateY = parseFloat(state.style.top) + state.offsetHeight / 2;
+    if (Math.abs(stateX - x) < 5 && Math.abs(stateY - y) < 5) {
+      return state.id;
+    }
+  }
+  return null;
+}
+
+
 function toggleConnections(stateId) {
+  console.log(`Log: Triggered toggleConnections for state = ${stateId}`);
   const connectedTransitions = document.querySelectorAll(`path[d*="${stateId}"]`);
   const labels = document.querySelectorAll('text');
 

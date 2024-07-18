@@ -1,3 +1,7 @@
+
+let SERVER_STATES = [];
+let SERVER_TRANSITIONS = [];
+
 async function fetchFileContent(filePath) {
   try {
       const response = await fetch(`http://127.0.0.1:8000/get-file-content/?file_path=${encodeURIComponent(filePath)}`);
@@ -9,12 +13,11 @@ async function fetchFileContent(filePath) {
       const file_content = await response.text();
       console.log(file_content);
       parse_automata(file_content);
-      document.getElementById("file-content").innerText = file_content;
   } catch (error) {
       console.error('Error fetching file content:', error);
-      document.getElementById("file-content").innerText = "Error fetching file content.";
   }
 }
+
 
 function handleFetch() {
   const filePath = document.getElementById("file-path").value;
@@ -39,6 +42,8 @@ function parse_automata(output) {
       transitions.push({ startState, action, endState });
   }
 
+  SERVER_STATES = states;
+  SERVER_TRANSITIONS = transitions;
   visualize_automata(states, transitions);
 }
 
@@ -67,7 +72,7 @@ function visualize_automata(states, transitions) {
     const stateDiv = document.createElement('div');
     stateDiv.className = 'state';
     stateDiv.textContent = state;
-    stateDiv.id = `state-${state}`;
+    stateDiv.id = `${state}`;
   
     const row = Math.floor(index / numColumns);
     const col = index % numColumns;
@@ -94,8 +99,8 @@ function visualize_automata(states, transitions) {
   automataContainer.appendChild(svg);
 
   transitions.forEach(({ startState, action, endState }) => {
-    const startStateDiv = document.getElementById(`state-${startState}`);
-    const endStateDiv = document.getElementById(`state-${endState}`);
+    const startStateDiv = document.getElementById(`${startState}`);
+    const endStateDiv = document.getElementById(`${endState}`);
   
     const startX = startStateDiv.offsetLeft + stateWidth / 2;
     const startY = startStateDiv.offsetTop + stateHeight / 2;
@@ -138,5 +143,91 @@ function visualize_automata(states, transitions) {
     textElement.textContent = action;
   
     svg.appendChild(textElement);
+  });
+}
+
+function filterNodes() {
+  let connectionCounts = [];
+  for(let i=0; i<SERVER_STATES.length; i++) connectionCounts.push(0);
+  for(let i=0; i<SERVER_TRANSITIONS.length; i++){
+    connectionCounts[SERVER_TRANSITIONS[i].startState.split("s")[1]] += 1;
+    connectionCounts[SERVER_TRANSITIONS[i].endState.split("s")[1]] += 1
+  }
+  const sortedConnectionCounts = connectionCounts.toSorted();
+
+  let topNStates = [], N=5;
+  for(let i=0; i<N; i++){
+    for(j=0; j<connectionCounts.length; j++){
+      if(connectionCounts[j]==sortedConnectionCounts[i]) topNStates.push(`s${j}`);
+    }
+  }
+
+  console.log(`Top ${N} states = ${topNStates}`);
+
+  const states = document.querySelectorAll('.state');
+  const transitions = document.querySelectorAll('path');
+  const labels = document.querySelectorAll('text');
+
+
+  states.forEach(state => {
+    if (topNStates.includes(state.id)) {
+      state.style.display = 'none';
+    } else {
+      state.style.display = 'block';
+      state.onclick = () => toggleConnections(state.id);
+    }
+  });
+
+  transitions.forEach(transition => {
+    const stateMatches = transition.getAttribute('d').match(/(s\d+)/g);
+    const startState = stateMatches ? stateMatches[0] : null;
+    const endState = stateMatches ? stateMatches[1] : null;
+
+    if (!topNStates.includes(startState) && !topNStates.includes(endState)) {
+      transition.style.display = 'none';
+    } else {
+      transition.style.display = 'block';
+    }
+  });
+
+  labels.forEach(label => {
+    const labelPosition = { x: parseFloat(label.getAttribute('x')), y: parseFloat(label.getAttribute('y')) };
+    const labelMatchedTransition = Array.from(transitions).find(transition => {
+      const d = transition.getAttribute('d');
+      const stateMatches = d.match(/state-(s\d+)/g);
+      const startState = stateMatches ? stateMatches[0] : null;
+      const endState = stateMatches ? stateMatches[1] : null;
+      const controlPoint1X = parseFloat(d.match(/C\s+([\d.]+)\s+/)[1]);
+      const controlPoint1Y = parseFloat(d.match(/C\s+[\d.]+\s+([\d.]+),/)[1]);
+      
+      return controlPoint1X === labelPosition.x && controlPoint1Y === labelPosition.y && (mostConnectedNodes.includes(startState) || mostConnectedNodes.includes(endState));
+    });
+    
+    if (!labelMatchedTransition) {
+      label.style.display = 'none';
+    } else {
+      label.style.display = 'block';
+    }
+  });
+}
+
+function toggleConnections(stateId) {
+  const connectedTransitions = document.querySelectorAll(`path[d*="${stateId}"]`);
+  const labels = document.querySelectorAll('text');
+
+  connectedTransitions.forEach(transition => {
+    const displayStyle = transition.style.display === 'none' ? 'block' : 'none';
+    transition.style.display = displayStyle;
+    
+    const d = transition.getAttribute('d');
+    const controlPoint1X = parseFloat(d.match(/C\s+([\d.]+)\s+/)[1]);
+    const controlPoint1Y = parseFloat(d.match(/C\s+[\d.]+\s+([\d.]+),/)[1]);
+    
+    labels.forEach(label => {
+      const labelPosition = { x: parseFloat(label.getAttribute('x')), y: parseFloat(label.getAttribute('y')) };
+      if (labelPosition.x === controlPoint1X && labelPosition.y === controlPoint1Y) {
+        label.style.display = displayStyle;
+      }
+    });
   });
 }

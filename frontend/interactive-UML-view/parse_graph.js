@@ -29,4 +29,6 @@ function saveOutputAsUMLSingleFile(filePath) {
 }
 
 // Example usage:
-saveOutputAsUMLSingleFile('/home/abhijit/Robustify-Design/frontend/interactive-UML-view/sol12.aut');
+//saveOutputAsUMLSingleFile('/home/abhijit/Robustify-Design/frontend/interactive-UML-view/sol12.aut');
+test = "s21";
+console.log(test.split("s")[1]);

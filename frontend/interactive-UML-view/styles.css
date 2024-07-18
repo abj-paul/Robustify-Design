@@ -24,9 +24,10 @@ body {
 
 #automata-container {
     position: relative;
-    width: 800px; /* Adjust as needed */
-    height: 600px; /* Adjust as needed */
-    border: 1px solid black;
+    width: 1000px; /* Adjust as needed */
+    height: 1000px; /* Adjust as needed */
+    border: 0px solid black;
+    margin-top: 30px;
 }
 .state {
     position: absolute;

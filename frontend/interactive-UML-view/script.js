@@ -71,9 +71,8 @@ function visualize_automata(states, transitions) {
   
     const row = Math.floor(index / numColumns);
     const col = index % numColumns;
-
-    const left = col * (stateWidth + margin) + padding;
-    const top = row * (stateHeight + margin) + padding;
+    const left = col * 2 * (stateWidth + margin) + padding;
+    const top = row * 2 * (stateHeight + margin) + padding;
   
     positions.push({ left, top });
   
@@ -94,24 +93,6 @@ function visualize_automata(states, transitions) {
   svg.style.left = '0';
   automataContainer.appendChild(svg);
 
-  // Define arrowhead marker
-  const defs = document.createElementNS(svgNamespace, 'defs');
-  const marker = document.createElementNS(svgNamespace, 'marker');
-  marker.setAttribute('id', 'arrowhead');
-  marker.setAttribute('markerWidth', '10');
-  marker.setAttribute('markerHeight', '7');
-  marker.setAttribute('refX', '10');
-  marker.setAttribute('refY', '3.5');
-  marker.setAttribute('orient', 'auto');
-
-  const arrowHead = document.createElementNS(svgNamespace, 'polygon');
-  arrowHead.setAttribute('points', '0 0, 10 3.5, 0 7');
-  arrowHead.setAttribute('fill', 'black');
-
-  marker.appendChild(arrowHead);
-  defs.appendChild(marker);
-  svg.appendChild(defs);
-
   transitions.forEach(({ startState, action, endState }) => {
     const startStateDiv = document.getElementById(`state-${startState}`);
     const endStateDiv = document.getElementById(`state-${endState}`);
@@ -121,8 +102,23 @@ function visualize_automata(states, transitions) {
     const endX = endStateDiv.offsetLeft + stateWidth / 2;
     const endY = endStateDiv.offsetTop + stateHeight / 2;
 
+    // Creating space between edges randomly
+    const controlPointOffsetX = (Math.random() - 0.5) * 100;
+    const controlPointOffsetY = (Math.random() - 0.5) * 100;
+
+    const controlPoint1X = (startX + endX) / 2 + controlPointOffsetX;
+    const controlPoint1Y = (startY + endY) / 2 + controlPointOffsetY;
+
     const arrowLine = document.createElementNS(svgNamespace, 'path');
-    const path = `M ${startX} ${startY} Q ${(startX + endX) / 2} ${(startY + endY) / 2 - 30}, ${endX} ${endY}`;
+    let path = `M ${startX} ${startY} C ${controlPoint1X} ${controlPoint1Y}, ${controlPoint1X} ${controlPoint1Y}, ${endX} ${endY}`;
+    if (startState==endState) {
+      const loopRadius = 70;
+      const loopOffsetX = startX + loopRadius;
+      const loopOffsetY = startY - loopRadius;
+
+      path = `M ${startX} ${startY} C ${loopOffsetX} ${loopOffsetY}, ${loopOffsetX} ${loopOffsetY + 2 * loopRadius}, ${startX} ${startY}`;
+    }
+    
     arrowLine.setAttribute('d', path);
     arrowLine.setAttribute('stroke', 'black');
     arrowLine.setAttribute('stroke-width', '2');
@@ -133,10 +129,8 @@ function visualize_automata(states, transitions) {
 
     // Add action text along the arrow using SVG text element
     const textElement = document.createElementNS(svgNamespace, 'text');
-    const midX = (startX + endX) / 2;
-    const midY = (startY + endY) / 2 - 30; // Offset to avoid overlap with the curve
-    textElement.setAttribute('x', midX);
-    textElement.setAttribute('y', midY);
+    textElement.setAttribute('x', controlPoint1X);
+    textElement.setAttribute('y', controlPoint1Y);
     textElement.setAttribute('fill', 'black');
     textElement.setAttribute('font-size', '12px');
     textElement.setAttribute('text-anchor', 'middle');

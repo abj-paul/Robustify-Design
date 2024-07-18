@@ -59,8 +59,8 @@ function visualize_automata(states, transitions) {
   const containerWidth = Math.max(automataContainer.offsetWidth, numColumns * (stateWidth + margin) + padding);
   const containerHeight = Math.max(automataContainer.offsetHeight, numColumns * (stateHeight + margin) + padding);
 
-  automataContainer.style.width = `${containerWidth}px`;
-  automataContainer.style.height = `${containerHeight}px`;
+  //automataContainer.style.width = `${containerWidth}px`;
+  //automataContainer.style.height = `${containerHeight}px`;
 
   const positions = [];
 
@@ -95,61 +95,73 @@ function visualize_automata(states, transitions) {
   svg.style.left = '0';
   automataContainer.appendChild(svg);
 
-  // Create paths for transitions
-  transitions.forEach(({ startState, action, endState }) => {
-    const startStateDiv = document.getElementById(`${startState}`);
-    const endStateDiv = document.getElementById(`${endState}`);
+  states.forEach((state, index) => {
+    let outgoingEdgeCountForCurrentState = 0;
+    for(let i=0; i<transitions.length; i++){
+      if(transitions[i].startState == state) {
+        startState = transitions[i].startState;
+        action = transitions[i].action;
+        endState = transitions[i].endState;
 
-    const startX = startStateDiv.offsetLeft + stateWidth / 2;
-    const startY = startStateDiv.offsetTop + stateHeight / 2;
-    const endX = endStateDiv.offsetLeft + stateWidth / 2;
-    const endY = endStateDiv.offsetTop + stateHeight / 2;
+        const startStateDiv = document.getElementById(`${startState}`);
+        const endStateDiv = document.getElementById(`${endState}`);
 
-     // Creating space between edges randomly
-     const controlPointOffsetX = (Math.random()) * 100;
-     const controlPointOffsetY = (Math.random()) * 100;
- 
-     const controlPoint1X = (startX + endX) / 2 + controlPointOffsetX;
-     const controlPoint1Y = (startY + endY) / 2 + controlPointOffsetY;
- 
+        const startX = startStateDiv.offsetLeft + stateWidth / 2;
+        const startY = startStateDiv.offsetTop + stateHeight / 2;
+        const endX = endStateDiv.offsetLeft + stateWidth / 2;
+        const endY = endStateDiv.offsetTop + stateHeight / 2;
 
-    // Create a path element for the transition
-    const pathId = `${startState}-${endState}-path`;
-    const path = document.createElementNS(svgNamespace, 'path');
-    let pathData = `M ${startX} ${startY} C ${controlPoint1X},${controlPoint1Y} ${controlPoint1X},${controlPoint1Y} ${endX},${endY}`;
+        let controlPoint1X = (startX + endX) / 2 + outgoingEdgeCountForCurrentState * 20;
+        let controlPoint1Y = (startY + endY) / 2 + outgoingEdgeCountForCurrentState * 20;
+        if(outgoingEdgeCountForCurrentState%2){
+          controlPoint1X = (startX + endX) / 2 - outgoingEdgeCountForCurrentState * 20;
+          controlPoint1Y = (startY + endY) / 2 - outgoingEdgeCountForCurrentState * 20;
+        }
 
-    if (startState === endState) {
-      const loopRadius = 70;
-      const loopOffsetX = startX + loopRadius;
-      const loopOffsetY = startY - loopRadius;
+        // Create a path element for the transition
+        const pathId = `${startState}-${endState}-path`;
+        const path = document.createElementNS(svgNamespace, 'path');
+        let pathData = `M ${startX} ${startY} C ${controlPoint1X},${controlPoint1Y} ${controlPoint1X+50},${controlPoint1Y+50} ${endX},${endY}`;
 
-      pathData = `M ${startX} ${startY} C ${loopOffsetX} ${loopOffsetY}, ${loopOffsetX} ${loopOffsetY + 2 * loopRadius}, ${startX} ${startY}`;
+        if (startState === endState) {
+          const loopRadius = 70;
+          const loopOffsetX = startX + loopRadius;
+          const loopOffsetY = startY - loopRadius;
+
+          pathData = `M ${startX} ${startY} C ${loopOffsetX} ${loopOffsetY}, ${loopOffsetX} ${loopOffsetY + 2 * loopRadius}, ${startX} ${startY}`;
+        }
+
+        path.setAttribute('d', pathData);
+        path.setAttribute('id', pathId);
+        path.setAttribute('stroke-width', '2');
+        path.setAttribute('fill', 'none');
+        path.setAttribute('marker-end', 'url(#arrowhead)');
+
+        svg.appendChild(path);
+
+        // Create text element along the path
+        const textElement = document.createElementNS(svgNamespace, 'text');
+        const textPath = document.createElementNS(svgNamespace, 'textPath');
+        textPath.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', `#${pathId}`);
+        textPath.setAttribute('startOffset', '50%'); // Adjust as needed
+
+        textPath.textContent = action;
+        textElement.setAttribute('font-size', '12px');
+        textElement.setAttribute('text-anchor', 'middle');
+        textElement.setAttribute('dy', '-5'); // Slightly adjust vertical position
+
+        const colors = ['black', 'blue', 'green', 'purple', 'red', 'yellow', 'brown'];
+        const colorIndex = outgoingEdgeCountForCurrentState % colors.length;
+        path.setAttribute('stroke', colors[colorIndex]);
+        textElement.setAttribute('fill', colors[colorIndex]);
+
+
+        textElement.appendChild(textPath);
+        svg.appendChild(textElement);
+        outgoingEdgeCountForCurrentState+=1;
+      }
     }
-
-    path.setAttribute('d', pathData);
-    path.setAttribute('id', pathId);
-    path.setAttribute('stroke', 'black');
-    path.setAttribute('stroke-width', '2');
-    path.setAttribute('fill', 'none');
-    path.setAttribute('marker-end', 'url(#arrowhead)');
-
-    svg.appendChild(path);
-
-    // Create text element along the path
-    const textElement = document.createElementNS(svgNamespace, 'text');
-    const textPath = document.createElementNS(svgNamespace, 'textPath');
-    textPath.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', `#${pathId}`);
-    textPath.setAttribute('startOffset', '50%'); // Adjust as needed
-
-    textPath.textContent = action;
-    textElement.setAttribute('fill', 'black');
-    textElement.setAttribute('font-size', '12px');
-    textElement.setAttribute('text-anchor', 'middle');
-    textElement.setAttribute('dy', '-5'); // Slightly adjust vertical position
-
-    textElement.appendChild(textPath);
-    svg.appendChild(textElement);
-  });
+  })
 }
 
 function filterNodes() {
@@ -181,7 +193,9 @@ function filterNodes() {
       state.style.display = 'none';
     } else {
       //state.style.display = 'block';
-      state.onclick = () => toggleConnections(state.id);
+      state.style.border = "2px solid red";
+      document.getElementById(state.id).onclick = () => toggleConnections(state.id);
+      console.log(state);
     }
   });
 
@@ -239,7 +253,7 @@ function getStateIdByPosition(x, y) {
 
 function toggleConnections(stateId) {
   console.log(`Log: Triggered toggleConnections for state = ${stateId}`);
-  const connectedTransitions = document.querySelectorAll(`path[d*="${stateId}"]`);
+  /*const connectedTransitions = document.querySelectorAll(`path[d*="${stateId}"]`);
   const labels = document.querySelectorAll('text');
 
   connectedTransitions.forEach(transition => {
@@ -256,5 +270,5 @@ function toggleConnections(stateId) {
         label.style.display = displayStyle;
       }
     });
-  });
+  });*/
 }

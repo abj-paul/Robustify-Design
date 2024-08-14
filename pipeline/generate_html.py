@@ -8,6 +8,8 @@ def generate_output_document_html(project_folder):
     now = datetime.now()
     date_time_str = now.strftime("%Y-%m-%d_%H-%M-%S")
     generate_html(f"{project_folder.split('/')[-1]}_summary_{date_time_str}.html")
+    os.chdir("../..")
+
 
 def add_image_to_html(html, image_path, title):
     with Image.open(image_path) as img:
@@ -147,4 +149,4 @@ def generate_html(output_path):
     print(f"HTML report saved as {output_path}")
 
 # Example usage
-generate_output_document_html("projects/EVoting")
+#generate_output_document_html("projects/EVoting")

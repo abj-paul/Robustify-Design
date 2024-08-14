@@ -15,6 +15,7 @@ from libs.output_to_uml import save_output_as_uml
 from libs.convert_xml_to_image import convert_xml_to_image
 from wrapper import convert_to_lts
 from generate_pdf import generate_output_document
+from generate_html import generate_output_document_html
 
 app = FastAPI()
 
@@ -122,6 +123,7 @@ async def upload_additional( project_folder: str = Form(...), class_list: List[s
     convert_xml_to_image(project_folder,"sys.xml")
     convert_xml_to_image(project_folder,"env.xml")
     generate_output_document(project_folder)
+    generate_output_document_html(project_folder)
 
     return {"status": f"Fortis executed. Report in {os.getcwd()}"}
 

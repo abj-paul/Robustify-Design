@@ -56,8 +56,8 @@ def save_output_as_uml_single_file(project_path, solution_index):
         </uml:Transition>'''
     uml += UML_EXIT
 
-    print(states)
-    print(transitions)
+    #print(states)
+    #print(transitions)
 
     file = open(f"{project_path}/solution_{solution_index}.xml", "w")
     file.write(uml)

@@ -1,0 +1,32 @@
+MACHINE = ( enter -> P0 ),
+P0 = ( uname -> P1 ),
+P1 = ( pwd -> P2 ),
+P2 = ( otpsent -> P3 | wrong_pwd -> P1 ),
+P3 = ( otpentered -> P4 ),
+P4 = ( success -> P5 | failure -> P0 ),
+P5 = ( activity -> P5 | complete -> P6 ),
+P6 = ( logout -> MACHINE ).
+
+
+ENV = (u.enter -> USER | adv.enter -> ADVERSARY),
+USER = ( uname -> USER | pwd -> USER | otpentered -> USER | success -> USER | activity -> USER | complete -> USER | u.logout -> ENV ),
+ADVERSARY = (  success -> ADVERSARY | activity -> ADVERSARY | complete -> ADVERSARY | adv.logout -> ENV ).
+
+
+const NoBody = 0
+const User = 1
+const Adversary = 2
+range WHO = NoBody..Adversary
+
+P = ACTIVITY[NoBody][NoBody][NoBody],
+ACTIVITY[in:WHO][otp:WHO][act:WHO] = (
+      u.enter -> ACTIVITY[User][otp][act] | adv.enter -> ACTIVITY[Adversary][otp][act]
+    | success -> ACTIVITY[in][otp][in]
+    | activity -> ACTIVITY[in][in][act]
+    | when (otp == act) confirm -> ACTIVITY[in][NoBody][NoBody]
+).
+
+
+
+
+||SYSTEM = (ENV || MACHINE).

@@ -3,9 +3,11 @@ P1 = (select -> P2),
 P2 = (vote -> P3 | back -> P1),
 P3 = (confirm -> EM | back -> P2).
 
+
 ENV = (v.enter -> VOTER | eo.enter -> EO),
 VOTER = (password -> VOTER | select -> VOTER | vote -> VOTER | confirm -> VOTER | back -> VOTER | v.exit -> ENV),
 EO = (select -> EO | vote -> EO | confirm -> EO | back -> EO | eo.exit -> ENV).
+
 
 const NoBody = 0
 const Voter = 1
@@ -19,5 +21,6 @@ VOTE[in:WHO][sel:WHO][v:WHO] = (
     | select -> VOTE[in][in][v]
     | when (sel == v) confirm -> VOTE[in][NoBody][NoBody]
 ).
-    
-||SYS = (EM || ENV ).
+
+
+||DEFAULT = (ENV || EM || P).

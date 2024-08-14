@@ -11,6 +11,7 @@ def generate_output_document(project_folder):
     now = datetime.now()
     date_time_str = now.strftime("%Y-%m-%d_%H-%M-%S")
     generate_pdf(f"{project_folder.split('/')[-1]}_summary_{date_time_str}.pdf")
+    os.chdir("../..")
 
 def add_image_to_canvas(c, image_path, x, y, max_width, max_height):
     with Image.open(image_path) as img:

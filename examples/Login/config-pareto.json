@@ -1,0 +1,22 @@
+{
+  "sys": ["sys.lts"],
+  "env": [],
+  "dev": ["env.lts"],
+  "safety": ["p.lts"],
+  "method": "supervisory",
+  "options": {
+    "progress": ["complete"],
+    "preferredMap": {
+      "3": [ ["enter", "uname", "pwd", "otpsent", "otpentered", "success", "activity", "complete"] ]
+    },
+    "controllableMap": {
+      "1": ["uname", "pwd", "otpsent", "otpentered", "success", "activity", "complete", "logout"],
+      "3": ["u.enter", "u.logout", "adv.enter", "adv.logout"]
+    },
+    "observableMap": {
+      "0": ["uname", "pwd", "otpsent", "otpentered", "success", "activity", "complete", "logout"],
+      "2": ["u.enter", "u.logout", "adv.enter", "adv.logout"]
+    },
+    "algorithm": "Pareto"
+  }
+}

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmlns:uml="http://www.omg.org/spec/UML/20090901">
+    <uml:State name="State1"/>
+    <uml:State name="State2"/>
+    <uml:State name="State3"/>
+    <uml:Transition>
+        <uml:Source>
+            <uml:State name="State1"/>
+        </uml:Source>
+        <uml:Target>
+            <uml:State name="State2"/>
+        </uml:Target>
+        <uml:Effect name="action1"/>
+    </uml:Transition>
+    <uml:Transition>
+        <uml:Source>
+            <uml:State name="State2"/>
+        </uml:Source>
+        <uml:Target>
+            <uml:State name="State3"/>
+        </uml:Target>
+        <uml:Effect name="action2"/>
+    </uml:Transition>
+    <uml:Transition>
+        <uml:Source>
+            <uml:State name="State1"/>
+        </uml:Source>
+        <uml:Target>
+            <uml:State name="State3"/>
+        </uml:Target>
+        <uml:Effect name="action3"/>
+    </uml:Transition>
+</uml:Model>

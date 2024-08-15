@@ -120,8 +120,11 @@ async def upload_additional( project_folder: str = Form(...), class_list: List[s
             convert_xml_to_image(f"{project_folder}",f"solution_{solution_index}.xml")
             solution_index+=1
 
-    convert_xml_to_image(project_folder,"sys.xml")
-    convert_xml_to_image(project_folder,"env.xml")
+    try:
+        convert_xml_to_image(project_folder,"sys.xml")
+        convert_xml_to_image(project_folder,"env.xml")
+    except:
+        print("No XML: for sys and env found!!")
     generate_output_document(project_folder)
     generate_output_document_html(project_folder)
 

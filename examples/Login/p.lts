@@ -1,0 +1,12 @@
+const NoBody = 0
+const User = 1
+const Adversary = 2
+range WHO = NoBody..Adversary
+
+P = ACTIVITY[NoBody][NoBody][NoBody],
+ACTIVITY[in:WHO][otp:WHO][act:WHO] = (
+      u.enter -> ACTIVITY[User][otp][act] | adv.enter -> ACTIVITY[Adversary][otp][act]
+    | success -> ACTIVITY[in][otp][in]
+    | activity -> ACTIVITY[in][in][act]
+    | when (otp == act) complete -> ACTIVITY[in][NoBody][NoBody]
+).

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <uml:Model xmlns:uml="http://www.omg.org/spec/UML/20090901">
+    <uml:State name="s0"/>
+<uml:State name="s1"/>
+<uml:State name="s2"/>
+<uml:State name="s3"/>
+<uml:State name="s4"/>
+<uml:State name="s5"/>
+<uml:State name="s6"/>
+<uml:State name="s7"/>
+<uml:State name="s8"/>
+<uml:State name="s9"/>
+<uml:State name="s10"/>
+<uml:State name="s11"/>
+<uml:State name="s12"/>
+<uml:State name="s13"/>
+
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s4"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s2"/>
+            </uml:Target>
+            <uml:Effect name="back"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s2"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s3"/>
+            </uml:Target>
+            <uml:Effect name="back"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s2"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s4"/>
+            </uml:Target>
+            <uml:Effect name="vote"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s5"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s6"/>
+            </uml:Target>
+            <uml:Effect name="password"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s9"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s7"/>
+            </uml:Target>
+            <uml:Effect name="back"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s7"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s9"/>
+            </uml:Target>
+            <uml:Effect name="vote"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s8"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s7"/>
+            </uml:Target>
+            <uml:Effect name="select"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s0"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s1"/>
+            </uml:Target>
+            <uml:Effect name="password"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s9"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s5"/>
+            </uml:Target>
+            <uml:Effect name="confirm"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s1"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s2"/>
+            </uml:Target>
+            <uml:Effect name="select"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s3"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s2"/>
+            </uml:Target>
+            <uml:Effect name="select"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s4"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s5"/>
+            </uml:Target>
+            <uml:Effect name="confirm"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s7"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s8"/>
+            </uml:Target>
+            <uml:Effect name="back"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s6"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s7"/>
+            </uml:Target>
+            <uml:Effect name="select"/>
+        </uml:Transition>
+    </uml:Model>

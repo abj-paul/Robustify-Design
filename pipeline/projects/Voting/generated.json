@@ -1,0 +1,25 @@
+{
+    
+    "sys": ["sys.lts"],
+    "env": [],
+    "dev": ["env.lts"],
+    "safety": ["p.lts"],
+    "method": "supervisory",
+    "options": {
+        "progress": ["confirm"],
+        "preferredMap": {
+        "3": [
+            ["select", "back", "select", "vote", "confirm"]
+        ]
+        },
+        "controllableMap": {
+            "0": ["password", "select", "vote", "confirm","back"],
+            "1": [ "eo.enter","eo.exit","v.enter","v.exit"]
+        },
+        "observableMap": {
+            "0": [ "password","select","vote","confirm","back"],
+            "1": ["eo.enter","eo.exit","v.enter","v.exit"]
+        }
+    }
+}
+  

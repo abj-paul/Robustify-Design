@@ -6,7 +6,7 @@ def run_fortis(project_path):
 
     jar_path = os.path.abspath(os.path.join("../../../pipeline/bin/fortis.jar"))
     config_path = "config-pareto.json"
-    os.system(f"java -jar {jar_path} robustify {config_path}")
+    os.system(f"java -jar {jar_path} robustify {config_path} --minimized")
 
     os.chdir("../..")
     print(f"Fortis generated robust designs in {project_path}/solutions.")

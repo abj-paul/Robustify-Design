@@ -1,1 +1,0 @@
-A voting system must be robust to user errors.

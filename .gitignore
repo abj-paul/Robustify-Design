@@ -2,3 +2,5 @@ bin/
 .python-version
 *parserEnv*
 *__pycache__*
+*.dat
+human-comprehension*

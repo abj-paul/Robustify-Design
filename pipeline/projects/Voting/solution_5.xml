@@ -38,139 +38,34 @@
 <uml:State name="s35"/>
 <uml:State name="s36"/>
 <uml:State name="s37"/>
+<uml:State name="s38"/>
+<uml:State name="s39"/>
+<uml:State name="s40"/>
 
         <uml:Transition>
             <uml:Source>
-                <uml:State name="s4"/>
-            </uml:Source>
-            <uml:Target>
-                <uml:State name="s4"/>
-            </uml:Target>
-            <uml:Effect name="v.exit"/>
-        </uml:Transition>
-        <uml:Transition>
-            <uml:Source>
-                <uml:State name="s0"/>
-            </uml:Source>
-            <uml:Target>
-                <uml:State name="s1"/>
-            </uml:Target>
-            <uml:Effect name="password"/>
-        </uml:Transition>
-        <uml:Transition>
-            <uml:Source>
                 <uml:State name="s3"/>
             </uml:Source>
             <uml:Target>
-                <uml:State name="s5"/>
+                <uml:State name="s2"/>
             </uml:Target>
-            <uml:Effect name="vote"/>
+            <uml:Effect name="v.enter"/>
         </uml:Transition>
         <uml:Transition>
             <uml:Source>
+                <uml:State name="s9"/>
+            </uml:Source>
+            <uml:Target>
                 <uml:State name="s8"/>
-            </uml:Source>
-            <uml:Target>
-                <uml:State name="s10"/>
             </uml:Target>
-            <uml:Effect name="vote"/>
-        </uml:Transition>
-        <uml:Transition>
-            <uml:Source>
-                <uml:State name="s6"/>
-            </uml:Source>
-            <uml:Target>
-                <uml:State name="s6"/>
-            </uml:Target>
-            <uml:Effect name="v.exit"/>
-        </uml:Transition>
-        <uml:Transition>
-            <uml:Source>
-                <uml:State name="s11"/>
-            </uml:Source>
-            <uml:Target>
-                <uml:State name="s11"/>
-            </uml:Target>
-            <uml:Effect name="eo.exit"/>
+            <uml:Effect name="eo.enter"/>
         </uml:Transition>
         <uml:Transition>
             <uml:Source>
                 <uml:State name="s7"/>
             </uml:Source>
             <uml:Target>
-                <uml:State name="s0"/>
-            </uml:Target>
-            <uml:Effect name="v.exit"/>
-        </uml:Transition>
-        <uml:Transition>
-            <uml:Source>
-                <uml:State name="s11"/>
-            </uml:Source>
-            <uml:Target>
-                <uml:State name="s11"/>
-            </uml:Target>
-            <uml:Effect name="v.exit"/>
-        </uml:Transition>
-        <uml:Transition>
-            <uml:Source>
-                <uml:State name="s6"/>
-            </uml:Source>
-            <uml:Target>
-                <uml:State name="s0"/>
-            </uml:Target>
-            <uml:Effect name="confirm"/>
-        </uml:Transition>
-        <uml:Transition>
-            <uml:Source>
-                <uml:State name="s2"/>
-            </uml:Source>
-            <uml:Target>
-                <uml:State name="s2"/>
-            </uml:Target>
-            <uml:Effect name="v.exit"/>
-        </uml:Transition>
-        <uml:Transition>
-            <uml:Source>
-                <uml:State name="s9"/>
-            </uml:Source>
-            <uml:Target>
-                <uml:State name="s11"/>
-            </uml:Target>
-            <uml:Effect name="vote"/>
-        </uml:Transition>
-        <uml:Transition>
-            <uml:Source>
-                <uml:State name="s6"/>
-            </uml:Source>
-            <uml:Target>
-                <uml:State name="s4"/>
-            </uml:Target>
-            <uml:Effect name="back"/>
-        </uml:Transition>
-        <uml:Transition>
-            <uml:Source>
-                <uml:State name="s3"/>
-            </uml:Source>
-            <uml:Target>
-                <uml:State name="s4"/>
-            </uml:Target>
-            <uml:Effect name="v.exit"/>
-        </uml:Transition>
-        <uml:Transition>
-            <uml:Source>
-                <uml:State name="s2"/>
-            </uml:Source>
-            <uml:Target>
-                <uml:State name="s2"/>
-            </uml:Target>
-            <uml:Effect name="eo.exit"/>
-        </uml:Transition>
-        <uml:Transition>
-            <uml:Source>
-                <uml:State name="s9"/>
-            </uml:Source>
-            <uml:Target>
-                <uml:State name="s2"/>
+                <uml:State name="s5"/>
             </uml:Target>
             <uml:Effect name="back"/>
         </uml:Transition>
@@ -181,61 +76,79 @@
             <uml:Target>
                 <uml:State name="s9"/>
             </uml:Target>
-            <uml:Effect name="eo.exit"/>
-        </uml:Transition>
-        <uml:Transition>
-            <uml:Source>
-                <uml:State name="s9"/>
-            </uml:Source>
-            <uml:Target>
-                <uml:State name="s9"/>
-            </uml:Target>
-            <uml:Effect name="eo.exit"/>
-        </uml:Transition>
-        <uml:Transition>
-            <uml:Source>
-                <uml:State name="s5"/>
-            </uml:Source>
-            <uml:Target>
-                <uml:State name="s6"/>
-            </uml:Target>
-            <uml:Effect name="v.exit"/>
-        </uml:Transition>
-        <uml:Transition>
-            <uml:Source>
-                <uml:State name="s0"/>
-            </uml:Source>
-            <uml:Target>
-                <uml:State name="s0"/>
-            </uml:Target>
-            <uml:Effect name="eo.exit"/>
-        </uml:Transition>
-        <uml:Transition>
-            <uml:Source>
-                <uml:State name="s5"/>
-            </uml:Source>
-            <uml:Target>
-                <uml:State name="s3"/>
-            </uml:Target>
-            <uml:Effect name="back"/>
-        </uml:Transition>
-        <uml:Transition>
-            <uml:Source>
-                <uml:State name="s8"/>
-            </uml:Source>
-            <uml:Target>
-                <uml:State name="s2"/>
-            </uml:Target>
-            <uml:Effect name="back"/>
+            <uml:Effect name="v.enter"/>
         </uml:Transition>
         <uml:Transition>
             <uml:Source>
                 <uml:State name="s1"/>
             </uml:Source>
             <uml:Target>
+                <uml:State name="s0"/>
+            </uml:Target>
+            <uml:Effect name="eo.enter"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s9"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s2"/>
+            </uml:Target>
+            <uml:Effect name="back"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s5"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s4"/>
+            </uml:Target>
+            <uml:Effect name="v.enter"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s2"/>
+            </uml:Source>
+            <uml:Target>
                 <uml:State name="s3"/>
             </uml:Target>
-            <uml:Effect name="select"/>
+            <uml:Effect name="eo.enter"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s6"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s4"/>
+            </uml:Target>
+            <uml:Effect name="back"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s10"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s11"/>
+            </uml:Target>
+            <uml:Effect name="v.enter"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s4"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s2"/>
+            </uml:Target>
+            <uml:Effect name="back"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s7"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s7"/>
+            </uml:Target>
+            <uml:Effect name="eo.enter"/>
         </uml:Transition>
         <uml:Transition>
             <uml:Source>
@@ -248,52 +161,7 @@
         </uml:Transition>
         <uml:Transition>
             <uml:Source>
-                <uml:State name="s5"/>
-            </uml:Source>
-            <uml:Target>
-                <uml:State name="s7"/>
-            </uml:Target>
-            <uml:Effect name="confirm"/>
-        </uml:Transition>
-        <uml:Transition>
-            <uml:Source>
-                <uml:State name="s6"/>
-            </uml:Source>
-            <uml:Target>
-                <uml:State name="s6"/>
-            </uml:Target>
-            <uml:Effect name="eo.exit"/>
-        </uml:Transition>
-        <uml:Transition>
-            <uml:Source>
-                <uml:State name="s9"/>
-            </uml:Source>
-            <uml:Target>
-                <uml:State name="s9"/>
-            </uml:Target>
-            <uml:Effect name="v.exit"/>
-        </uml:Transition>
-        <uml:Transition>
-            <uml:Source>
-                <uml:State name="s4"/>
-            </uml:Source>
-            <uml:Target>
-                <uml:State name="s2"/>
-            </uml:Target>
-            <uml:Effect name="back"/>
-        </uml:Transition>
-        <uml:Transition>
-            <uml:Source>
-                <uml:State name="s7"/>
-            </uml:Source>
-            <uml:Target>
-                <uml:State name="s1"/>
-            </uml:Target>
-            <uml:Effect name="password"/>
-        </uml:Transition>
-        <uml:Transition>
-            <uml:Source>
-                <uml:State name="s2"/>
+                <uml:State name="s3"/>
             </uml:Source>
             <uml:Target>
                 <uml:State name="s8"/>
@@ -302,6 +170,69 @@
         </uml:Transition>
         <uml:Transition>
             <uml:Source>
+                <uml:State name="s5"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s5"/>
+            </uml:Target>
+            <uml:Effect name="eo.enter"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s1"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s2"/>
+            </uml:Target>
+            <uml:Effect name="password"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s4"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s4"/>
+            </uml:Target>
+            <uml:Effect name="v.enter"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s2"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s4"/>
+            </uml:Target>
+            <uml:Effect name="select"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s3"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s3"/>
+            </uml:Target>
+            <uml:Effect name="eo.enter"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s4"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s5"/>
+            </uml:Target>
+            <uml:Effect name="eo.enter"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s7"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s6"/>
+            </uml:Target>
+            <uml:Effect name="v.enter"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
                 <uml:State name="s4"/>
             </uml:Source>
             <uml:Target>
@@ -311,57 +242,57 @@
         </uml:Transition>
         <uml:Transition>
             <uml:Source>
-                <uml:State name="s10"/>
+                <uml:State name="s7"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s0"/>
+            </uml:Target>
+            <uml:Effect name="confirm"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s6"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s7"/>
+            </uml:Target>
+            <uml:Effect name="eo.enter"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s6"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s6"/>
+            </uml:Target>
+            <uml:Effect name="v.enter"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s9"/>
             </uml:Source>
             <uml:Target>
                 <uml:State name="s11"/>
             </uml:Target>
-            <uml:Effect name="eo.exit"/>
+            <uml:Effect name="vote"/>
         </uml:Transition>
         <uml:Transition>
             <uml:Source>
-                <uml:State name="s4"/>
+                <uml:State name="s5"/>
             </uml:Source>
             <uml:Target>
-                <uml:State name="s4"/>
-            </uml:Target>
-            <uml:Effect name="eo.exit"/>
-        </uml:Transition>
-        <uml:Transition>
-            <uml:Source>
-                <uml:State name="s1"/>
-            </uml:Source>
-            <uml:Target>
-                <uml:State name="s2"/>
-            </uml:Target>
-            <uml:Effect name="v.exit"/>
-        </uml:Transition>
-        <uml:Transition>
-            <uml:Source>
-                <uml:State name="s8"/>
-            </uml:Source>
-            <uml:Target>
-                <uml:State name="s4"/>
-            </uml:Target>
-            <uml:Effect name="v.exit"/>
-        </uml:Transition>
-        <uml:Transition>
-            <uml:Source>
                 <uml:State name="s3"/>
-            </uml:Source>
-            <uml:Target>
-                <uml:State name="s1"/>
             </uml:Target>
             <uml:Effect name="back"/>
         </uml:Transition>
         <uml:Transition>
             <uml:Source>
-                <uml:State name="s0"/>
+                <uml:State name="s6"/>
             </uml:Source>
             <uml:Target>
-                <uml:State name="s0"/>
+                <uml:State name="s1"/>
             </uml:Target>
-            <uml:Effect name="v.exit"/>
+            <uml:Effect name="confirm"/>
         </uml:Transition>
         <uml:Transition>
             <uml:Source>
@@ -374,11 +305,110 @@
         </uml:Transition>
         <uml:Transition>
             <uml:Source>
+                <uml:State name="s9"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s9"/>
+            </uml:Target>
+            <uml:Effect name="v.enter"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s0"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s1"/>
+            </uml:Target>
+            <uml:Effect name="v.enter"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s11"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s10"/>
+            </uml:Target>
+            <uml:Effect name="eo.enter"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s1"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s1"/>
+            </uml:Target>
+            <uml:Effect name="v.enter"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s0"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s0"/>
+            </uml:Target>
+            <uml:Effect name="eo.enter"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s5"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s7"/>
+            </uml:Target>
+            <uml:Effect name="vote"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s2"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s2"/>
+            </uml:Target>
+            <uml:Effect name="v.enter"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s8"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s3"/>
+            </uml:Target>
+            <uml:Effect name="back"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s11"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s11"/>
+            </uml:Target>
+            <uml:Effect name="v.enter"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s8"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s8"/>
+            </uml:Target>
+            <uml:Effect name="eo.enter"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
+                <uml:State name="s8"/>
+            </uml:Source>
+            <uml:Target>
+                <uml:State name="s10"/>
+            </uml:Target>
+            <uml:Effect name="vote"/>
+        </uml:Transition>
+        <uml:Transition>
+            <uml:Source>
                 <uml:State name="s10"/>
             </uml:Source>
             <uml:Target>
-                <uml:State name="s6"/>
+                <uml:State name="s10"/>
             </uml:Target>
-            <uml:Effect name="v.exit"/>
+            <uml:Effect name="eo.enter"/>
         </uml:Transition>
     </uml:Model>

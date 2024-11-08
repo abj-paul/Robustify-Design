@@ -4,3 +4,4 @@ bin/
 *__pycache__*
 *.dat
 human-comprehension*
+annotation/

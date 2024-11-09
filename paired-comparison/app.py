@@ -90,10 +90,9 @@ async def submit_annotation(data: AnnotationData):
     print(f"{data.image1} | {data.focus_time_image1}")
     print(f"{data.image2} | {data.focus_time_image2}")
 
-    timestamp = datetime.now().isoformat()
     with open(CSV_FILE, mode="a", newline="") as file:
         writer = csv.writer(file)
-        writer.writerow([data.image1, data.image2, data.selected, data.focus_time_image1, data.focus_time_image2, timestamp])
+        writer.writerow([data.image1, data.image2, data.selected, data.focus_time_image1, data.focus_time_image2, data.time_taken])
     return JSONResponse(content={"message": "Annotation saved successfully!"})
 
 @app.get("/images/{image_name}")

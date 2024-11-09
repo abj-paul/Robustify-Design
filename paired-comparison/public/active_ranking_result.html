@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Gallery with Rankings and Expandable View</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Basic styling for the grid layout */
+        .image-box {
+            position: relative;
+            overflow: hidden;
+            height: 300px;
+            width: 400px;
+            border: 2px solid #ddd;
+            background-color: #f9f9f9;
+            cursor: pointer;
+        }
+
+        /* Ensure images fill their containers */
+        .image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        /* Modal for expanded image */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+
+        .modal:target {
+            display: flex;
+        }
+
+        /* Close button for the modal */
+        .modal .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        /* Adjusting the grid layout for image display */
+        .image-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 images per row */
+            gap: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container my-5">
+        <h1 class="mb-4">Image Display with Rankings and Expandable View</h1>
+
+        <!-- Grid of images with rankings outside the containers -->
+        <div class="image-container">
+            <!-- Images will be inserted here dynamically -->
+        </div>
+    </div>
+
+    <!-- Modal for image expansion -->
+    <div id="imageModal" class="modal">
+        <span class="close-btn" onclick="closeModal()">×</span>
+        <img id="expandedImage" src="" alt="Expanded Image">
+    </div>
+
+    <!-- Bootstrap JS (for modal functionality if needed) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // List of images and their names
+        const images = [
+            { rank: 1, name: "voting-solution-config-pareto_sol8.png" },
+            { rank: 2, name: "voting-solution-config-pareto-non-opt_sol8.png" },
+            { rank: 3, name: "therac25-solutions-config-simple_sol1.png" },
+            { rank: 4, name: "therac25-solutions-config-pareto-non-opt_sol1.png" },
+            { rank: 5, name: "voting-solution-config-pareto_sol15.png" },
+            { rank: 6, name: "voting-solution-config-pareto_sol16.png" },
+            { rank: 7, name: "voting-solution-config-pareto-non-opt_sol5.png" },
+            { rank: 8, name: "voting-solution-config-pareto_sol13.png" },
+            { rank: 9, name: "voting-solution-config-pareto_sol11.png" },
+            { rank: 10, name: "pump-solutions-config-pareto_sol1.png" },
+            { rank: 11, name: "voting-solution-config-pareto_sol4.png" },
+            { rank: 12, name: "voting-solution-config-pareto_sol12.png" },
+            { rank: 13, name: "voting-solution-config-pareto-non-opt_sol4.png" },
+            { rank: 14, name: "voting-solutions-config-oasis_sol1.png" },
+            { rank: 15, name: "therac25-solutions-config-pareto_sol2.png" },
+            { rank: 16, name: "voting-solution-config-pareto_sol1.png" },
+            { rank: 17, name: "voting-solution-config-pareto-non-opt_sol7.png" },
+            { rank: 18, name: "voting-solution-config-pareto_sol5.png" },
+            { rank: 19, name: "voting-solution-config-pareto_sol7.png" },
+            { rank: 20, name: "voting-solution-config-pareto-non-opt_sol15.png" },
+            { rank: 21, name: "voting-solution-config-pareto-non-opt_sol16.png" },
+            { rank: 22, name: "voting-solutions-config-fast_sol1.png" },
+            { rank: 23, name: "voting-solution-config-pareto_sol3.png" },
+            { rank: 24, name: "pump-solutions-config-oasis_sol1.png" },
+            { rank: 25, name: "voting-solution-config-pareto-non-opt_sol6.png" },
+            { rank: 26, name: "therac25-solutions-config-pareto_sol1.png" },
+            { rank: 27, name: "voting-solution-config-pareto_sol9.png" },
+            { rank: 28, name: "voting-solution-config-pareto-non-opt_sol10.png" },
+            { rank: 29, name: "voting-solution-config-pareto_sol2.png" },
+            { rank: 30, name: "pump-solutions-config-pareto-non-opt_sol1.png" },
+            { rank: 31, name: "voting-solution-config-pareto_sol14.png" },
+            { rank: 32, name: "voting-solution-config-pareto-non-opt_sol1.png" },
+            { rank: 33, name: "voting-solution-config-pareto_sol6.png" },
+            { rank: 34, name: "voting-solution-config-pareto-non-opt_sol12.png" },
+            { rank: 35, name: "voting-solution-config-pareto-non-opt_sol9.png" },
+            { rank: 36, name: "therac25-solutions-config-pareto-non-opt_sol2.png" },
+            { rank: 37, name: "voting-solution-config-pareto-non-opt_sol11.png" },
+            { rank: 38, name: "pump-solutions-config-fast_sol1.png" },
+            { rank: 39, name: "voting-solution-config-pareto-non-opt_sol14.png" },
+            { rank: 40, name: "voting-solution-config-pareto-non-opt_sol13.png" },
+            { rank: 41, name: "therac25-solutions-config-oasis_sol1.png" },
+            { rank: 42, name: "therac25-solutions-config-fast_sol1.png" },
+            { rank: 43, name: "voting-solution-config-pareto-non-opt_sol3.png" },
+            { rank: 44, name: "voting-solution-config-pareto_sol10.png" },
+            { rank: 45, name: "voting-solution-config-pareto-non-opt_sol2.png" }
+        ];
+
+        // Function to load and display images dynamically
+        window.onload = function() {
+            const container = document.querySelector('.image-container');
+            images.forEach(image => {
+                const imgElement = document.createElement('div');
+                imgElement.classList.add('col-4', 'image-box');  // Bootstrap 3 columns per row
+                imgElement.innerHTML = `
+                    <div class="d-flex justify-content-center">
+                        <h5>Ranking ${image.rank}</h5>
+                    </div>
+                    <img src="images/${image.name}" alt="Image ${image.rank}" onclick="expandImage('images/${image.name}')">
+                `;
+                container.appendChild(imgElement);
+            });
+        };
+
+        // Function to expand image in modal
+        function expandImage(imageSrc) {
+            const modal = document.getElementById('imageModal');
+            const expandedImage = document.getElementById('expandedImage');
+            expandedImage.src = imageSrc;
+            modal.style.display = 'flex';
+        }
+
+        // Function to close modal
+        function closeModal() {
+            const modal = document.getElementById('imageModal');
+            modal.style.display = 'none';
+        }
+    </script>
+
+</body>
+</html>

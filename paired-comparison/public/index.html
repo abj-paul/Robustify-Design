@@ -6,25 +6,93 @@
     <title>Paired Image Comparison</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .thumbnail { max-width: 100%; max-height: 300px; cursor: pointer; transition: transform 0.2s; }
-        .thumbnail:hover { transform: scale(1.05); }
-        .modal-image { width: 100%; }
+        /* Main container and body styling */
+        body {
+            background-color: #f4f7f6;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            max-width: 700px;
+            margin-top: 50px;
+        }
+
+        /* Header and buttons */
+        h3 {
+            font-weight: 700;
+            color: #333333;
+            text-align: center;
+        }
+        .btn-primary {
+            background-color: #4a90e2;
+            border-color: #4a90e2;
+            transition: all 0.2s;
+        }
+        .btn-primary:hover {
+            background-color: #357abd;
+            transform: scale(1.05);
+        }
+        .btn-secondary {
+            background-color: #b0bec5;
+            border: none;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        /* Image thumbnails */
+        .thumbnail {
+            max-width: 100%;
+            max-height: 300px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        .thumbnail:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Modal styling */
+        .modal-content {
+            background-color: #1d1d1d;
+            color: #f4f7f6;
+            border-radius: 8px;
+        }
+        .modal-title {
+            color: #e0e0e0;
+        }
+        .modal-image {
+            width: 100%;
+            border-radius: 8px;
+        }
+        .close {
+            color: #ffffff;
+            opacity: 0.8;
+        }
+        .close:hover {
+            color: #ffffff;
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="p-4">
     <div class="container">
-        <h3 class="mb-4">Compare Images</h3>
+        <h3 class="mb-4">Which LTS did you understand more easily?</h3>
         <div class="row mb-3">
             <div class="col">
                 <img id="image1" class="thumbnail" data-toggle="modal" data-target="#zoomModal" onclick="openModal('image1')" alt="Image 1">
-                <button class="btn btn-primary btn-block mt-2" onclick="selectImage('image1')">Select Image 1</button>
+                <button class="btn btn-primary btn-block mt-2" onclick="selectImage('image1')">This is easier</button>
             </div>
             <div class="col">
                 <img id="image2" class="thumbnail" data-toggle="modal" data-target="#zoomModal" onclick="openModal('image2')" alt="Image 2">
-                <button class="btn btn-primary btn-block mt-2" onclick="selectImage('image2')">Select Image 2</button>
+                <button class="btn btn-primary btn-block mt-2" onclick="selectImage('image2')">This is easier</button>
             </div>
         </div>
-        <button class="btn btn-secondary" onclick="loadImages()">Load New Images</button>
+        <button class="btn btn-secondary btn-block mt-3" onclick="loadImages()">Load New Images</button>
 
         <!-- Modal for Zooming Images -->
         <div class="modal fade" id="zoomModal" tabindex="-1" aria-labelledby="zoomModalLabel" aria-hidden="true">
@@ -47,12 +115,11 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        let decisionStartTime = null; // Start time for each comparison session
-        let focusStartTime = null;    // Start time for image focus
-        let lastFocusedImage = null;  // Last image that was focused on
-        let focusTimes = { image1: 0, image2: 0 }; // Track focus times for each image
+        let decisionStartTime = null;
+        let focusStartTime = null;
+        let lastFocusedImage = null;
+        let focusTimes = { image1: 0, image2: 0 };
 
-        // Load new images from the server and start decision timer
         async function loadImages() {
             try {
                 const response = await fetch('http://127.0.0.1:8000/random-images');
@@ -60,48 +127,43 @@
                 document.getElementById("image1").src = `http://127.0.0.1:8000${data.image1}`;
                 document.getElementById("image2").src = `http://127.0.0.1:8000${data.image2}`;
 
-                // Reset timers and focus data
                 focusTimes = { image1: 0, image2: 0 };
                 lastFocusedImage = null;
                 focusStartTime = null;
-                decisionStartTime = new Date(); // Start the decision timer when new images load
+                decisionStartTime = new Date();
             } catch (error) {
                 console.error("Error loading images:", error);
             }
         }
 
-        // Open modal with selected image for zoom
         function openModal(imageId) {
             const src = document.getElementById(imageId).src;
             document.getElementById("zoomedImage").src = src;
-            startFocusTimer(imageId); // Start focus time when image is zoomed
+            startFocusTimer(imageId);
         }
 
-        // Start or switch the focus timer for each image
         function startFocusTimer(imageId) {
             if (focusStartTime !== null && lastFocusedImage !== imageId) {
                 const focusEndTime = new Date();
-                const timeSpent = (focusEndTime - focusStartTime) / 1000; // in seconds
+                const timeSpent = (focusEndTime - focusStartTime) / 1000;
                 focusTimes[lastFocusedImage] += timeSpent;
             }
             focusStartTime = new Date();
             lastFocusedImage = imageId;
         }
 
-        // End focus timer for the current image
         function endFocusTimer() {
             if (focusStartTime !== null && lastFocusedImage !== null) {
                 const focusEndTime = new Date();
-                const timeSpent = (focusEndTime - focusStartTime) / 1000; // in seconds
+                const timeSpent = (focusEndTime - focusStartTime) / 1000;
                 focusTimes[lastFocusedImage] += timeSpent;
-                focusStartTime = null; // Reset focus start time after stopping
+                focusStartTime = null;
             }
         }
 
-        // Function to submit an annotation and reset the timer
         async function selectImage(selectedImageId) {
-            endFocusTimer(); // Ensure final focus time is captured
-            const annotationDuration = (new Date() - decisionStartTime) / 1000; // Calculate decision time
+            endFocusTimer();
+            const annotationDuration = (new Date() - decisionStartTime) / 1000;
 
             const image1 = document.getElementById("image1").src;
             const image2 = document.getElementById("image2").src;
@@ -122,10 +184,9 @@
                 body: JSON.stringify(data)
             });
 
-            loadImages(); // Reset for next comparison
+            loadImages();
         }
 
-        // Initial load
         loadImages();
     </script>
 </body>

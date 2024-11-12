@@ -11,7 +11,8 @@ app = FastAPI()
 
 # Directory containing images
 IMAGE_DIR = "./public/images"
-CSV_FILE = "annotations.csv"
+ANNOTATION_FILE1 = "annotations.csv"     # Primary annotation file
+ANNOTATION_FILE2 = "annotations2.csv"    # Second annotator’s file
 
 # Enable CORS
 app.add_middleware(
@@ -32,55 +33,48 @@ class AnnotationData(BaseModel):
 
 
 # Ensure CSV file exists and has headers
-if not os.path.exists(CSV_FILE):
-    with open(CSV_FILE, mode="w", newline="") as file:
+if not os.path.exists(ANNOTATION_FILE2):
+    with open(ANNOTATION_FILE2, mode="w", newline="") as file:
         writer = csv.writer(file)
         writer.writerow(["Image1", "Image2", "Selected", "Timestamp"])
 
-def load_existing_pairs():
-    """Load all existing pairs from the CSV file to avoid duplicates."""
-    existing_pairs = set()
+
+def load_pairs_from_file(file_path: str) -> list[tuple[str, str]]:
+    """Load image pairs from a specified annotation file."""
+    pairs = []
     try:
-        with open(CSV_FILE, mode="r") as file:
-            reader = csv.reader(file)
+        with open(file_path, mode="r") as csvfile:
+            reader = csv.DictReader(csvfile)
             for row in reader:
-                if len(row) >= 2:
-                    # Assuming the first two columns are image1 and image2
-                    image1, image2 = row[0], row[1]
-                    # Store pairs in a way that (image1, image2) == (image2, image1)
-                    existing_pairs.add(tuple(sorted([image1, image2])))
+                pairs.append((row["image1"], row["image2"]))
     except FileNotFoundError:
-        # If the CSV file doesn't exist, no pairs have been compared yet
-        pass
-    print(f"Processed {len(existing_pairs)} samples so far.")
-    return existing_pairs
+        pass  # If the file doesn't exist, return an empty list
+    return pairs
 
 @app.get("/random-images")
 async def get_random_images():
-    """API to get two random images for comparison, ensuring no duplicate pairs."""
-    images = [img for img in os.listdir(IMAGE_DIR) if img.endswith((".png", ".jpg", ".jpeg"))]
-    if len(images) < 2:
-        return JSONResponse(content={"error": "Not enough images found"}, status_code=404)
-    
-    existing_pairs = load_existing_pairs()
+    """Retrieve the next unannotated image pair for the second annotator."""
+    # Load image pairs from both annotation files
+    existing_pairs_annotator1 = load_pairs_from_file(ANNOTATION_FILE1)
+    existing_pairs_annotator2 = load_pairs_from_file(ANNOTATION_FILE2)
 
-    # Randomly sample until a new pair is found or reach a limit
-    max_attempts = 100  # Limit the number of attempts to avoid an infinite loop if almost all pairs are in the CSV
-    for attempt in range(max_attempts):
-        image1, image2 = random.sample(images, 2)
-        pair = tuple(sorted([image1, image2]))
+    # Determine the index based on the number of annotations by the second annotator
+    index = len(existing_pairs_annotator2)
 
-        # If this pair is new, proceed
-        if pair not in existing_pairs:
-            # Track a serial number based on the CSV length
-            serial_number = len(existing_pairs) + 1  # Incremental serial number based on unique pairs in the CSV
-            return {
-                "serial_number": serial_number,
-                "image1": f"/images/{image1}",
-                "image2": f"/images/{image2}"
-            }
-    
-    return JSONResponse(content={"error": "No new pairs available"}, status_code=404)
+    # Check if the index is within bounds of the first annotator's file
+    if index >= len(existing_pairs_annotator1):
+        return JSONResponse(content={"error": "No new pairs available"}, status_code=404)
+
+    # Retrieve the image pair at the specified index
+    image1, image2 = existing_pairs_annotator1[index]
+    serial_number = index + 1  # Serial number for reference
+
+    return {
+        "serial_number": serial_number,
+        "image1": f"/images/{image1}",
+        "image2": f"/images/{image2}"
+    }
+
 
 @app.post("/submit")
 async def submit_annotation(data: AnnotationData):
@@ -90,7 +84,7 @@ async def submit_annotation(data: AnnotationData):
     print(f"{data.image1} | {data.focus_time_image1}")
     print(f"{data.image2} | {data.focus_time_image2}")
 
-    with open(CSV_FILE, mode="a", newline="") as file:
+    with open(ANNOTATION_FILE2, mode="a", newline="") as file:
         writer = csv.writer(file)
         writer.writerow([data.image1, data.image2, data.selected, data.focus_time_image1, data.focus_time_image2, data.time_taken])
     return JSONResponse(content={"message": "Annotation saved successfully!"})

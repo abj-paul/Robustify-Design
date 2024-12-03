@@ -5,3 +5,4 @@ bin/
 *.dat
 human-comprehension*
 annotation/
+pipeline/projects/*

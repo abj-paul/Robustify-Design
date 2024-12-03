@@ -1,0 +1,3 @@
+envBackend*
+*pycache*
+*.db

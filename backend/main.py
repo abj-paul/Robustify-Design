@@ -1,16 +1,26 @@
 from sqlalchemy.orm import Session
 from database import Base, engine, get_db
 from models import User, Project
-from schemas import UserCreate, ProjectCreate, Project, SpecModel
+from schemas import UserCreate, ProjectCreate, Project, SpecModel, LoginRequest
 from auth import create_access_token, verify_password
 import crud
 from fastapi import FastAPI, UploadFile, Form, HTTPException, Depends
 from typing import Optional
 import json
+from fastapi.middleware.cors import CORSMiddleware
+
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+# Allow CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.post("/register")
@@ -21,11 +31,12 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
 
 
 @app.post("/login")
-def login(username: str, password: str, db: Session = Depends(get_db)):
-    user = crud.get_user_by_username(db, username)
-    if not user or not verify_password(password, user.password):
+def login(request: LoginRequest, db: Session = Depends(get_db)):
+    user = crud.get_user_by_username(db, request.username)
+    if not user or not verify_password(request.password, user.password):
         raise HTTPException(status_code=400, detail="Invalid credentials")
-    return {"access_token": create_access_token({"sub": username})}
+    return {"access_token": create_access_token({"sub": request.username})}
+
 
 
 @app.get("/projects", response_model=list[Project])

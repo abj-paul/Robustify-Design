@@ -1,0 +1,26 @@
+.project-list-container {
+    max-width: 800px;
+    margin: 20px auto;
+    text-align: center;
+  }
+  
+  .project-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+  }
+  
+  .project-list li {
+    padding: 10px;
+    margin: 5px 0;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .project-list li:hover {
+    background-color: #e0e0e0;
+  }
+  

@@ -1,0 +1,12 @@
+<div class="project-list-container">
+    <h1>Welcome to Your Projects</h1>
+  
+    <button mat-raised-button color="primary" (click)="createProject()">Create New Project</button>
+  
+    <ul class="project-list">
+      <li *ngFor="let project of projects" (click)="openDashboard(project.id)">
+        {{ project.title }}
+      </li>
+    </ul>
+  </div>
+  

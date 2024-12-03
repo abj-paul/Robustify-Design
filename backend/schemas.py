@@ -10,6 +10,9 @@ class ProjectBase(BaseModel):
 class ProjectCreate(ProjectBase):
     pass
 
+class LoginRequest(BaseModel):
+    username: str
+    password: str
 
 class Project(ProjectBase):
     id: int

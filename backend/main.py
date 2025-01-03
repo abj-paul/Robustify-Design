@@ -25,8 +25,8 @@ app.add_middleware(
 
 @app.post("/register")
 def register(user: UserCreate, db: Session = Depends(get_db)):
-    if crud.get_user_by_username(db, user.username):
-        raise HTTPException(status_code=400, detail="Username already registered")
+    if crud.get_user_by_username(db, user.username): #, user.organization
+        raise HTTPException(status_code=400, detail="User already registered")
     return crud.create_user(db, user)
 
 
@@ -35,7 +35,7 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
     user = crud.get_user_by_username(db, request.username)
     if not user or not verify_password(request.password, user.password):
         raise HTTPException(status_code=400, detail="Invalid credentials")
-    return {"access_token": create_access_token({"sub": request.username})}
+    return {"access_token": create_access_token({"sub": request.username}), "user": user}
 
 
 

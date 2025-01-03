@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ConstantService } from '../constant.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-project-list',
   templateUrl: './project-list.component.html',
   styleUrls: ['./project-list.component.css'],
+  imports: [CommonModule]
 })
 export class ProjectListComponent implements OnInit {
   projects = [
@@ -13,9 +16,10 @@ export class ProjectListComponent implements OnInit {
     { id: 3, title: 'Project Gamma' },
   ];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private constantService: ConstantService) {}
 
   ngOnInit(): void {
+    console.log(this.constantService.getUser());
     const token = localStorage.getItem('access_token');
     if (!token) {
       alert('Unauthorized access. Redirecting to login.');

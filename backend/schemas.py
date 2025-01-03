@@ -39,6 +39,7 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str
+    organization: str
 
 
 class User(UserBase):

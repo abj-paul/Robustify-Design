@@ -1,0 +1,25 @@
+
+
+The detailed development plan is kept here.
+
+** Creating Test Users
+
+| User name | Password  | Organization |
+|-----------+-----------+--------------|
+| test1     | abcdefgh1 | IIT          |
+| test2     | abcdefgh2 | IIT          |
+| test3     | abcdefgh3 | IIT          |
+| abhijit   | uwu123    | IIT          |
+
+** Project Backlog
+
+| Item                                             | Time    |
+|--------------------------------------------------+---------|
+| Completing Login, Authentication, Access Control | Jan 2   |
+| Completing Project Setup                         | Jan 3-5 |
+| Report Generation                                | Jan 6-7 |
+| LLM Insights                                     | ??      |
+
+
+*** Draft. Understanding Backend
+Hmm it seems we have a lotta endpoint in backend to save everything. Lets test them. Lets start with authentication testing. If test works, lets integrate it with frontend. Lets build a simple dashboard in frontend.

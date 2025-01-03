@@ -4,6 +4,9 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { BackendService } from '../backend.service';
 import { HttpClient } from '@angular/common/http';
 import { catchError, throwError } from 'rxjs';
+import { routes } from '../app.routes';
+import { Router } from '@angular/router';
+import { ConstantService } from '../constant.service';
 
 @Component({
   selector: 'app-register',
@@ -15,11 +18,11 @@ import { catchError, throwError } from 'rxjs';
 export class RegisterComponent {
   registerForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private backendService: BackendService, private http: HttpClient) {
+  constructor(private fb: FormBuilder, private backendService: BackendService, private http: HttpClient, private router: Router, private constantService: ConstantService) {
     this.registerForm = this.fb.group(
       {
         username: ['', Validators.required],
-        email: ['', [Validators.required, Validators.email]],
+        organization: ['', [Validators.required, Validators.minLength(2)]],
         password: ['', [Validators.required, Validators.minLength(6)]],
         confirmPassword: ['', Validators.required],
       },
@@ -35,20 +38,27 @@ export class RegisterComponent {
 
   onSubmit() {
     if (this.registerForm.valid) {
-      const { username, email, password } = this.registerForm.value;
+      const { username, organization, password } = this.registerForm.value;
 
       this.http
-        .post(this.backendService.apiUrl+"/register", { username, email, password })
+        .post(this.backendService.apiUrl+"/register", { username, organization, password })
         .pipe(
           catchError((error) => {
             console.error('Registration failed', error);
+            //alert(error.message);
             return throwError(error);
           })
         )
         .subscribe({
-          next: (response) => {
+          next: (response: any) => {
             console.log('Registration successful', response);
-            alert('Registration successful!');
+            //alert('Registration successful!');
+            this.constantService.setUser({
+              "userid": response.id,
+              "username": response.username,
+              "organization": response.organization
+            })
+            this.router.navigate(["project-list"]); //dashboard
           },
           error: (error) => {
             console.error('Error:', error);

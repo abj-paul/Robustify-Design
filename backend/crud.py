@@ -1,17 +1,18 @@
 from http.client import HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy import and_
 from models import User, Project
 from schemas import UserCreate, ProjectCreate, ProjectUpdate
 from auth import get_password_hash
 
 
-def get_user_by_username(db: Session, username: str):
-    return db.query(User).filter(User.username == username).first()
+def get_user_by_username(db: Session, username: str): #, organization: str
+    return db.query(User).filter(User.username == username).first() #and_( , User.organization == organization
 
 
 def create_user(db: Session, user: UserCreate):
     hashed_password = get_password_hash(user.password)
-    db_user = User(username=user.username, password=hashed_password)
+    db_user = User(username=user.username, password=hashed_password, organization=user.organization)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)

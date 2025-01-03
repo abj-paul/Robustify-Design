@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { CommonModule } from '@angular/common';
 import { BackendService } from '../backend.service';
 import { Router } from '@angular/router';
+import { ConstantService } from '../constant.service';
 
 
 @Component({
@@ -18,7 +19,7 @@ import { Router } from '@angular/router';
 export class LoginComponent {
   loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private backendService: BackendService, private router: Router) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private backendService: BackendService, private router: Router, private constantService: ConstantService) {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
       password: ['', Validators.required],
@@ -41,6 +42,12 @@ export class LoginComponent {
           next: (response: any) => {
             console.log('Login successful', response);
             localStorage.setItem('access_token', response.access_token);
+
+            this.constantService.setUser({
+              "userid": response.user.id,
+              "username": response.user.username,
+              "organization": response.user.organization
+            })
             this.router.navigate(['/project-list']); // Redirect to dashboard
             //alert('Login successful!');
           },

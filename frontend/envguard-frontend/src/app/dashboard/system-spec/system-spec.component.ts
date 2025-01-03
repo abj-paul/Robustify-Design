@@ -72,7 +72,10 @@ ltl property {
 
   onCodeChange(): void {
     const content = this.fileContent;
-    if (content.includes('ltl')) {
+    if (this.fileContent.includes("uml:Model")) {
+      this.editorMode = 'uml';
+    }
+    else if (content.includes('ltl')) {
       this.editorMode = 'ltl';
       this.aceEditor.session.setMode('ace/mode/text'); // Since LTL mode isn't built-in
     } else if (content.includes('@startuml')) {

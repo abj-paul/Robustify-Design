@@ -23,13 +23,16 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "node_modules/ace-builds/src-noconflict",
+                "output": "/assets/ace/"
               }
             ],
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/ace-builds/src-noconflict/ace.js"
+            ]
           },
           "configurations": {
             "production": {

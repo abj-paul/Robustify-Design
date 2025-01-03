@@ -7,6 +7,7 @@ from typing import List, Optional
 from pydantic import BaseModel
 from typing import List, Dict, Any
 from datetime import datetime
+from fastapi.staticfiles import StaticFiles
 
 from libs.parse_uml_to_lts import uml_to_lts, write_in_file
 from libs.set_config import set_config
@@ -28,6 +29,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+PUBLIC_FOLDER = "public"
+app.mount("/images", StaticFiles(directory=f"{PUBLIC_FOLDER}/images"), name="images")
 
 
 @app.post("/upload/files")
@@ -146,6 +149,14 @@ async def get_file_content(file_path: str):
         raise HTTPException(status_code=404, detail="File not found")
 
 
+
+@app.get("/service/xml-to-png")
+async def generateImage(xmlContent: str):
+    file = open(f"{PUBLIC_FOLDER}/images/running_uml_code.xml", "w")  # Open in write mode
+    file.write(xmlContent)
+    file.close()
+    convert_xml_to_image(f"{PUBLIC_FOLDER}/images/","running_uml_code.xml")
+    return "localhost:8000/images/running_uml_code.png"
 
 # Run the application with the command:
 # uvicorn main:app --reload

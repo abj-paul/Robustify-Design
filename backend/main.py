@@ -8,7 +8,8 @@ from fastapi import FastAPI, UploadFile, Form, HTTPException, Depends
 from typing import Optional
 import json
 from fastapi.middleware.cors import CORSMiddleware
-
+from fastapi import HTTPException
+import httpx
 
 Base.metadata.create_all(bind=engine)
 
@@ -22,6 +23,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+PIPELINE_SERVER_ADDRESS = "http://localhost:8000"
 
 @app.post("/register")
 def register(user: UserCreate, db: Session = Depends(get_db)):
@@ -73,6 +75,13 @@ async def update_environment_spec(project_id: int, spec: SpecModel, db: Session 
     db.commit()
     return {"message": "Environment spec updated successfully"}
 
+
+@app.post("/service/xml-to-png")
+async def update_environment_spec(project_id: int, spec: SpecModel, db: Session = Depends(get_db)):
+    project = crud.get_project(db, project_id)
+    project.environment_spec = spec.content
+    db.commit()
+    return {"message": "Environment spec updated successfully"}
 
 # Other endpoints (system_spec, safety_property, config) follow the same structure as above.
 # ...
@@ -154,3 +163,17 @@ async def update_config(project_id: int, config: dict, db: Session = Depends(get
     project.config = config
     db.commit()
     return {"message": "Config file updated successfully"}
+
+@app.get("/service/xml-to-png")
+async def generate_image(xmlContent: str):
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(PIPELINE_SERVER_ADDRESS + "/service/xml-to-png", params={"xmlContent": xmlContent})
+            response.raise_for_status()
+            return response.json()  # Assuming the target service returns JSON
+    except httpx.RequestError as e:
+        raise HTTPException(status_code=500, detail=f"Request error: {str(e)}")
+    except httpx.HTTPStatusError as e:
+        raise HTTPException(status_code=response.status_code, detail=f"HTTP error: {str(e)}")
+
+    

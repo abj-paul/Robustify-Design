@@ -4,12 +4,12 @@ The detailed development plan is kept here.
 
 ** Creating Test Users
 
-| User name | Password  | Organization |
-|-----------+-----------+--------------|
-| test1     | abcdefgh1 | IIT          |
-| test2     | abcdefgh2 | IIT          |
-| test3     | abcdefgh3 | IIT          |
-| abhijit   | uwu123    | IIT          |
+| User name | Password | Organization |
+|-----------+----------+--------------|
+| test1     | uwu123   | IIT          |
+| test2     | uwu123   | IIT          |
+| test3     | uwu123   | IIT          |
+| abhijit   | uwu123   | IIT          |
 
 ** Project Backlog
 
@@ -23,6 +23,13 @@ The detailed development plan is kept here.
 
 *** Draft. Understanding Backend
 Hmm it seems we have a lotta endpoint in backend to save everything. Lets test them. Lets start with authentication testing. If test works, lets integrate it with frontend. Lets build a simple dashboard in frontend.
+
+Now let us connect the dashboard. Develop system specification upload first. If you can do it, you can do the rest of the three as well.
+
+*** Dockerizing
+--> Two fastapi backend
+--> Data folder to retain image in fastapi
+
 
 * Appendix
 https://docs.google.com/document/d/1lhh91qx08It_xFHnBMPcmfsRCFfclmwLHlOGXjjAqvQ/edit?usp=sharing

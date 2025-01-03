@@ -104,3 +104,16 @@
   ::-webkit-scrollbar-thumb:hover {
     background: #555;
   }
+
+  .image-preview {
+    text-align: center;
+    margin: 20px 0;
+  }
+  
+  .image-preview img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #3d3d3d;
+    border-radius: 4px;
+  }
+  

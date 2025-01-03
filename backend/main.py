@@ -164,11 +164,11 @@ async def update_config(project_id: int, config: dict, db: Session = Depends(get
     db.commit()
     return {"message": "Config file updated successfully"}
 
-@app.get("/service/xml-to-png")
-async def generate_image(xmlContent: str):
+@app.get("/service/uml-to-png")
+async def generate_image(umlContent: str):
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.get(PIPELINE_SERVER_ADDRESS + "/service/xml-to-png", params={"xmlContent": xmlContent})
+            response = await client.get(PIPELINE_SERVER_ADDRESS + "/service/xml-to-png", params={"xmlContent": umlContent})
             response.raise_for_status()
             return response.json()  # Assuming the target service returns JSON
     except httpx.RequestError as e:

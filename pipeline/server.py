@@ -156,7 +156,7 @@ async def generateImage(xmlContent: str):
     file.write(xmlContent)
     file.close()
     convert_xml_to_image(f"{PUBLIC_FOLDER}/images/","running_uml_code.xml")
-    return "localhost:8000/images/running_uml_code.png"
+    return {"imageUrl":"http://localhost:8000/images/running_uml_code.png"}
 
 # Run the application with the command:
 # uvicorn main:app --reload

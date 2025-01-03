@@ -1,12 +1,11 @@
-<!-- system-spec.component.html -->
 <div class="editor-container">
   <div class="editor-header">
     <div class="title">
       <h2>System Specification Editor</h2>
       <span class="mode-badge">{{ editorMode.toUpperCase() }}</span>
     </div>
-    <button (click)="submitFile()" class="submit-button">
-      Verify & Submit
+    <button (click)="compileContent()" class="submit-button">
+      Compile & View Image
     </button>
   </div>
   <div class="editor-wrapper">
@@ -16,5 +15,8 @@
     <div class="status">
       Mode: {{ editorMode.toUpperCase() }} | Auto-detection enabled
     </div>
+  </div>
+  <div *ngIf="compiledImageSafeUrl" class="image-preview">
+    <img [src]="compiledImageSafeUrl" alt="Compiled Image" />
   </div>
 </div>

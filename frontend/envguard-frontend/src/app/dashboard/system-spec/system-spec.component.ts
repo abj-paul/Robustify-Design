@@ -7,21 +7,25 @@ import 'ace-builds/src-noconflict/theme-tomorrow_night';
 import 'ace-builds/src-noconflict/ext-language_tools';
 import { BackendService } from '../../backend.service';
 import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-system-spec',
   standalone: true,
   templateUrl: './system-spec.component.html',
   styleUrls: ['./system-spec.component.css'],
-  imports: [FormsModule]
+  imports: [FormsModule, CommonModule]
 })
 export class SystemSpecComponent implements OnInit {
   @ViewChild('editor') private editor!: ElementRef<HTMLElement>;
   private aceEditor: any;
   fileContent: string = '';
   editorMode: string = 'text';
+  compiledImageUrl: string = '';
+  compiledImageSafeUrl: SafeUrl = '';
 
-  constructor(private backendService: BackendService, private http: HttpClient) {}
+  constructor(private backendService: BackendService, private http: HttpClient, private sanitizer: DomSanitizer) {}
 
   ngOnInit() {
     // Initial content
@@ -95,5 +99,31 @@ ltl property {
     if (this.aceEditor) {
       this.aceEditor.destroy();
     }
+  }
+
+  compileContent(): void {
+    if (this.editorMode === 'uml') {
+      this.compileUMLAndGeneratePNG();
+    } else if (this.editorMode === 'ltl') {
+      this.compileLTLAndGeneratePNG();
+    }
+  }
+
+  compileUMLAndGeneratePNG(): void {
+    console.log(this.fileContent);
+    this.http.get<any>(`${this.backendService.apiUrl}/service/uml-to-png`, { params: { "umlContent": this.fileContent } })
+      .subscribe(response => {
+        this.compiledImageUrl = response.imageUrl;
+        const timestamp = new Date().getTime(); // Current timestamp
+        this.compiledImageSafeUrl = this.sanitizer.bypassSecurityTrustUrl(`${response.imageUrl}?t=${timestamp}`);
+        console.log(this.compiledImageSafeUrl);
+      });
+  }
+
+  compileLTLAndGeneratePNG(): void {
+    this.http.get<any>(`${this.backendService.apiUrl}/service/xml-to-png`, { params: { "ltlContent": this.fileContent } })
+      .subscribe(response => {
+        this.compiledImageUrl = response.imageUrl;
+      });
   }
 }

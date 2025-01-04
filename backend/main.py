@@ -61,7 +61,7 @@ async def upload_environment_spec(
     project.environment_spec = (await file.read()).decode("utf-8") if file else content
     db.commit()
 
-    spec_filename = "env.ltl" if file and file.filename.endswith("ltl") else "env.xml"
+    spec_filename = "env.lts" if file and file.filename.endswith("lts") else "env.xml"
     return await handle_specification_upload(project, file, content, spec_filename)
 
 
@@ -77,7 +77,7 @@ async def update_environment_spec(project_id: int, file: UploadFile = None, cont
     project.environment_spec = (await file.read()).decode("utf-8") if file else content
     db.commit()
     
-    spec_filename = "env.ltl" if file and file.filename.endswith("ltl") else "env.xml"
+    spec_filename = "env.lts" if file and file.filename.endswith("lts") else "env.xml"
     return await handle_specification_upload(project, file, content, spec_filename)
 
 
@@ -91,7 +91,7 @@ async def upload_system_spec(
     project.system_spec = (await file.read()).decode("utf-8") if file else content
     db.commit()
     
-    spec_filename = "sys.ltl" if file and file.filename.endswith("ltl") else "sys.xml"
+    spec_filename = "sys.lts" if file and file.filename.endswith("lts") else "sys.xml"
     return await handle_specification_upload(project, file, content, spec_filename)
 
 
@@ -108,7 +108,7 @@ async def update_system_spec(project_id: int, file: UploadFile = None, content: 
 
     project.system_spec = (await file.read()).decode("utf-8") if file else content
     db.commit()
-    spec_filename = "sys.xml" if content and "uml" in content else "sys.ltl"
+    spec_filename = "sys.xml" if content and "uml" in content else "sys.lts"
     return await handle_specification_upload(project, file, content, spec_filename)
     
 
@@ -122,7 +122,7 @@ async def upload_safety_property(
     project.safety_property = (await file.read()).decode("utf-8") if file else content
     db.commit()
 
-    spec_filename = "p.xml" if content and "uml" in content else "p.ltl"
+    spec_filename = "p.xml" if content and "uml" in content else "p.lts"
     return await handle_specification_upload(project, file, content, spec_filename)
 
 
@@ -138,21 +138,23 @@ async def update_safety_property(project_id: int, file: UploadFile = None, conte
     project.safety_property = (await file.read()).decode("utf-8") if file else content
     db.commit()
     
-    spec_filename = "p.xml" if content and "uml" in content else "p.ltl"
+    spec_filename = "p.xml" if content and "uml" in content else "p.lts"
     return await handle_specification_upload(project, file, content, spec_filename)
 
 
 # Configuration File Endpoints
 @app.post("/projects/{project_id}/config")
-async def upload_config(project_id: int, file: UploadFile, db: Session = Depends(get_db)):
+async def upload_config(project_id: int, file: UploadFile = None, content: Optional[str] = Form(None), db: Session = Depends(get_db)):
     project = crud.get_project(db, project_id)
-    content = (await file.read()).decode("utf-8")
+    content = (await file.read()).decode("utf-8") if file else content
     try:
         project.config = json.loads(content)
     except json.JSONDecodeError:
         raise HTTPException(status_code=400, detail="Invalid JSON in config file")
     db.commit()
-    return {"message": "Config file uploaded successfully"}
+    
+    spec_filename = "config-pareto.json"
+    return await handle_specification_upload(project, file, content, spec_filename)
 
 
 @app.get("/projects/{project_id}/config")
@@ -162,12 +164,15 @@ async def get_config(project_id: int, db: Session = Depends(get_db)):
 
 
 @app.put("/projects/{project_id}/config")
-async def update_config(project_id: int, config: dict, db: Session = Depends(get_db)):
+async def update_config(project_id: int, file: UploadFile = None, content: Optional[str] = Form(None), db: Session = Depends(get_db)):
     project = crud.get_project(db, project_id)
-    project.config = config
+    project.config = (await file.read()).decode("utf-8") if file else content
     db.commit()
-    return {"message": "Config file updated successfully"}
+    spec_filename = "config-pareto.json"
+    return await handle_specification_upload(project, file, content, spec_filename)
 
+
+# Services
 @app.get("/service/uml-to-png")
 async def generate_image(umlContent: str):
     try:
@@ -180,15 +185,14 @@ async def generate_image(umlContent: str):
     except httpx.HTTPStatusError as e:
         raise HTTPException(status_code=response.status_code, detail=f"HTTP error: {str(e)}")
 
-    
 
-# Services
 @app.post("/service/xml-to-png")
 async def update_environment_spec(project_id: int, spec: SpecModel, db: Session = Depends(get_db)):
     project = crud.get_project(db, project_id)
     project.environment_spec = spec.content
     db.commit()
     return {"message": "Environment spec updated successfully"}
+
 
 async def handle_specification_upload(project, file, content, spec_filename):
     project_folder = f"{BASE_PROJECT_FOLDER}/{project.name}-{project.id}"

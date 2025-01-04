@@ -30,7 +30,7 @@ Today, I will do the following tasks.
 1. [X] Set project-name in cache (9:10)
 2. [X] Submit specification (save as sql and file) (10:00)
 3. [ ] Place the specification code in 4 parts (11:30)
-4. [ ] Save as sql and file (12:00)
+4. [X] Save as sql and file (12:00)
 5. [ ] Multi file specification
 6. [ ] Execute fortis (1:00)
 7. [ ] Show reports 

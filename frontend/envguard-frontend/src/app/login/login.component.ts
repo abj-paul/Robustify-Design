@@ -42,6 +42,7 @@ export class LoginComponent {
           next: (response: any) => {
             console.log('Login successful', response);
             localStorage.setItem('access_token', response.access_token);
+            console.log(localStorage.getItem('access_token'));
 
             this.constantService.setUser({
               "userid": response.user.id,

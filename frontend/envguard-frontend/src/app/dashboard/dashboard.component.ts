@@ -1,36 +1,71 @@
+// dashboard.component.ts
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
 import { SpecTemplateComponent } from './spec-template/spec-template.component';
+import { SystemSpecificationComponent } from './system-specification/system-specification.component';
+import { EnvironmentSpecificationComponent } from './environment-specification/environment-specification.component';
+import { SafetyPropertyComponent } from './safety-property/safety-property.component';
+import { ConfigurationComponent } from './configuration/configuration.component';
+import { RobustificationComponent } from '../robustification/robustification.component';
+import { ReportComponent } from '../report/report.component';
+import { ConstantService } from '../constant.service';
+//import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
   standalone: true,
-  imports: [MatTabsModule, CommonModule, SpecTemplateComponent],
+  imports: [
+    MatTabsModule,
+    CommonModule,
+    RouterModule,
+    SystemSpecificationComponent,
+    EnvironmentSpecificationComponent,
+    SafetyPropertyComponent,
+    ConfigurationComponent,
+    RobustificationComponent,
+    ReportComponent
+  ],
 })
 export class DashboardComponent implements OnInit {
   projectId: number | null = null;
   projectTitle: string | null = null;
+  activeTab = 'environment';
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private constantService: ConstantService,
+    //private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
-    const token = localStorage.getItem('access_token');
-    if (!token) {
-      alert('Unauthorized access. Redirecting to login.');
-      this.router.navigate(['/login']);
+    // Check authentication status
+    // if (!this.authService.isAuthenticated()) {
+    //   this.router.navigate(['/login']);
+    //   return;
+    // }
+
+    this.projectTitle = this.constantService.getProject()?.name;
+    this.projectId = this.constantService.getProject()?.id;
+
+    if (!this.projectId) {
+      this.router.navigate(['/project-list']);
       return;
     }
 
-    this.route.queryParams.subscribe((params) => {
-      this.projectId = params['projectId'];
-      if (!this.projectId) {
-        alert('Invalid project. Redirecting to project list.');
-        this.router.navigate(['/project-list']);
-      }
+    // Subscribe to route changes to update active tab
+    this.router.events.subscribe(() => {
+      const currentUrl = this.router.url.split('/').pop() || 'environment';
+      this.activeTab = currentUrl;
     });
+  }
+
+  setActiveTab(tab: string) {
+    this.activeTab = tab;
+    this.router.navigate([`/dashboard/${tab}`]);
   }
 }

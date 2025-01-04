@@ -1,28 +1,18 @@
-<div class="dashboard-container">
-    <h1>{{ projectTitle }}</h1>
-  
-    <mat-tab-group>
-      <mat-tab label="Environment Specification">
-        <div class="tab-content">Environment Specification Content Here</div>
-      </mat-tab>
-      <mat-tab label="System Specification">
-        <div class="tab-content">
-          System Specification Content Here
-          <app-spec-template></app-spec-template>
-        </div>
-      </mat-tab>
-      <mat-tab label="Safety Property">
-        <div class="tab-content">Safety Property Content Here</div>
-      </mat-tab>
-      <mat-tab label="Configuration">
-        <div class="tab-content">Configuration Content Here</div>
-      </mat-tab>
-      <mat-tab label="Robustification">
-        <div class="tab-content">Robustification Content Here</div>
-      </mat-tab>
-      <mat-tab label="Reports">
-        <div class="tab-content">Reports Content Here</div>
-      </mat-tab>
-    </mat-tab-group>
+uwu
+<div class="dashboard-wrapper">
+  <div class="sidebar">
+    <h2 class="sidebar-title">Project Dashboard</h2>
+    <ul class="sidebar-nav">
+      <li><a routerLink="environment" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Environment Specification</a></li>
+      <li><a routerLink="system" routerLinkActive="active">System Specification</a></li>
+      <li><a routerLink="safety" routerLinkActive="active">Safety Property</a></li>
+      <li><a routerLink="configuration" routerLinkActive="active">Configuration</a></li>
+      <li><a routerLink="robustification" routerLinkActive="active">Robustification</a></li>
+      <li><a routerLink="reports" routerLinkActive="active">Reports</a></li>
+    </ul>
   </div>
-  
+  <div class="main-content">
+    <h1>{{ projectTitle }}</h1>
+    <router-outlet></router-outlet>
+  </div>
+</div>

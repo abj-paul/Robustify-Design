@@ -60,7 +60,9 @@ async def upload_environment_spec(
     project = crud.get_project(db, project_id)
     project.environment_spec = (await file.read()).decode("utf-8") if file else content
     db.commit()
-    return {"message": "Environment spec uploaded successfully"}
+
+    spec_filename = "env.ltl" if file and file.filename.endswith("ltl") else "env.xml"
+    return await handle_specification_upload(project, file, content, spec_filename)
 
 
 @app.get("/projects/{project_id}/environment_spec")
@@ -70,11 +72,13 @@ async def get_environment_spec(project_id: int, db: Session = Depends(get_db)):
 
 
 @app.put("/projects/{project_id}/environment_spec")
-async def update_environment_spec(project_id: int, spec: SpecModel, db: Session = Depends(get_db)):
+async def update_environment_spec(project_id: int, file: UploadFile = None, content: Optional[str] = Form(None), db: Session = Depends(get_db)):
     project = crud.get_project(db, project_id)
-    project.environment_spec = spec.content
+    project.environment_spec = (await file.read()).decode("utf-8") if file else content
     db.commit()
-    return {"message": "Environment spec updated successfully"}
+    
+    spec_filename = "env.ltl" if file and file.filename.endswith("ltl") else "env.xml"
+    return await handle_specification_upload(project, file, content, spec_filename)
 
 
 
@@ -102,10 +106,10 @@ async def update_system_spec(project_id: int, file: UploadFile = None, content: 
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
 
-    project.system_spec = content
+    project.system_spec = (await file.read()).decode("utf-8") if file else content
     db.commit()
     spec_filename = "sys.xml" if content and "uml" in content else "sys.ltl"
-    return await handle_specification_upload(project, None, content, spec_filename)
+    return await handle_specification_upload(project, file, content, spec_filename)
     
 
 
@@ -117,7 +121,9 @@ async def upload_safety_property(
     project = crud.get_project(db, project_id)
     project.safety_property = (await file.read()).decode("utf-8") if file else content
     db.commit()
-    return {"message": "Safety property uploaded successfully"}
+
+    spec_filename = "p.xml" if content and "uml" in content else "p.ltl"
+    return await handle_specification_upload(project, file, content, spec_filename)
 
 
 @app.get("/projects/{project_id}/safety_property")
@@ -127,11 +133,13 @@ async def get_safety_property(project_id: int, db: Session = Depends(get_db)):
 
 
 @app.put("/projects/{project_id}/safety_property")
-async def update_safety_property(project_id: int, spec: SpecModel, db: Session = Depends(get_db)):
+async def update_safety_property(project_id: int, file: UploadFile = None, content: Optional[str] = Form(None), db: Session = Depends(get_db)):
     project = crud.get_project(db, project_id)
-    project.safety_property = spec.content
+    project.safety_property = (await file.read()).decode("utf-8") if file else content
     db.commit()
-    return {"message": "Safety property updated successfully"}
+    
+    spec_filename = "p.xml" if content and "uml" in content else "p.ltl"
+    return await handle_specification_upload(project, file, content, spec_filename)
 
 
 # Configuration File Endpoints

@@ -187,7 +187,8 @@ async def run_fortis(
     project = crud.get_project(db, project_id)
     project_folder = f"{BASE_PROJECT_FOLDER}/{project.name}-{project.id}"
 
-    async with httpx.AsyncClient() as client:
+    timeout = httpx.Timeout(60.0)  # Adjust timeout as needed (e.g., 60 seconds)
+    async with httpx.AsyncClient(timeout=timeout) as client:
         response = await client.post(
             f"{PIPELINE_SERVER_ADDRESS}/execute",
             data={"project_folder": project_folder, "class_list": class_list}
@@ -199,6 +200,7 @@ async def run_fortis(
         return JSONResponse(
             content={"error": response.text}, status_code=response.status_code
         )
+
 
 
 # Services

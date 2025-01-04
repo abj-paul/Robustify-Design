@@ -38,12 +38,10 @@ export class RobustificationComponent {
         next: (response) => {
           console.log('Robustification Successful:', response);
           this.isSuccess = true;
-          this.isLoading = false;
         },
         error: (error) => {
           console.error('Robustification failed:', error);
           this.isSuccess = false;
-          this.isLoading = false;
         },
         complete: () => {
           this.isLoading = false;

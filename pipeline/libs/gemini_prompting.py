@@ -9,7 +9,7 @@ import numpy as np
 load_dotenv()
 
 
-def get_response_from_gemini(design_data):
+def get_response_from_gemini(design_data, sys, env, p, redesign):
     # Configure the API
     genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
@@ -44,7 +44,7 @@ def get_response_from_gemini(design_data):
     query = (
         "You are a behavioral system design analyzer. Given a design, you will return "
         "insights on that design, highlighting changes and any significant observations.\n\n"
-        f"Here is the design data: {json.dumps(design_data_serialized, indent=2)}\n\n"
+        f"Here is the design data: System behavioral model is {sys}, Environment model is {env} and safety property is {p}. Here is the generated design using Fortis tool to robustify the system. The robust design is : {redesign}. Some metrics of this robust design is: {json.dumps(design_data_serialized, indent=2)}\n\n"
         "Please provide your analysis."
     )
 
@@ -74,10 +74,27 @@ def get_response_from_gemini(design_data):
 
 
 # Get ranked designs
-ranked_designs = rank_designs("../projects/Voting-2")
+project_folder = "../projects/Voting-2"
+ranked_designs = rank_designs(project_folder)
 
 # Process each design
 for design in ranked_designs:
-    response = get_response_from_gemini(design)
+    f = open(f"{project_folder}/sys.lts")
+    sys = f.read()
+    f.close()
+
+    f = open(f"{project_folder}/env.lts")
+    env = f.read()
+    f.close()
+
+    f = open(f"{project_folder}/p.lts")
+    p = f.read()
+    f.close()
+
+    f = open(f"{project_folder}/solutions/{design['solution']}")
+    redesign = f.read()
+    f.close()
+
+    response = get_response_from_gemini(design, sys, env, p, redesign)
     print(response)
     break  # Process only the first design for demonstration

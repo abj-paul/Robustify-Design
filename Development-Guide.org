@@ -25,6 +25,18 @@ Hmm it seems we have a lotta endpoint in backend to save everything. Lets test t
 
 Now let us connect the dashboard. Develop system specification upload first. If you can do it, you can do the rest of the three as well.
 
+
+Today, I will do the following tasks.
+1. [ ] Set project-name in cache (9:10)
+2. [ ] Submit specification (save as sql and file) (10:00)
+3. [ ] Place the specification code in 4 parts (11:30)
+4. [ ] Save as sql and file (12:00)
+5. [ ] Execute fortis (1:00)
+6. [ ] Show reports 
+7. [ ] Create Project
+8. [ ] Report in window
+9. [ ] LLM Insights on report window
+
 *** Dockerizing
 --> Two fastapi backend
 --> Data folder to retain image in fastapi

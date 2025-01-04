@@ -33,8 +33,10 @@ export class ProjectListComponent implements OnInit {
     // Future functionality for project creation
   }
 
-  openDashboard(projectId: number) {
-    this.router.navigate(['/dashboard'], { queryParams: { projectId } });
+  openDashboardForProject(project: Project) {
+    this.constantService.setProject(project);
+    console.log(`Current Project is $(project.name)`);
+    this.router.navigate(['/dashboard'], { queryParams: { projectId: project.id } });
   }
 
   loadProjectListForUser(): void {

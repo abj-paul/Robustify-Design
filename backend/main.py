@@ -24,6 +24,7 @@ app.add_middleware(
 )
 
 PIPELINE_SERVER_ADDRESS = "http://localhost:8000"
+BASE_PROJECT_FOLDER = "projects"
 
 @app.post("/register")
 def register(user: UserCreate, db: Session = Depends(get_db)):
@@ -92,6 +93,33 @@ async def upload_system_spec(
     project = crud.get_project(db, project_id)
     project.system_spec = (await file.read()).decode("utf-8") if file else content
     db.commit()
+
+    project_folder = f"{BASE_PROJECT_FOLDER}/{project.name}"
+    async with httpx.AsyncClient() as client:
+        response = await client.post(f"{PIPELINE_SERVER_ADDRESS}/create_project/", data={"project_name":project.name, "project_description": project.description})
+
+        if file:  
+            files = {"files": (file.filename, file.file, file.content_type)}
+            response = await client.post(
+                f"{PIPELINE_SERVER_ADDRESS}/upload/files",
+                data={"project_folder": project_folder},
+                files=files
+            )
+        else:  
+            response = await client.post(
+                f"{PIPELINE_SERVER_ADDRESS}/upload/specification/",
+                data={
+                    "filename": "system_spec.txt",
+                    "specification": content,
+                    "project_folder": project_folder
+                }
+            )
+        
+        if response.status_code != 200:
+            raise HTTPException(status_code=response.status_code, detail="Failed to upload specification")
+
+    #return {"message": "System spec updated successfully in database and file"}
+
     return {"message": "System spec uploaded successfully"}
 
 
@@ -100,13 +128,41 @@ async def get_system_spec(project_id: int, db: Session = Depends(get_db)):
     project = crud.get_project(db, project_id)
     return {"system_spec": project.system_spec}
 
+# @app.put("/projects/{project_id}/system_spec")
+# async def update_system_spec(project_id: int, spec: SpecModel, db: Session = Depends(get_db)):
+#     project = crud.get_project(db, project_id)
+#     if not project:
+#         raise HTTPException(status_code=404, detail="Project not found")
 
-@app.put("/projects/{project_id}/system_spec")
-async def update_system_spec(project_id: int, spec: SpecModel, db: Session = Depends(get_db)):
-    project = crud.get_project(db, project_id)
-    project.system_spec = spec.content
-    db.commit()
-    return {"message": "System spec updated successfully"}
+#     project.system_spec = spec.content
+#     db.commit()
+
+#     # Dynamically call the appropriate backend endpoint
+#     project_folder = f"{BASE_PROJECT_FOLDER}/{project.name}"
+#     async with httpx.AsyncClient() as client:
+#         response = await client.post(f"{PIPELINE_SERVER_ADDRESS}/create_project/", data={"project_name":project.name, "project_description": project.description})
+
+#         if hasattr(spec, 'file'):  
+#             files = {"files": (spec.file.filename, spec.file.file, spec.file.content_type)}
+#             response = await client.post(
+#                 f"{PIPELINE_SERVER_ADDRESS}/upload/files",
+#                 data={"project_folder": project_folder},
+#                 files=files
+#             )
+#         else:  
+#             response = await client.post(
+#                 f"{PIPELINE_SERVER_ADDRESS}/upload/specification/",
+#                 data={
+#                     "filename": "system_spec.txt",
+#                     "specification": spec.content,
+#                     "project_folder": project_folder
+#                 }
+#             )
+        
+#         if response.status_code != 200:
+#             raise HTTPException(status_code=response.status_code, detail="Failed to upload specification")
+
+#     return {"message": "System spec updated successfully in database and file"}
 
 
 # Safety Property Endpoints

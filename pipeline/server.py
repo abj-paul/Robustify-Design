@@ -60,8 +60,7 @@ async def upload_specification(filename: str = Form(...), specification: str = F
 @app.post("/create_project/")
 async def create_project(
     project_name: str = Form(...),
-    project_description: str = Form(...),
-    project_image: UploadFile = File(...),
+    project_description: str = Form(...) #project_image: UploadFile = File(...),
 ):
     try:
         # Create a folder with project name if it doesn't exist
@@ -73,10 +72,10 @@ async def create_project(
         with open(description_file, "w") as f:
             f.write(project_description)
         # Save project image
-        image_path = os.path.join(project_folder, project_image.filename)
-        with open(image_path, "wb") as f:
-            f.write(project_image.file.read())
-        print("Control reach here")
+        # image_path = os.path.join(project_folder, project_image.filename)
+        # with open(image_path, "wb") as f:
+        #     f.write(project_image.file.read())
+        # print("Control reach here")
 
         return {"message": "Project created successfully", "project_name": project_name, "project_folder": project_folder}
     

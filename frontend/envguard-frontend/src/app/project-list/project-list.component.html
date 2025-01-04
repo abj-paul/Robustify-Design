@@ -1,12 +1,32 @@
 <div class="project-list-container">
-    <h1>Welcome to Your Projects</h1>
-  
-    <button mat-raised-button color="primary" (click)="createProject()">Create New Project</button>
-  
-    <ul class="project-list">
-      <li *ngFor="let project of projects" (click)="openDashboardForProject(project)">
-        {{ project.name }}
-      </li>
-    </ul>
+  <header class="page-header">
+    <div class="header-content">
+      <h1>Project Hub</h1>
+      <p class="subtitle">Manage and organize your projects</p>
+    </div>
+    <button class="create-button" (click)="createProject()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+      Create New Project
+    </button>
+  </header>
+
+  <div class="projects-grid">
+    <div class="project-card" *ngFor="let project of projects" (click)="openDashboardForProject(project)">
+      <div class="project-icon">
+        {{ project.name[0].toUpperCase() }}
+      </div>
+      <div class="project-details">
+        <h3>{{ project.name }}</h3>
+        <p class="project-meta">Last updated: {{ project.lastUpdated || 'Not available' }}</p>
+      </div>
+      <div class="project-arrow">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 18l6-6-6-6"/>
+        </svg>
+      </div>
+    </div>
   </div>
-  
+</div>

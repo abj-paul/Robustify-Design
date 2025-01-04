@@ -13,4 +13,6 @@ export class Project {
     config : string = "Default";
 
     user: User = new User();
+
+    lastUpdated: Date = new Date();
 }

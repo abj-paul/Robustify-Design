@@ -114,7 +114,7 @@ async def update_system_spec(project_id: int, file: UploadFile = None, content: 
 
 
 # Safety Property Endpoints
-@app.post("/projects/{project_id}/safety_property")
+@app.post("/projects/{project_id}/safety_spec")
 async def upload_safety_property(
     project_id: int, file: UploadFile = None, content: Optional[str] = Form(None), db: Session = Depends(get_db)
 ):
@@ -126,13 +126,13 @@ async def upload_safety_property(
     return await handle_specification_upload(project, file, content, spec_filename)
 
 
-@app.get("/projects/{project_id}/safety_property")
+@app.get("/projects/{project_id}/safety_spec")
 async def get_safety_property(project_id: int, db: Session = Depends(get_db)):
     project = crud.get_project(db, project_id)
     return {"safety_property": project.safety_property}
 
 
-@app.put("/projects/{project_id}/safety_property")
+@app.put("/projects/{project_id}/safety_spec")
 async def update_safety_property(project_id: int, file: UploadFile = None, content: Optional[str] = Form(None), db: Session = Depends(get_db)):
     project = crud.get_project(db, project_id)
     project.safety_property = (await file.read()).decode("utf-8") if file else content
@@ -143,7 +143,7 @@ async def update_safety_property(project_id: int, file: UploadFile = None, conte
 
 
 # Configuration File Endpoints
-@app.post("/projects/{project_id}/config")
+@app.post("/projects/{project_id}/configuration_spec")
 async def upload_config(project_id: int, file: UploadFile = None, content: Optional[str] = Form(None), db: Session = Depends(get_db)):
     project = crud.get_project(db, project_id)
     content = (await file.read()).decode("utf-8") if file else content
@@ -157,13 +157,13 @@ async def upload_config(project_id: int, file: UploadFile = None, content: Optio
     return await handle_specification_upload(project, file, content, spec_filename)
 
 
-@app.get("/projects/{project_id}/config")
+@app.get("/projects/{project_id}/configuration_spec")
 async def get_config(project_id: int, db: Session = Depends(get_db)):
     project = crud.get_project(db, project_id)
     return {"config": project.config}
 
 
-@app.put("/projects/{project_id}/config")
+@app.put("/projects/{project_id}/configuration_spec")
 async def update_config(project_id: int, file: UploadFile = None, content: Optional[str] = Form(None), db: Session = Depends(get_db)):
     project = crud.get_project(db, project_id)
     project.config = (await file.read()).decode("utf-8") if file else content
@@ -186,7 +186,7 @@ async def generate_image(umlContent: str):
         raise HTTPException(status_code=response.status_code, detail=f"HTTP error: {str(e)}")
 
 
-@app.post("/service/xml-to-png")
+@app.post("/service/lts-to-png")
 async def update_environment_spec(project_id: int, spec: SpecModel, db: Session = Depends(get_db)):
     project = crud.get_project(db, project_id)
     project.environment_spec = spec.content

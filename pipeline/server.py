@@ -12,7 +12,7 @@ from fastapi.staticfiles import StaticFiles
 from libs.parse_uml_to_lts import uml_to_lts, write_in_file
 from libs.set_config import set_config
 from libs.execute_fortis import run_fortis
-from libs.output_to_uml import save_output_as_uml
+from libs.output_to_uml import save_output_as_uml, save_output_as_uml_single_file
 from libs.convert_xml_to_image import convert_xml_to_image
 from wrapper import convert_to_lts
 from generate_pdf import generate_output_document
@@ -156,6 +156,14 @@ async def generateImage(xmlContent: str):
     file.close()
     convert_xml_to_image(f"{PUBLIC_FOLDER}/images/","running_uml_code.xml")
     return {"imageUrl":"http://localhost:8000/images/running_uml_code.png"}
+
+@app.get("/service/lts-to-png")
+async def generateImage(ltsContent: str):
+    file = open(f"{PUBLIC_FOLDER}/images/running_lts_code.lts", "w")  # Open in write mode
+    file.write(ltsContent)
+    file.close()
+    convert_xml_to_image(f"{PUBLIC_FOLDER}/images/","running_lts_code.lts")
+    return {"imageUrl":"http://localhost:8000/images/running_lts_code.png"}
 
 # Run the application with the command:
 # uvicorn main:app --reload

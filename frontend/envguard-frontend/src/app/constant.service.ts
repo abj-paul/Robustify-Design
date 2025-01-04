@@ -6,8 +6,9 @@ import { Project } from './models/Project';
   providedIn: 'root'
 })
 export class ConstantService {
-  currUser: User = new User();
-  currProject: Project = new Project();
+  private currUser: User = new User();
+  private currProject: Project = new Project();
+  private activeTab: string = 'environment';
 
   constructor() { }
 
@@ -26,5 +27,14 @@ export class ConstantService {
 
   getProject() : Project {
     return this.currProject;
+  }
+
+  getActiveTab(): string {
+    return this.activeTab;
+  }
+
+  setActiveTab(activeTab: string): void {
+    console.log("Upading active tab in constant service..");
+    this.activeTab = activeTab;
   }
 }

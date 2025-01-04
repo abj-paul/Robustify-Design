@@ -82,7 +82,7 @@ ltl property {
     if (this.fileContent.includes("uml:Model")) {
       this.editorMode = 'uml';
     }
-    else if (content.includes('ltl')) {
+    else if (content.includes('= (')) {
       this.editorMode = 'ltl';
       this.aceEditor.session.setMode('ace/mode/text'); // Since LTL mode isn't built-in
     } else if (content.includes('@startuml')) {
@@ -95,10 +95,12 @@ ltl property {
   }
 
   updateSystemSpecService(projectId: number, xmlContent: string): Observable<any> {
-    const url = `${this.backendService.apiUrl}/projects/${projectId}/system_spec`;
-    const payload = { content: xmlContent };
-    return this.http.put(url, payload);
-  }
+    const url = `${this.backendService.apiUrl}/projects/${this.constantService.getProject().id}/${this.constantService.getActiveTab()}_spec`;
+    const formData = new FormData();
+    formData.append('content', xmlContent);
+
+    return this.http.post(url, formData);
+}
 
   updateSpec() {
     console.log(`For project ${this.constantService.getProject().id}, I am sending ${this.fileContent}`);
@@ -147,7 +149,7 @@ ltl property {
   }
 
   compileLTLAndGeneratePNG(): void {
-    this.http.get<any>(`${this.backendService.apiUrl}/service/xml-to-png`, { params: { "ltlContent": this.fileContent } })
+    this.http.get<any>(`${this.backendService.apiUrl}/service/lts-to-png`, { params: { "ltlContent": this.fileContent } })
       .subscribe(response => {
         this.compiledImageUrl = response.imageUrl;
       });

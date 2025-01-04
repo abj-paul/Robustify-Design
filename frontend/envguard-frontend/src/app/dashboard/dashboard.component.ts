@@ -61,11 +61,13 @@ export class DashboardComponent implements OnInit {
     this.router.events.subscribe(() => {
       const currentUrl = this.router.url.split('/').pop() || 'environment';
       this.activeTab = currentUrl;
+      this.constantService.setActiveTab(this.activeTab);
     });
   }
 
   setActiveTab(tab: string) {
     this.activeTab = tab;
+    this.constantService.setActiveTab(tab);
     this.router.navigate([`/dashboard/${tab}`]);
   }
 }

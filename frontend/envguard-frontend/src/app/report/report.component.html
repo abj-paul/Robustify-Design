@@ -1,1 +1,17 @@
-<p>report works!</p>
+<mat-card *ngIf="loading" class="loading-card">
+    <mat-spinner></mat-spinner>
+    <span>Loading reports...</span>
+  </mat-card>
+  
+  <mat-card *ngIf="error" class="error-card">
+    <mat-icon>error_outline</mat-icon>
+    <span>{{ error }}</span>
+  </mat-card>
+  
+  <mat-list *ngIf="!loading && !error">
+    <mat-list-item *ngFor="let report of reports" (click)="openReport(report)">
+      <mat-icon matListIcon>description</mat-icon>
+      <span>{{ report | slice: report.lastIndexOf('/') + 1 }}</span>
+    </mat-list-item>
+  </mat-list>
+  

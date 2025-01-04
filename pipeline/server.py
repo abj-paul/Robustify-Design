@@ -29,10 +29,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 PUBLIC_FOLDER = "public"
-app.mount("/images", StaticFiles(directory=f"{PUBLIC_FOLDER}/images"), name="images")
-
+app.mount("/images", StaticFiles(directory=f"public/images"), name="images")
+app.mount("/projects", StaticFiles(directory="projects"), name="projects")
 
 @app.post("/upload/files")
 async def upload_files(files: List[UploadFile] = File(...), project_folder: str = Form(...)):
@@ -168,6 +167,23 @@ async def generateImage(ltsContent: str):
     file.close()
     convert_xml_to_image(f"{PUBLIC_FOLDER}/images/","running_lts_code.lts")
     return {"imageUrl":"http://localhost:8000/images/running_lts_code.png"}
+
+@app.get("/service/projects/{project_name}/")
+async def list_project_files(project_name: str):
+    project_folder = f"projects/{project_name}"
+    
+    # Check if the project folder exists
+    if not os.path.exists(project_folder):
+        raise HTTPException(status_code=404, detail="Project not found")
+    
+    # List files in the directory
+    files = []
+    for root, dirs, files_in_dir in os.walk(project_folder):
+        for file in files_in_dir:
+            # Append the relative path of the file
+            files.append(f"{root}/{file}")
+    
+    return {"files": files}
 
 # Run the application with the command:
 # uvicorn main:app --reload

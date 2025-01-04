@@ -77,13 +77,6 @@ async def update_environment_spec(project_id: int, spec: SpecModel, db: Session 
     return {"message": "Environment spec updated successfully"}
 
 
-@app.post("/service/xml-to-png")
-async def update_environment_spec(project_id: int, spec: SpecModel, db: Session = Depends(get_db)):
-    project = crud.get_project(db, project_id)
-    project.environment_spec = spec.content
-    db.commit()
-    return {"message": "Environment spec updated successfully"}
-
 
 # System Specification Endpoints
 @app.post("/projects/{project_id}/system_spec")
@@ -93,34 +86,9 @@ async def upload_system_spec(
     project = crud.get_project(db, project_id)
     project.system_spec = (await file.read()).decode("utf-8") if file else content
     db.commit()
-
-    project_folder = f"{BASE_PROJECT_FOLDER}/{project.name}"
-    async with httpx.AsyncClient() as client:
-        response = await client.post(f"{PIPELINE_SERVER_ADDRESS}/create_project/", data={"project_name":project.name, "project_description": project.description})
-
-        if file:  
-            files = {"files": (file.filename, file.file, file.content_type)}
-            response = await client.post(
-                f"{PIPELINE_SERVER_ADDRESS}/upload/files",
-                data={"project_folder": project_folder},
-                files=files
-            )
-        else:  
-            response = await client.post(
-                f"{PIPELINE_SERVER_ADDRESS}/upload/specification/",
-                data={
-                    "filename": "system_spec.txt",
-                    "specification": content,
-                    "project_folder": project_folder
-                }
-            )
-        
-        if response.status_code != 200:
-            raise HTTPException(status_code=response.status_code, detail="Failed to upload specification")
-
-    #return {"message": "System spec updated successfully in database and file"}
-
-    return {"message": "System spec uploaded successfully"}
+    
+    spec_filename = "sys.ltl" if file and file.filename.endswith("ltl") else "sys.xml"
+    return await handle_specification_upload(project, file, content, spec_filename)
 
 
 @app.get("/projects/{project_id}/system_spec")
@@ -128,41 +96,17 @@ async def get_system_spec(project_id: int, db: Session = Depends(get_db)):
     project = crud.get_project(db, project_id)
     return {"system_spec": project.system_spec}
 
-# @app.put("/projects/{project_id}/system_spec")
-# async def update_system_spec(project_id: int, spec: SpecModel, db: Session = Depends(get_db)):
-#     project = crud.get_project(db, project_id)
-#     if not project:
-#         raise HTTPException(status_code=404, detail="Project not found")
+@app.put("/projects/{project_id}/system_spec")
+async def update_system_spec(project_id: int, file: UploadFile = None, content: Optional[str] = Form(None), db: Session = Depends(get_db)):
+    project = crud.get_project(db, project_id)
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
 
-#     project.system_spec = spec.content
-#     db.commit()
-
-#     # Dynamically call the appropriate backend endpoint
-#     project_folder = f"{BASE_PROJECT_FOLDER}/{project.name}"
-#     async with httpx.AsyncClient() as client:
-#         response = await client.post(f"{PIPELINE_SERVER_ADDRESS}/create_project/", data={"project_name":project.name, "project_description": project.description})
-
-#         if hasattr(spec, 'file'):  
-#             files = {"files": (spec.file.filename, spec.file.file, spec.file.content_type)}
-#             response = await client.post(
-#                 f"{PIPELINE_SERVER_ADDRESS}/upload/files",
-#                 data={"project_folder": project_folder},
-#                 files=files
-#             )
-#         else:  
-#             response = await client.post(
-#                 f"{PIPELINE_SERVER_ADDRESS}/upload/specification/",
-#                 data={
-#                     "filename": "system_spec.txt",
-#                     "specification": spec.content,
-#                     "project_folder": project_folder
-#                 }
-#             )
-        
-#         if response.status_code != 200:
-#             raise HTTPException(status_code=response.status_code, detail="Failed to upload specification")
-
-#     return {"message": "System spec updated successfully in database and file"}
+    project.system_spec = content
+    db.commit()
+    spec_filename = "sys.xml" if content and "uml" in content else "sys.ltl"
+    return await handle_specification_upload(project, None, content, spec_filename)
+    
 
 
 # Safety Property Endpoints
@@ -229,3 +173,40 @@ async def generate_image(umlContent: str):
         raise HTTPException(status_code=response.status_code, detail=f"HTTP error: {str(e)}")
 
     
+
+# Services
+@app.post("/service/xml-to-png")
+async def update_environment_spec(project_id: int, spec: SpecModel, db: Session = Depends(get_db)):
+    project = crud.get_project(db, project_id)
+    project.environment_spec = spec.content
+    db.commit()
+    return {"message": "Environment spec updated successfully"}
+
+async def handle_specification_upload(project, file, content, spec_filename):
+    project_folder = f"{BASE_PROJECT_FOLDER}/{project.name}-{project.id}"
+    async with httpx.AsyncClient() as client:
+        response = await client.post(f"{PIPELINE_SERVER_ADDRESS}/create_project/", data={"project_name":f"{project.name}-{project.id}", "project_description": project.description})
+
+        if file:  
+            files = {"files": (file.filename, file.file, file.content_type)}
+            response = await client.post(
+                f"{PIPELINE_SERVER_ADDRESS}/upload/files",
+                data={"project_folder": project_folder},
+                files=files
+            )
+        else:  
+            response = await client.post(
+                f"{PIPELINE_SERVER_ADDRESS}/upload/specification/",
+                data={
+                    "filename": f"{spec_filename}",
+                    "specification": content,
+                    "project_folder": project_folder
+                }
+            )
+        
+        if response.status_code != 200:
+            raise HTTPException(status_code=response.status_code, detail="Failed to upload specification")
+
+    #return {"message": "System spec updated successfully in database and file"}
+
+    return {"message": f"{spec_filename} spec saved successfully in {project_folder}."}

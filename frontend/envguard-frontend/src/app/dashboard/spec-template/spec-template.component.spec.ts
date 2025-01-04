@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SystemSpecComponent } from './system-spec.component';
+import { SpecTemplateComponent } from './spec-template.component';
 
 describe('SystemSpecComponent', () => {
-  let component: SystemSpecComponent;
-  let fixture: ComponentFixture<SystemSpecComponent>;
+  let component: SpecTemplateComponent;
+  let fixture: ComponentFixture<SpecTemplateComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SystemSpecComponent]
+      imports: [SpecTemplateComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(SystemSpecComponent);
+    fixture = TestBed.createComponent(SpecTemplateComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

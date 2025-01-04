@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
-import { SystemSpecComponent } from './system-spec/system-spec.component';
+import { SpecTemplateComponent } from './spec-template/spec-template.component';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
   standalone: true,
-  imports: [MatTabsModule, CommonModule, SystemSpecComponent],
+  imports: [MatTabsModule, CommonModule, SpecTemplateComponent],
 })
 export class DashboardComponent implements OnInit {
   projectId: number | null = null;

@@ -13,13 +13,13 @@ import { Observable } from 'rxjs';
 import { ConstantService } from '../../constant.service';
 
 @Component({
-  selector: 'app-system-spec',
+  selector: 'app-spec-template',
   standalone: true,
-  templateUrl: './system-spec.component.html',
-  styleUrls: ['./system-spec.component.css'],
+  templateUrl: './spec-template.component.html',
+  styleUrls: ['./spec-template.component.css'],
   imports: [FormsModule, CommonModule]
 })
-export class SystemSpecComponent implements OnInit {
+export class SpecTemplateComponent implements OnInit {
   @ViewChild('editor') private editor!: ElementRef<HTMLElement>;
   private aceEditor: any;
   fileContent: string = '';

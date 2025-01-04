@@ -2,23 +2,24 @@ import os
 import json
 from datetime import datetime
 from PIL import Image
+from libs.design_ranking import rank_designs
 
 def generate_output_document_html(project_folder):
     os.chdir(project_folder)
     now = datetime.now()
     date_time_str = now.strftime("%Y-%m-%d_%H-%M-%S")
-    generate_html(f"{project_folder.split('/')[-1]}_summary_{date_time_str}.html")
+    generate_html(project_folder,f"{project_folder.split('/')[-1]}_summary_{date_time_str}.html")
     os.chdir("../..")
 
 
-def add_image_to_html(html, image_path, title):
+def add_image_to_html(html, image_path, project_folder, title):
     with Image.open(image_path) as img:
         img_width, img_height = img.size
         ratio = min(600/img_width, 400/img_height)
         new_width = int(img_width * ratio)
         new_height = int(img_height * ratio)
     html += f"<h2>{title}</h2>\n"
-    html += f'<img src="{image_path}" width="{new_width}" height="{new_height}"><br>\n'
+    html += f'<img src="http://localhost:8000/{project_folder}/{image_path}" width="{new_width}" height="{new_height}"><br>\n'
     return html
 
 def add_text_annotation_html(html, text):
@@ -34,7 +35,7 @@ def add_json_to_html(html, json_path):
         html += "\n</pre>\n"
     return html
 
-def generate_html(output_path):
+def generate_html(project_folder, output_path):
     html = """<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -104,7 +105,7 @@ def generate_html(output_path):
         if os.path.exists(img):
             html += f'<button class="accordion">{title}</button>'
             html += '<div class="panel">'
-            html = add_image_to_html(html, img, title)
+            html = add_image_to_html(html, f"{img}", project_folder, title)
             html += '</div>'
     
     # Add configurations
@@ -116,14 +117,33 @@ def generate_html(output_path):
         html += '</div>'
     
     # Add solutions
-    solution_files = sorted([f for f in os.listdir() if f.startswith("solution_") and f.endswith(".png")])
-    for solution in solution_files:
-        if os.path.exists(solution):
-            title = f"Solution: {solution}"
-            html += f'<button class="accordion">{title}</button>'
-            html += '<div class="panel">'
-            html = add_image_to_html(html, solution, title)
-            html += '</div>'
+    os.chdir("../..")
+    ranked_designs = rank_designs(project_folder)
+    os.chdir(project_folder)
+
+    for design in ranked_designs:
+        print(f"Ranking now {design['solution']}")
+        solution_path = design['solution']
+        title = f"Solution: {os.path.basename(solution_path)}"
+        
+        # Add the accordion button for the solution
+        html += f'<button class="accordion">{title}</button>'
+        html += '<div class="panel">'
+        
+        # Add solution image
+        print(solution_path.replace('.aut', '.png').replace("solutions/","").replace("sol","solution_"))
+        html = add_image_to_html(html, solution_path.replace('.aut', '.png').replace("sol","solution_"), project_folder, title)
+        
+        # Add ranking data
+        #html += f'<p><strong>Complexity:</strong> {design["_complexity"]}</p>'
+        html += f'<p><strong>Albin Complexity:</strong> {design["albin_complexity"]}</p>'
+        html += f'<p><strong>Girvan-Newman Modularity:</strong> {design["girvan_newman_modularity"]}</p>'
+        html += f'<p><strong>Jaccard Redundancy:</strong> {design["jaccard_redundancy"]}</p>'
+        html += f'<p><strong>Laplacian Spectral Complexity:</strong> {design["laplacian_spectral_complexity"]}</p>'
+        html += f'<p><strong>Eigen Symmetry:</strong> {design["eigen_symmetry"]}</p>'
+        
+        # Close the panel for the current design
+        html += '</div>'
     
     html += """
 <script>
@@ -144,6 +164,8 @@ def generate_html(output_path):
 </body>
 </html>
 """
+
+    print(os.curdir)
     with open(output_path, "w") as file:
         file.write(html)
     print(f"HTML report saved as {output_path}")

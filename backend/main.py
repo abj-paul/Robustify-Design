@@ -221,7 +221,7 @@ async def get_reports(project_id: int, db: Session = Depends(get_db)):
     files = response.json().get("files", [])
     
     # Filter out only PDF files
-    pdf_files = [file for file in files if file.lower().endswith('.pdf')]
+    pdf_files = [file for file in files if file.lower().endswith('.html')] #pdf
     
     # Build the URL for each PDF file
     pdf_urls = [f"{PIPELINE_SERVER_ADDRESS}/{file}" for file in pdf_files]

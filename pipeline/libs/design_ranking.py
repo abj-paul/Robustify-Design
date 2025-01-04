@@ -220,38 +220,35 @@ def rank_solutions(evaluations, metrics):
     return ranked_solutions
 
 
-# Your main loop for generating evaluations
-generated_design_evaluations = []
+def rank_designs(project_directory):
+    generated_design_evaluations = []
+    for file in os.listdir(f"{project_directory}/solutions"):
+        if file.endswith(".aut"):
+            filepath = os.path.join(f"{project_directory}/solutions", file)
+            temp = get_matrices_from_aut_file(filepath)
+            
+            sparse_adj_matrix = csr_matrix(temp[0])
 
-project_directory = "../projects/Voting-2"
-for file in os.listdir(f"{project_directory}/solutions"):
-    if file.endswith(".aut"):
-        filepath = os.path.join(f"{project_directory}/solutions", file)
-        temp = get_matrices_from_aut_file(filepath)
-        
-        sparse_adj_matrix = csr_matrix(temp[0])
+            generated_design_evaluations.append({
+                "solution": file,
+                "numeric": temp[0],
+                "labeled": temp[1],
+                "albin_complexity": albin_complexity(temp[0]),
+                "girvan_newman_modularity": girvan_newman_modularity(temp[0]),
+                "jaccard_redundancy": calculate_redundancy_jaccard(temp[0]),
+                "eigen_symmetry": calculate_symmetry_eigenvalues(sparse_adj_matrix)[1],
+                "state_length": len(temp[0]),
+                "laplacian_spectral_complexity": compute_laplacian_spectral_complexity(temp[0]),
+                "gpt_comments": "GPT Comments on design"
+            })
 
-        generated_design_evaluations.append({
-            "solution": filepath,
-            "numeric": temp[0],
-            "labeled": temp[1],
-            "albin_complexity": albin_complexity(temp[0]),
-            "girvan_newman_modularity": girvan_newman_modularity(temp[0]),
-            "jaccard_redundancy": calculate_redundancy_jaccard(temp[0]),
-            "eigen_symmetry": calculate_symmetry_eigenvalues(sparse_adj_matrix)[1],
-            "state_length": len(temp[0]),
-            "laplacian_spectral_complexity": compute_laplacian_spectral_complexity(temp[0])
-        })
+    metrics = ["albin_complexity", "girvan_newman_modularity", "jaccard_redundancy", "eigen_symmetry", "state_length", "laplacian_spectral_complexity"]
+    ranked_designs = rank_solutions(generated_design_evaluations, metrics)
+    
+    return ranked_designs
 
-# Define the list of metrics to consider for Pareto optimality
-metrics = ["albin_complexity", "girvan_newman_modularity", "jaccard_redundancy", "eigen_symmetry", "state_length", "laplacian_spectral_complexity"]
 
-# Rank the generated design evaluations using Pareto optimality
-ranked_designs = rank_solutions(generated_design_evaluations, metrics)
+# for rank, design in enumerate(rank_designs("../projects/Voting-2")):
+#     print(f"Rank {rank}: {design['solution']} - Albin Complexity: {design['albin_complexity']}")
 
-print(f"I have a total of {len(generated_design_evaluations)} solutions but ranked_designs list size is {len(ranked_designs)}")
-
-# Print or use the ranked designs
-for rank, design in enumerate(ranked_designs):
-    print(f"Rank {rank}: {design['solution']} - Albin Complexity: {design['albin_complexity']}")
-
+#print(rank_designs("../projects/Voting-2"))

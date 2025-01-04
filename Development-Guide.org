@@ -29,18 +29,29 @@ Now let us connect the dashboard. Develop system specification upload first. If 
 Today, I will do the following tasks.
 1. [X] Set project-name in cache (9:10)
 2. [X] Submit specification (save as sql and file) (10:00)
-3. [ ] Place the specification code in 4 parts (11:30)
+3. [X] Place the specification code in 4 parts (11:30)
 4. [X] Save as sql and file (12:00)
-5. [ ] Multi file specification
-6. [ ] Execute fortis (1:00)
-7. [ ] Show reports 
-8. [ ] Create Project
-9. [ ] Report in window
-10. [ ] LLM Insights on report window
+5. [ ] Execute fortis (1:00)
+6. [ ] Show reports 
+7. [ ] Create Project
+8. [ ] Report in window
+9. [ ] LLM Insights on report window
+10. [ ] Multi file specification
+
+*** Bug Fix
+- [ ] LTS/XML format bug in backend-->main
+- [ ] Need feature for cases when we upload both XML and LTS. We need a way to select either.
+- [ ] Turn configuration into setting option
 
 *** Dockerizing
 --> Two fastapi backend
 --> Data folder to retain image in fastapi
+--> static path for running fortis: /home/abhijit/Robustify-Design/pipeline/projects/Voting-2
+
+
+ng serve
+uvicorn main:app --reload --port 3000
+uvicorn server:app --reload
 
 *** Techs
 - cache-busting 

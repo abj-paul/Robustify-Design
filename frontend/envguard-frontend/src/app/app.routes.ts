@@ -14,7 +14,7 @@ export const routes: Routes = [
   { path: "register", component: RegisterComponent },
   { path: "login", component: LoginComponent },
   { path: 'project-list', component: ProjectListComponent },
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' }, // Default route for the base path
   {
     path: 'dashboard',
     component: DashboardComponent,
@@ -28,5 +28,4 @@ export const routes: Routes = [
       { path: 'reports', component: ReportComponent }
     ]
   },
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' } // Default route
 ];

@@ -10,6 +10,9 @@ import json
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import HTTPException
 import httpx
+from typing import List
+from fastapi.responses import JSONResponse
+
 
 Base.metadata.create_all(bind=engine)
 
@@ -91,7 +94,10 @@ async def upload_system_spec(
     project.system_spec = (await file.read()).decode("utf-8") if file else content
     db.commit()
     
-    spec_filename = "sys.lts" if file and file.filename.endswith("lts") else "sys.xml"
+    spec_filename = "sys.lts"
+    if file: spec_filename = "sys.lts" if file and file.filename.endswith("lts") else "sys.xml"
+    else: spec_filename = "sys.xml" if "uml" in content else "sys.lts"
+
     return await handle_specification_upload(project, file, content, spec_filename)
 
 
@@ -170,6 +176,29 @@ async def update_config(project_id: int, file: UploadFile = None, content: Optio
     db.commit()
     spec_filename = "config-pareto.json"
     return await handle_specification_upload(project, file, content, spec_filename)
+
+# Robustification
+@app.post("/projects/{project_id}/execute")
+async def run_fortis(
+    project_id: int,
+    class_list: List[str] = Form(...),
+    db: Session = Depends(get_db)
+):
+    project = crud.get_project(db, project_id)
+    project_folder = f"{BASE_PROJECT_FOLDER}/{project.name}-{project.id}"
+
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            f"{PIPELINE_SERVER_ADDRESS}/execute",
+            data={"project_folder": project_folder, "class_list": class_list}
+        )
+    
+    if response.status_code == 200:
+        return JSONResponse(content=response.json(), status_code=response.status_code)
+    else:
+        return JSONResponse(
+            content={"error": response.text}, status_code=response.status_code
+        )
 
 
 # Services

@@ -17,6 +17,7 @@ from libs.convert_xml_to_image import convert_xml_to_image
 from wrapper import convert_to_lts
 from generate_pdf import generate_output_document
 from generate_html import generate_output_document_html
+import json
 
 app = FastAPI()
 
@@ -101,6 +102,9 @@ async def upload_configuration(
 
 @app.post("/execute")
 async def upload_additional( project_folder: str = Form(...), class_list: List[str] = Form(...)): # class_list = ["barcode-reader.xml","booking-program.xml","printer.xml"]
+    print(project_folder)
+    print(f"Received class list: {class_list}")
+    #if '[]' not in class_list[0]:
     if len(class_list[0])!=0: 
         convert_to_lts(project_folder, class_list, not os.path.isfile(f"{project_folder}/env.xml"))
         for class_name in class_list:

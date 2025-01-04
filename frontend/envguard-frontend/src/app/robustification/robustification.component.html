@@ -1,1 +1,22 @@
-<p>robustification works!</p>
+<div class="robustification-container">
+    <button 
+      class="run-button" 
+      (click)="runFortis()" 
+      [disabled]="isLoading">
+      Run Robustification
+    </button>
+  
+    <!-- Progress Spinner -->
+    <div *ngIf="isLoading" class="spinner">
+      <p>Processing... Please wait.</p>
+    </div>
+  
+    <!-- Success/Failure Message -->
+    <div *ngIf="isSuccess === true" class="success-message">
+      Robustification completed successfully!
+    </div>
+    <div *ngIf="isSuccess === false" class="error-message">
+      Robustification failed. Please try again.
+    </div>
+  </div>
+  

@@ -32,12 +32,13 @@ Today, I will do the following tasks.
 3. [X] Place the specification code in 4 parts (11:30)
 4. [X] Save as sql and file (12:00)
 5. [X] Execute fortis (1:00)
-6. [ ] Show reports versions.
-7. [ ] Slideshow report content of latest run.
-8. [ ] Ranking
-9. [ ] Create Project
+6. [X] Show reports versions.
+7. [ ] Ranking
+8. [ ] Create Project
+9. [ ] Create 4 projects
 10. [ ] LLM Insights on report window
-11. [ ] Multi file specification
+11. [ ] Report formatting
+12. [ ] Multi file specification
 
 *** Bug Fix
 - [ ] LTS/XML format bug in backend-->main

@@ -19,4 +19,11 @@
   <div *ngIf="compiledImageSafeUrl" class="image-preview">
     <img [src]="compiledImageSafeUrl" alt="Compiled Image" />
   </div>
+
+  <div class="save-container">
+    <button (click)="updateSpec()" class="save-button">💾 Save</button>
+    <span *ngIf="isSaved" class="saved-message">✔ Saved</span>
+  </div>
+    
+  
 </div>

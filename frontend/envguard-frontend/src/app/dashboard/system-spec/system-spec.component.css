@@ -117,3 +117,45 @@
     border-radius: 4px;
   }
   
+  .save-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .save-button {
+    background-color: #4caf50;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  
+  .save-button:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+  }
+  
+  .save-button:active {
+    background-color: #3e8e41;
+  }
+  
+  .saved-message {
+    color: #4caf50;
+    font-size: 14px;
+    font-weight: bold;
+    animation: fadeOut 2s forwards;
+  }
+  
+  @keyframes fadeOut {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  

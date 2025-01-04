@@ -9,6 +9,8 @@ import { BackendService } from '../../backend.service';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { Observable } from 'rxjs';
+import { ConstantService } from '../../constant.service';
 
 @Component({
   selector: 'app-system-spec',
@@ -24,8 +26,9 @@ export class SystemSpecComponent implements OnInit {
   editorMode: string = 'text';
   compiledImageUrl: string = '';
   compiledImageSafeUrl: SafeUrl = '';
+  isSaved = false;
 
-  constructor(private backendService: BackendService, private http: HttpClient, private sanitizer: DomSanitizer) {}
+  constructor(private backendService: BackendService, private http: HttpClient, private sanitizer: DomSanitizer, private constantService: ConstantService) {}
 
   ngOnInit() {
     // Initial content
@@ -91,7 +94,30 @@ ltl property {
     }
   }
 
+  updateSystemSpecService(projectId: number, xmlContent: string): Observable<any> {
+    const url = `${this.backendService.apiUrl}/projects/${projectId}/system_spec`;
+    const payload = { content: xmlContent };
+    return this.http.put(url, payload);
+  }
+
+  updateSpec() {
+    console.log(`For project ${this.constantService.getProject().id}, I am sending ${this.fileContent}`);
+
+    this.updateSystemSpecService(this.constantService.getProject().id, this.fileContent)
+      .subscribe(
+        response => {
+          this.isSaved = true;
+          setTimeout(() => (this.isSaved = false), 4000); // Hide message after 2 seconds
+          console.log('Update successful:', response);
+        },
+        error => {
+          console.error('Update failed:', error);
+        }
+      );
+  }
+
   submitFile(): void {
+    
     console.log('Submitted content:', this.fileContent);
   }
 

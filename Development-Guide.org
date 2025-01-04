@@ -27,7 +27,7 @@ Now let us connect the dashboard. Develop system specification upload first. If 
 
 
 Today, I will do the following tasks.
-1. [ ] Set project-name in cache (9:10)
+1. [X] Set project-name in cache (9:10)
 2. [ ] Submit specification (save as sql and file) (10:00)
 3. [ ] Place the specification code in 4 parts (11:30)
 4. [ ] Save as sql and file (12:00)

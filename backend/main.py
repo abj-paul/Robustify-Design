@@ -83,10 +83,6 @@ async def update_environment_spec(project_id: int, spec: SpecModel, db: Session 
     db.commit()
     return {"message": "Environment spec updated successfully"}
 
-# Other endpoints (system_spec, safety_property, config) follow the same structure as above.
-# ...
-
-
 
 # System Specification Endpoints
 @app.post("/projects/{project_id}/system_spec")

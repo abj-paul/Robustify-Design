@@ -1,4 +1,3 @@
-// chat.component.ts
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
@@ -6,11 +5,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BackendService } from '../backend.service';
 import { ConstantService } from '../constant.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { marked } from 'marked';
 
 interface Message {
   text: string;
   isUser: boolean;
   timestamp: Date;
+  sanitizedHtml?: SafeHtml;
 }
 
 @Component({
@@ -31,9 +33,16 @@ export class ChatComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private route: ActivatedRoute,
-    private backendService : BackendService,
-    private constantService : ConstantService
-  ) {}
+    private backendService: BackendService,
+    private constantService: ConstantService,
+    private sanitizer: DomSanitizer
+  ) {
+    marked.setOptions({
+      gfm: true,
+      breaks: true,
+      //sanitize: true
+    });
+  }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -47,10 +56,7 @@ export class ChatComponent implements OnInit {
       .subscribe({
         next: (response) => {
           console.log(response);
-          this.solutions = response.solutions.map(url => {
-            // Extract filename from URL
-            return url.split('/').pop() || '';
-          });
+          this.solutions = response.solutions.map(url => url.split('/').pop() || '');
         },
         error: (error) => {
           console.error('Error loading solutions:', error);
@@ -60,8 +66,7 @@ export class ChatComponent implements OnInit {
 
   selectSolution(solution: string) {
     this.selectedSolution = solution;
-    this.messages = []; // Clear chat when new solution is selected
-    // Add initial message showing selected solution
+    this.messages = [];
     this.messages.push({
       text: `Selected solution: ${solution}`,
       isUser: false,
@@ -69,10 +74,14 @@ export class ChatComponent implements OnInit {
     });
   }
 
+  private parseMarkdown(text: string): SafeHtml {
+    const rawHtml = marked(text);
+    return this.sanitizer.bypassSecurityTrustHtml(rawHtml.toString());
+  }
+
   async sendMessage() {
     if (!this.currentMessage.trim() || !this.selectedSolution) return;
 
-    // Add user message to chat
     this.messages.push({
       text: this.currentMessage,
       isUser: true,
@@ -97,7 +106,8 @@ export class ChatComponent implements OnInit {
         this.messages.push({
           text: response.toString(),
           isUser: false,
-          timestamp: new Date()
+          timestamp: new Date(),
+          sanitizedHtml: this.parseMarkdown(response.toString())
         });
       }
     } catch (error) {

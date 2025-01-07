@@ -229,6 +229,31 @@ async def get_reports(project_id: int, db: Session = Depends(get_db)):
     return {"reports": pdf_urls}
 
 
+@app.get("/solutions/{project_id}/")
+async def get_reports(project_id: int, db: Session = Depends(get_db)):
+    project = crud.get_project(db, project_id)
+    project_name = f"{project.name}-{project.id}"
+    
+    # Make an HTTP request to the second endpoint to list project files
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.get(f"{PIPELINE_SERVER_ADDRESS}/service/projects/solution/{project_name}/")
+            response.raise_for_status()  # Raise an error for 4xx/5xx responses
+        except httpx.HTTPStatusError as e:
+            return JSONResponse(content={"error": f"Failed to retrieve files: {e}."}, status_code=500)
+        except httpx.RequestError as e:
+            return JSONResponse(content={"error": f"Request failed: {e}."}, status_code=500)
+    
+    files = response.json().get("files", [])
+    
+    # Filter out only PDF files
+    aut_files = [file for file in files if file.lower().endswith('.aut')] #pdf
+    
+    # Build the URL for each PDF file
+    aut_urls = [f"{PIPELINE_SERVER_ADDRESS}/{file}" for file in aut_files]
+    
+    return {"solutions": aut_urls}
+
 # Services
 @app.get("/service/uml-to-png")
 async def generate_image(umlContent: str):
@@ -249,6 +274,32 @@ async def update_environment_spec(project_id: int, spec: SpecModel, db: Session 
     project.environment_spec = spec.content
     db.commit()
     return {"message": "Environment spec updated successfully"}
+
+@app.get("/service/gemini/{project_id}/")
+async def talk_to_gemini(project_id: int, solution_name: str, user_query: str, db: Session = Depends(get_db)):
+    # Retrieve project information from the database
+    project = crud.get_project(db, project_id)
+    project_name = f"{project.name}-{project.id}"
+
+    try:
+        # Send the request to the updated gemini service endpoint
+        async with httpx.AsyncClient(timeout=httpx.Timeout(120.0)) as client:  # Set timeout to 120 seconds
+            response = await client.get(
+                PIPELINE_SERVER_ADDRESS + f"/service/gemini/{project_name}/",
+                params={
+                    "solution_name": solution_name,
+                    "user_query": user_query
+                }
+            )
+            response.raise_for_status()
+            print(f"Received response of query {user_query}")
+            return response.json()  # Assuming the target service returns JSON
+    except httpx.RequestError as e:
+        raise HTTPException(status_code=500, detail=f"Request error: {str(e)}")
+    except httpx.HTTPStatusError as e:
+        raise HTTPException(status_code=response.status_code, detail=f"HTTP error: {str(e)}")
+
+
 
 
 async def handle_specification_upload(project, file, content, spec_filename):
@@ -279,3 +330,5 @@ async def handle_specification_upload(project, file, content, spec_filename):
     #return {"message": "System spec updated successfully in database and file"}
 
     return {"message": f"{spec_filename} spec saved successfully in {project_folder}."}
+
+

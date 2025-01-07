@@ -9,6 +9,7 @@ import { SafetyPropertyComponent } from './dashboard/safety-property/safety-prop
 import { SystemSpecificationComponent } from './dashboard/system-specification/system-specification.component';
 import { RobustificationComponent } from './robustification/robustification.component';
 import { ReportComponent } from './report/report.component';
+import { ChatComponent } from './chat/chat.component';
 
 export const routes: Routes = [
   { path: "register", component: RegisterComponent },
@@ -25,7 +26,8 @@ export const routes: Routes = [
       { path: 'safety', component: SafetyPropertyComponent },
       { path: 'configuration', component: ConfigurationComponent },
       { path: 'robustification', component: RobustificationComponent },
-      { path: 'reports', component: ReportComponent }
+      { path: 'reports', component: ReportComponent },
+      { path: 'chat', component: ChatComponent }
     ]
   },
 ];

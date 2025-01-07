@@ -1,0 +1,61 @@
+<div class="chat-container">
+  <div class="chat-main">
+    <div class="chat-messages" #messageContainer>
+      <div *ngIf="!selectedSolution" class="no-selection">
+        Please select a solution file from the sidebar to start the conversation.
+      </div>
+      
+      <div *ngFor="let message of messages" 
+           [class.user-message]="message.isUser"
+           [class.bot-message]="!message.isUser"
+           class="message">
+        <div class="message-content">
+          <div class="message-header">
+            <span class="message-sender">{{ message.isUser ? 'You' : 'Assistant' }}</span>
+            <span class="message-time">{{ message.timestamp | date: 'shortTime' }}</span>
+          </div>
+          <div class="message-text">{{ message.text }}</div>
+        </div>
+      </div>
+
+      <div *ngIf="loading" class="loading-indicator">
+        <div class="typing-indicator">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-input">
+      <input type="text" 
+             [(ngModel)]="currentMessage"
+             (keyup.enter)="sendMessage()"
+             [placeholder]="selectedSolution ? 'Type your message...' : 'Select a solution to start chatting'"
+             [disabled]="!selectedSolution || loading">
+      <button (click)="sendMessage()" 
+              [disabled]="!selectedSolution || !currentMessage.trim() || loading">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="solutions-sidebar">
+    <h3>Solution Files</h3>
+    <div class="solutions-list">
+      <div *ngFor="let solution of solutions"
+           (click)="selectSolution(solution)"
+           [class.selected]="solution === selectedSolution"
+           class="solution-item">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+        </svg>
+        {{ solution }}
+      </div>
+    </div>
+  </div>
+</div>

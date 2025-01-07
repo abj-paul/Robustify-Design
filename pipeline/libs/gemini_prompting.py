@@ -1,5 +1,4 @@
 from dotenv import load_dotenv
-from design_ranking import rank_designs
 import os
 import google.generativeai as genai
 import json
@@ -9,24 +8,22 @@ import numpy as np
 load_dotenv()
 
 
-def get_response_from_gemini(design_data, sys, env, p, redesign):
+def get_response_from_gemini(sys, env, p, redesign, user_query):
     # Configure the API
     genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
     # Convert numpy data types to native Python types for JSON serialization
     def serialize_data(data):
         if isinstance(data, np.ndarray):
-            return data.tolist()  # Convert numpy arrays to Python lists
-        elif isinstance(data, (np.int64, np.float64)):  
-            return data.item()  # Convert numpy scalar types to Python native types
+            return data.tolist()
+        elif isinstance(data, (np.int64, np.float64)):
+            return data.item()
         elif isinstance(data, dict):
-            return {k: serialize_data(v) for k, v in data.items()}  # Recursively process dictionaries
+            return {k: serialize_data(v) for k, v in data.items()}
         elif isinstance(data, list):
-            return [serialize_data(item) for item in data]  # Recursively process lists
+            return [serialize_data(item) for item in data]
         else:
-            return data  # Return other types as is
-
-    design_data_serialized = serialize_data(design_data)
+            return data
 
     # Create the model
     model = genai.GenerativeModel(
@@ -40,17 +37,23 @@ def get_response_from_gemini(design_data, sys, env, p, redesign):
         }
     )
 
-    # Prepare the query
+    # Prepare the query as a single string
     query = (
         "You are a behavioral system design analyzer. Given a design, you will return "
         "insights on that design, highlighting changes and any significant observations.\n\n"
-        f"Here is the design data: System behavioral model is {sys}, Environment model is {env} and safety property is {p}. Here is the generated design using Fortis tool to robustify the system. The robust design is : {redesign}. Some metrics of this robust design is: {json.dumps(design_data_serialized, indent=2)}\n\n"
-        "Please provide your analysis."
+        f"Here is the design data:\n"
+        f"- System behavioral model: {sys}\n"
+        f"- Environment model: {env}\n"
+        f"- Safety property: {p}\n"
+        f"- Generated robust design (using Fortis): {redesign}\n\n"
+        "Please answer the user's question based on this information.\n\n"
+        f"User Query: {user_query}"
     )
 
     # Get response
-    response = model.generate_content([query])
+    response = model.generate_content([query])  # Ensure the query is passed as a list
     return response.text  # Return only the text of the response
+
 
 # # Example usage
 # if __name__ == "__main__":
@@ -71,30 +74,33 @@ def get_response_from_gemini(design_data, sys, env, p, redesign):
 #     print(response)
 
 
+# # Get ranked designs
+# project_folder = "../projects/Voting-2"
+# ranked_designs = rank_designs(project_folder)
 
+# # Process each design
+# for design in ranked_designs:
+#     f = open(f"{project_folder}/sys.lts")
+#     sys = f.read()
+#     f.close()
 
-# Get ranked designs
-project_folder = "../projects/Voting-2"
-ranked_designs = rank_designs(project_folder)
+#     f = open(f"{project_folder}/env.lts")
+#     env = f.read()
+#     f.close()
 
-# Process each design
-for design in ranked_designs:
-    f = open(f"{project_folder}/sys.lts")
-    sys = f.read()
-    f.close()
+#     f = open(f"{project_folder}/p.lts")
+#     p = f.read()
+#     f.close()
 
-    f = open(f"{project_folder}/env.lts")
-    env = f.read()
-    f.close()
+#     f = open(f"{project_folder}/solutions/{design['solution']}")
+#     redesign = f.read()
+#     f.close()
 
-    f = open(f"{project_folder}/p.lts")
-    p = f.read()
-    f.close()
+#     print(sys)
+#     print(env)
+#     print(p)
+#     print(redesign)
 
-    f = open(f"{project_folder}/solutions/{design['solution']}")
-    redesign = f.read()
-    f.close()
-
-    response = get_response_from_gemini(design, sys, env, p, redesign)
-    print(response)
-    break  # Process only the first design for demonstration
+#     response = get_response_from_gemini(sys, env, p, redesign, "What is the meaning of life?")
+#     print(response)
+#     break  # Process only the first design for demonstration

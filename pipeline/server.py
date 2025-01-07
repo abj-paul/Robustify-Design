@@ -19,6 +19,8 @@ from generate_pdf import generate_output_document
 from generate_html import generate_output_document_html
 import json
 
+from libs.gemini_prompting import get_response_from_gemini
+
 app = FastAPI()
 
 # Allow CORS
@@ -184,6 +186,53 @@ async def list_project_files(project_name: str):
             files.append(f"{root}/{file}")
     
     return {"files": files}
+
+@app.get("/service/projects/solution/{project_name}/")
+async def list_solution_files(project_name: str):
+    project_folder = f"projects/{project_name}/solutions"
+    print(project_folder)
+    
+    # Check if the project folder exists
+    if not os.path.exists(project_folder):
+        raise HTTPException(status_code=404, detail="Project not found")
+    
+    # List files in the directory
+    files = []
+    for root, dirs, files_in_dir in os.walk(project_folder):
+        for file in files_in_dir:
+            # Append the relative path of the file
+            files.append(f"{root}/{file}")
+    
+    return {"files": files}
+
+@app.get("/service/gemini/{project_name}/")
+async def gemini_talking(project_name: str, solution_name, user_query):
+    base_dir = f"projects/{project_name}"
+    f = open(f"{base_dir}/sys.lts")
+    sys = f.read()
+    f.close()
+
+    f = open(f"{base_dir}/env.lts")
+    env = f.read()
+    f.close()
+
+    f = open(f"{base_dir}/p.lts")
+    p = f.read()
+    f.close()
+
+    f = open(f"{base_dir}/solutions/{solution_name}")
+    redesign = f.read()
+    f.close()
+
+    print(sys)
+    print(env)
+    print(p)
+    print(redesign)
+
+    response = get_response_from_gemini(sys, env, p, redesign, user_query)
+    return response
+
+
 
 # Run the application with the command:
 # uvicorn main:app --reload

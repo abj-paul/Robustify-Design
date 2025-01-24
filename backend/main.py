@@ -275,12 +275,18 @@ async def generate_image(umlContent: str):
         raise HTTPException(status_code=response.status_code, detail=f"HTTP error: {str(e)}")
 
 
-@app.post("/service/lts-to-png")
-async def update_environment_spec(project_id: int, spec: SpecModel, db: Session = Depends(get_db)):
-    project = crud.get_project(db, project_id)
-    project.environment_spec = spec.content
-    db.commit()
-    return {"message": "Environment spec updated successfully"}
+@app.get("/service/lts-to-png")
+async def generate_png_from_lts(ltlContent: str):
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(PIPELINE_SERVER_ADDRESS + "/service/lts-to-png", params={"ltlContent": ltlContent})
+            response.raise_for_status()
+            return response.json()  # Assuming the target service returns JSON
+    except httpx.RequestError as e:
+        raise HTTPException(status_code=500, detail=f"Request error: {str(e)}")
+    except httpx.HTTPStatusError as e:
+        raise HTTPException(status_code=response.status_code, detail=f"HTTP error: {str(e)}")
+
 
 @app.get("/service/gemini/{project_id}/")
 async def talk_to_gemini(project_id: int, solution_name: str, user_query: str, db: Session = Depends(get_db)):

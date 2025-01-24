@@ -20,6 +20,7 @@ from generate_html import generate_output_document_html
 import json
 
 from libs.gemini_prompting import get_response_from_gemini
+from libs.output_to_uml import save_output_as_uml_single_file
 
 app = FastAPI()
 
@@ -163,12 +164,13 @@ async def generateImage(xmlContent: str):
     return {"imageUrl":"http://localhost:8000/images/running_uml_code.png"}
 
 @app.get("/service/lts-to-png")
-async def generateImage(ltsContent: str):
+async def generateImage(ltlContent: str):
     file = open(f"{PUBLIC_FOLDER}/images/running_lts_code.lts", "w")  # Open in write mode
-    file.write(ltsContent)
+    file.write(ltlContent)
     file.close()
-    convert_xml_to_image(f"{PUBLIC_FOLDER}/images/","running_lts_code.lts")
-    return {"imageUrl":"http://localhost:8000/images/running_lts_code.png"}
+    #save_output_as_uml_single_file("","",f"{PUBLIC_FOLDER}/images/running_lts_code.lts")
+    #convert_xml_to_image(f"{PUBLIC_FOLDER}/images/","running_uml_code.xml")
+    return {"imageUrl":"http://localhost:8000/images/running_uml_code.png"}
 
 @app.get("/service/projects/{project_name}/")
 async def list_project_files(project_name: str):

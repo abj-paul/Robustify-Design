@@ -73,5 +73,12 @@ export class DashboardComponent implements OnInit {
 
   edit_project() {
     //alert('Create Project functionality will be implemented here.');
-    this.router.navigate(['/edit-project']);  }
+    this.router.navigate(['/edit-project']);  
+  }
+
+
+  goBackToProjectList() {
+    //alert('Create Project functionality will be implemented here.');
+    this.router.navigate(['/project-list']);  
+  }
 }

@@ -67,7 +67,7 @@ def get_project(
     user_id: int, 
     db: Session = Depends(get_db)
 ):
-    return crud.get_project(db, project_id, user_id)
+    return crud.find_project(db, project_id, user_id)
 
 @app.put("/projects/{project_id}", response_model=Project)
 def update_project(

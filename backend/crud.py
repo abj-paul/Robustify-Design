@@ -92,7 +92,7 @@ def get_chat_state(db: Session, project_id: int, solution_name: str):
 
 # Project
 
-def get_project(db: Session, project_id: int, user_id: int):
+def find_project(db: Session, project_id: int, user_id: int):
     project = db.query(models.Project).filter(
         models.Project.id == project_id, 
         models.Project.user_id == user_id

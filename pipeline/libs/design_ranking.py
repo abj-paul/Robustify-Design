@@ -215,7 +215,7 @@ def rank_solutions(evaluations, metrics):
     pareto_front = pareto_optimal(evaluations, metrics)
     
     # Step 2: Rank Pareto optimal solutions based on a selected metric, e.g., albin_complexity
-    ranked_solutions = sorted(pareto_front, key=lambda x: x['albin_complexity'], reverse=True)
+    ranked_solutions = sorted(pareto_front, key=lambda x: x['albin_complexity'], reverse=False)
     
     return ranked_solutions
 

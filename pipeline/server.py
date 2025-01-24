@@ -184,7 +184,7 @@ async def list_project_files(project_name: str):
         for file in files_in_dir:
             # Append the relative path of the file
             files.append(f"{root}/{file}")
-    
+    #print(f"Debugging report fetching at server: {files}")
     return {"files": files}
 
 @app.get("/service/projects/solution/{project_name}/")

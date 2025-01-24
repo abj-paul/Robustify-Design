@@ -93,6 +93,45 @@ def generate_html(project_folder, output_path):
 <body>
 <h1>Project Summary</h1>
 """
+
+    html += """
+<button id="expandAll" style="margin-bottom: 20px;">Expand All</button>
+<script>
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+
+    // Expand All button logic
+    document.getElementById("expandAll").addEventListener("click", function() {
+        var allPanelsOpen = Array.from(acc).every(accItem => accItem.classList.contains("active"));
+        for (i = 0; i < acc.length; i++) {
+            if (!allPanelsOpen) {
+                acc[i].classList.add("active");
+                acc[i].nextElementSibling.style.display = "block";
+            } else {
+                acc[i].classList.remove("active");
+                acc[i].nextElementSibling.style.display = "none";
+            }
+        }
+        this.textContent = allPanelsOpen ? "Expand All" : "Collapse All";
+    });
+
+    // Individual accordion toggle logic
+    for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.display === "block") {
+                panel.style.display = "none";
+            } else {
+                panel.style.display = "block";
+            }
+        });
+    }
+</script>
+</body>
+</html>
+"""
+
     # Image paths
     images = [
         ("System Specification Diagram", "sys.png"),

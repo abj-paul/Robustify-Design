@@ -1,6 +1,15 @@
-from sqlalchemy import Column, Integer, String, Text, JSON, ForeignKey
+from sqlalchemy import Column, Integer, String, Text, JSON, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from database import Base
+from datetime import datetime
+
+class ChatStateModel(Base):
+    __tablename__ = "chat_states"
+    id = Column(Integer, primary_key=True, index=True)
+    project_id = Column(Integer, nullable=False)
+    solution_name = Column(String, nullable=False)
+    messages = Column(JSON, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 
 class User(Base):

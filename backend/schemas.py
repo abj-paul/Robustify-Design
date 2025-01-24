@@ -1,6 +1,16 @@
 from pydantic import BaseModel
 from typing import Optional, Dict, List
 
+class ChatStateCreate(BaseModel):
+    project_id: int
+    solution_name: str
+    messages: List[dict]
+
+class ChatStateResponse(BaseModel):
+    project_id: int
+    solution_name: str
+    messages: List[dict]
+
 
 class ProjectBase(BaseModel):
     name: str

@@ -13,7 +13,14 @@ import httpx
 from typing import List
 from fastapi.responses import JSONResponse
 import os
+from database import Base, engine
+from models import ChatStateModel
+from database import SessionLocal
+from crud import create_or_update_chat_state, get_chat_state
+from schemas import ChatStateCreate, ChatStateResponse
 
+
+# Ensure tables are created on startup
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -332,3 +339,19 @@ async def handle_specification_upload(project, file, content, spec_filename):
     return {"message": f"{spec_filename} spec saved successfully in {project_folder}."}
 
 
+
+# Chat
+@app.post("/chat-state/")
+def api_create_or_update_chat_state(chat_state: ChatStateCreate, db: Session = Depends(get_db)):
+    try:
+        create_or_update_chat_state(db, chat_state)
+        return {"status": "success"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/chat-state/{project_id}/{solution_name}", response_model=ChatStateResponse)
+def api_get_chat_state(project_id: int, solution_name: str, db: Session = Depends(get_db)):
+    chat_state = get_chat_state(db, project_id, solution_name)
+    if not chat_state:
+        raise HTTPException(status_code=404, detail="Chat state not found")
+    return chat_state

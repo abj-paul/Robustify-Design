@@ -15,6 +15,12 @@ interface Message {
   sanitizedHtml?: SafeHtml;
 }
 
+interface ChatState {
+  project_id: number;
+  solution_name: string;
+  messages: Message[];
+}
+
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
@@ -39,8 +45,7 @@ export class ChatComponent implements OnInit {
   ) {
     marked.setOptions({
       gfm: true,
-      breaks: true,
-      //sanitize: true
+      breaks: true
     });
   }
 
@@ -55,7 +60,6 @@ export class ChatComponent implements OnInit {
     this.http.get<{solutions: string[]}>(`${this.backendService.apiUrl}/solutions/${this.constantService.getProject().id}/`)
       .subscribe({
         next: (response) => {
-          console.log(response);
           this.solutions = response.solutions.map(url => url.split('/').pop() || '');
         },
         error: (error) => {
@@ -66,17 +70,57 @@ export class ChatComponent implements OnInit {
 
   selectSolution(solution: string) {
     this.selectedSolution = solution;
-    this.messages = [];
-    this.messages.push({
-      text: `Selected solution: ${solution}`,
-      isUser: false,
-      timestamp: new Date()
-    });
+    this.loadChatState(solution);
   }
 
+  loadChatState(solution: string) {
+    this.http.get<ChatState>(`${this.backendService.apiUrl}/chat-state/${this.projectId}/${solution}`)
+      .subscribe({
+        next: (state) => {
+          this.messages = state.messages.map(msg => ({
+            ...msg,
+            timestamp: new Date(msg.timestamp),
+            sanitizedHtml: msg.sanitizedHtml && typeof msg.sanitizedHtml === 'object' 
+              ? this.sanitizer.bypassSecurityTrustHtml(
+                  (msg.sanitizedHtml as any).changingThisBreaksApplicationSecurity || msg.text
+                )
+              : this.parseMarkdown(msg.text)
+          }));
+        },
+        error: (error) => {
+          console.log('No existing chat state found, starting new conversation');
+          this.messages = [{
+            text: `Selected solution: ${solution}`,
+            isUser: false,
+            timestamp: new Date()
+          }];
+        }
+      });
+  }
+  
   private parseMarkdown(text: string): SafeHtml {
-    const rawHtml = marked(text);
-    return this.sanitizer.bypassSecurityTrustHtml(rawHtml.toString());
+    try {
+      const rawHtml = <string>marked(text);
+      return this.sanitizer.bypassSecurityTrustHtml(rawHtml);
+    } catch (error) {
+      console.error('Markdown parsing error:', error);
+      return this.sanitizer.bypassSecurityTrustHtml(text);
+    }
+  }
+
+  private saveChatState() {
+    if (!this.selectedSolution) return;
+
+    const chatState: ChatState = {
+      project_id: this.projectId,
+      solution_name: this.selectedSolution,
+      messages: this.messages
+    };
+
+    this.http.post(`${this.backendService.apiUrl}/chat-state/`, chatState)
+      .subscribe({
+        error: (error) => console.error('Error saving chat state:', error)
+      });
   }
 
   async sendMessage() {
@@ -87,7 +131,6 @@ export class ChatComponent implements OnInit {
       isUser: true,
       timestamp: new Date()
     });
-
     this.loading = true;
 
     try {
@@ -102,13 +145,15 @@ export class ChatComponent implements OnInit {
       ).toPromise();
 
       if (response) {
-        console.log(response);
-        this.messages.push({
+        const botMessage: Message = {
           text: response.toString(),
           isUser: false,
           timestamp: new Date(),
           sanitizedHtml: this.parseMarkdown(response.toString())
-        });
+        };
+        
+        this.messages.push(botMessage);
+        this.saveChatState();
       }
     } catch (error) {
       console.error('Error sending message:', error);

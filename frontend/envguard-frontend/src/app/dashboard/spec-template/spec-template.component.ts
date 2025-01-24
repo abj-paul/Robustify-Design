@@ -164,10 +164,13 @@ ltl property {
         console.log("DEBUG Response:", response);
   
         // Check if spec is a string
-        if (typeof response.spec === 'string') {
+        if (response.spec) {
           this.fileContent = response.spec;
           this.aceEditor?.session.setValue(this.fileContent); // Load into editor
-        } else {
+        } else if (response.spec == null){
+          console.log("Loaded null from frontend");
+        }
+        else {
           console.warn("DEBUG: Response is not a string. Converting to JSON format.");
           this.fileContent = JSON.stringify(response.spec, null, 2); // Pretty print JSON
           this.aceEditor?.session.setValue(this.fileContent);

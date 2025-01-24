@@ -71,7 +71,7 @@ async def upload_environment_spec(
 @app.get("/projects/{project_id}/environment_spec")
 async def get_environment_spec(project_id: int, db: Session = Depends(get_db)):
     project = crud.get_project(db, project_id)
-    return {"environment_spec": project.environment_spec}
+    return {"spec": project.environment_spec}
 
 
 @app.put("/projects/{project_id}/environment_spec")
@@ -104,7 +104,7 @@ async def upload_system_spec(
 @app.get("/projects/{project_id}/system_spec")
 async def get_system_spec(project_id: int, db: Session = Depends(get_db)):
     project = crud.get_project(db, project_id)
-    return {"system_spec": project.system_spec}
+    return {"spec": project.system_spec}
 
 @app.put("/projects/{project_id}/system_spec")
 async def update_system_spec(project_id: int, file: UploadFile = None, content: Optional[str] = Form(None), db: Session = Depends(get_db)):
@@ -135,7 +135,7 @@ async def upload_safety_property(
 @app.get("/projects/{project_id}/safety_spec")
 async def get_safety_property(project_id: int, db: Session = Depends(get_db)):
     project = crud.get_project(db, project_id)
-    return {"safety_property": project.safety_property}
+    return {"spec": project.safety_property}
 
 
 @app.put("/projects/{project_id}/safety_spec")
@@ -166,7 +166,7 @@ async def upload_config(project_id: int, file: UploadFile = None, content: Optio
 @app.get("/projects/{project_id}/configuration_spec")
 async def get_config(project_id: int, db: Session = Depends(get_db)):
     project = crud.get_project(db, project_id)
-    return {"config": project.config}
+    return {"spec": project.config}
 
 
 @app.put("/projects/{project_id}/configuration_spec")

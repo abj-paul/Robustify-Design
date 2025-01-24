@@ -45,6 +45,7 @@ class Example {
 ltl property {
   []<>(state -> X response)
 }`;
+    this.fetchSystemSpec();
   }
 
   ngAfterViewInit() {
@@ -154,4 +155,29 @@ ltl property {
         this.compiledImageUrl = response.imageUrl;
       });
   }
+  fetchSystemSpec(): void {
+    console.log("DEBUG: Loading content from db to sync dashboard.");
+    const url = `${this.backendService.apiUrl}/projects/${this.constantService.getProject().id}/${this.constantService.getActiveTab()}_spec`;
+  
+    this.http.get<{ spec: any }>(url).subscribe({
+      next: (response) => {
+        console.log("DEBUG Response:", response);
+  
+        // Check if spec is a string
+        if (typeof response.spec === 'string') {
+          this.fileContent = response.spec;
+          this.aceEditor?.session.setValue(this.fileContent); // Load into editor
+        } else {
+          console.warn("DEBUG: Response is not a string. Converting to JSON format.");
+          this.fileContent = JSON.stringify(response.spec, null, 2); // Pretty print JSON
+          this.aceEditor?.session.setValue(this.fileContent);
+        }
+      },
+      error: (err) => {
+        console.error('Failed to fetch system specification:', err);
+      }
+    });
+  }
+  
+  
 }

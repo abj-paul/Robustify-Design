@@ -1,0 +1,32 @@
+<div class="create-project-container">
+    <img src="load valid image from online"/>
+    <h2>Create a New Project</h2>
+    <form [formGroup]="projectForm" (ngSubmit)="createProject()">
+      <div class="form-group">
+        <label for="projectName">Project Name</label>
+        <input
+          id="projectName"
+          type="text"
+          formControlName="name"
+          placeholder="Enter project name"
+          class="form-control"
+        />
+        <div *ngIf="projectForm.get('name')?.invalid && projectForm.get('name')?.touched" class="error">
+          Project name is required and must be at least 3 characters.
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="projectDescription">Description</label>
+        <textarea
+          id="projectDescription"
+          formControlName="description"
+          placeholder="Enter project description (optional)"
+          class="form-control"
+        ></textarea>
+      </div>
+      <button type="submit" [disabled]="projectForm.invalid" class="btn btn-primary">
+        Create Project
+      </button>
+    </form>
+  </div>
+  

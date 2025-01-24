@@ -29,9 +29,8 @@ export class ProjectListComponent implements OnInit {
   }
 
   createProject() {
-    alert('Create Project functionality will be implemented here.');
-    // Future functionality for project creation
-  }
+    //alert('Create Project functionality will be implemented here.');
+    this.router.navigate(['/create-project']);  }
 
   openDashboardForProject(project: Project) {
     this.constantService.setProject(project);

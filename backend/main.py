@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from database import Base, engine, get_db
 from models import User, Project
-from schemas import UserCreate, ProjectCreate, Project, SpecModel, LoginRequest
+from schemas import ProjectBase, UserCreate, ProjectCreate, Project, SpecModel, LoginRequest
 from auth import create_access_token, verify_password
 import crud
 from fastapi import FastAPI, UploadFile, Form, HTTPException, Depends
@@ -18,7 +18,7 @@ from models import ChatStateModel
 from database import SessionLocal
 from crud import create_or_update_chat_state, get_chat_state
 from schemas import ChatStateCreate, ChatStateResponse
-
+import models
 
 # Ensure tables are created on startup
 Base.metadata.create_all(bind=engine)
@@ -60,6 +60,31 @@ def get_user_projects(user_id: int, db: Session = Depends(get_db)):
 @app.post("/projects", response_model=Project)
 def create_project(project: ProjectCreate, user_id: int, db: Session = Depends(get_db)):
     return crud.create_project(db, project, user_id)
+
+@app.get("/projects/{project_id}", response_model=Project)
+def get_project(
+    project_id: int, 
+    user_id: int, 
+    db: Session = Depends(get_db)
+):
+    return crud.get_project(db, project_id, user_id)
+
+@app.put("/projects/{project_id}", response_model=Project)
+def update_project(
+    project_id: int, 
+    project: ProjectBase, 
+    user_id: int, 
+    db: Session = Depends(get_db)
+):
+    return crud.update_project(db, project_id, project, user_id)
+
+@app.delete("/projects/{project_id}")
+def delete_project(
+    project_id: int, 
+    user_id: int, 
+    db: Session = Depends(get_db)
+):
+    return crud.delete_project(db, project_id, user_id)
 
 
 # Environment Specification Endpoints

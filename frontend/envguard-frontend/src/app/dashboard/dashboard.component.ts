@@ -70,4 +70,8 @@ export class DashboardComponent implements OnInit {
     this.constantService.setActiveTab(tab);
     this.router.navigate([`/dashboard/${tab}`]);
   }
+
+  edit_project() {
+    //alert('Create Project functionality will be implemented here.');
+    this.router.navigate(['/edit-project']);  }
 }

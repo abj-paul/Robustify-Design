@@ -13,10 +13,16 @@ import { ChatComponent } from './chat/chat.component';
 import { CreateProjectComponent } from './create-project/create-project.component';
 import { AuthInterceptor } from './auth.interceptor';
 import { AuthGuard } from './auth-guard.service';
+import { EditProjectComponent } from './edit-project/edit-project.component';
 
 export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
+  {
+    path: 'edit-project', // Add :id parameter
+    component: EditProjectComponent,
+    //canActivate: [AuthGuard]
+  },
   { 
     path: 'create-project', 
     component: CreateProjectComponent,

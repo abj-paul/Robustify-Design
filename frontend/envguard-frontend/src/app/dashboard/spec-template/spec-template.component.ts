@@ -97,6 +97,7 @@ ltl property {
 
   updateSystemSpecService(projectId: number, xmlContent: string): Observable<any> {
     const url = `${this.backendService.apiUrl}/projects/${this.constantService.getProject().id}/${this.constantService.getActiveTab()}_spec`;
+    console.log("Ahh URL OK? "+url);
     const formData = new FormData();
     formData.append('content', xmlContent);
 
@@ -164,7 +165,7 @@ ltl property {
         console.log("DEBUG Response:", response);
   
         // Check if spec is a string
-        if (response.spec) {
+        if (typeof response.spec === 'string') {
           this.fileContent = response.spec;
           this.aceEditor?.session.setValue(this.fileContent); // Load into editor
         } else if (response.spec == null){

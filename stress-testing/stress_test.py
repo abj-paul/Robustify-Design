@@ -106,6 +106,7 @@ BASE_URL = "http://localhost:3000"
 #         assert all(response.status_code == 200 for response in responses)
 
 @pytest.mark.asyncio
+@pytest.mark.timeout(6000)
 async def test_stress_execute_pipeline():
     """Stress test for robustification execution."""
     # Set a longer timeout for stress testing
@@ -125,7 +126,7 @@ async def test_stress_execute_pipeline():
         # Execute pipeline concurrently
         tasks = []
         KNOWN_PROJECT_ID = 2  # Replace with a valid project ID
-        for i in range(6):
+        for i in range(7):
             project_id = KNOWN_PROJECT_ID
             tasks.append(client.post(
                 f"{BASE_URL}/projects/{project_id}/execute",

@@ -224,7 +224,7 @@ async def run_fortis(
     project = crud.get_project(db, project_id)
     project_folder = f"{BASE_PROJECT_FOLDER}/{project.name}-{project.id}"
 
-    timeout = httpx.Timeout(6000.0)  # Adjust timeout as needed (e.g., 60 seconds) # CHANGEE! STRES TESTING
+    timeout = httpx.Timeout(200.0)  # Adjust timeout as needed (e.g., 60 seconds) # CHANGEE! STRES TESTING
     async with httpx.AsyncClient(timeout=timeout) as client:
         response = await client.post(
             f"{PIPELINE_SERVER_ADDRESS}/execute",

@@ -2,12 +2,11 @@ from sqlalchemy.orm import Session
 from database import Base, engine, get_db
 from models import User, Project
 from schemas import ProjectBase, UserCreate, ProjectCreate, Project, SpecModel, LoginRequest
-from auth import create_access_token, verify_password
+from auth import authenticate_request, create_access_token, verify_password
 import crud
 from fastapi import FastAPI, UploadFile, Form, HTTPException, Depends
 from typing import Optional
 import json
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi import HTTPException
 import httpx
 from typing import List
@@ -19,6 +18,11 @@ from database import SessionLocal
 from crud import create_or_update_chat_state, get_chat_state
 from schemas import ChatStateCreate, ChatStateResponse
 import models
+from fastapi.middleware.cors import CORSMiddleware
+
+PIPELINE_SERVER_ADDRESS = "http://localhost:8000"
+BASE_PROJECT_FOLDER = "projects"
+
 
 # Ensure tables are created on startup
 Base.metadata.create_all(bind=engine)
@@ -32,13 +36,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.middleware("http")(authenticate_request)
 
-PIPELINE_SERVER_ADDRESS = "http://localhost:8000"
-BASE_PROJECT_FOLDER = "projects"
 
+# Routes
 @app.post("/register")
 def register(user: UserCreate, db: Session = Depends(get_db)):
-    if crud.get_user_by_username(db, user.username): #, user.organization
+    if crud.get_user_by_username(db, user.username):
         raise HTTPException(status_code=400, detail="User already registered")
     return crud.create_user(db, user)
 
@@ -48,9 +52,10 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
     user = crud.get_user_by_username(db, request.username)
     if not user or not verify_password(request.password, user.password):
         raise HTTPException(status_code=400, detail="Invalid credentials")
-    return {"access_token": create_access_token({"sub": request.username}), "user": user}
-
-
+    return {
+        "access_token": create_access_token({"sub": request.username}),
+        "user": user
+    }
 
 @app.get("/projects", response_model=list[Project])
 def get_user_projects(user_id: int, db: Session = Depends(get_db)):

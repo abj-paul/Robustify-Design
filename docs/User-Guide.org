@@ -1,0 +1,68 @@
+
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
+#+Title: User Guide of EnvGuard
+#+Author: Abhijit Paul
+#+Date: <2025-01-25 শনি>
+
+EnvGuard is a solution to protect a system from environmental deviation. It provides an intuitive view through which users can upload, modify, understand, robustify and explore design alternatives. We also provide gemini integration to make it easier to understand the generated designs.
+** Project Management
+*** Project List
+You can see existing lists of projects here. You can also create new project from here. We will look into it soon.
+[[file:project-list.png]]
+Select on any project to open it.
+*** Project Hub
+Its a single-spot to manage details on the project, including requirements specification, robustification and exploration.
+[[file:project-dashboard-1.png]]
+You can upload and edit UML and LTL specifications here.
+[[file:env-spec-1.png]]
+You can also compile UML to visualize it. However, current version only compiles UML and does not consider LTL.
+[[file:sys-spec-1.png]]
+You can similarly upload system specifications, as shown above. For safety property, LTL notation is the norm.
+[[file:safety-proeprty-1.png]]
+And robustification process can be configured using a json format.
+[[file:configu-json.png]]
+*** Robustification
+Finally, user can click on "Robustification" to robustify the behavioral model against environmental deviations.
+[[file:robustification-1.png]]
+Robustification will take some time, typically around a minute.
+[[file:robustification-progress-2.png]]
+A success message will appear once it completes.
+[[file:robustification-complete.png]]
+*** Report
+You can see the generated report here. Note that, all versions are stored here.
+[[file:report-versions-1.png]]
+Click on any report to see details on it. It will open an html page. You can share the html page across team members to easily communicate design alternatives.
+[[file:report-details-1.png]]
+You can click on any to expand and see the designs. The collapsable view is presented to reduce the cognitive load as users explore the generated design alternatives.
+[[file:report-details-2.png]]
+Observe that each design alternatives has complexity scores assigned to it. It ranks them based on simple to complex order. This way, its easier to explore design alternatives.
+[[file:report-details-3.png]]
+For rare use cases, user can simply download the designs using browser's default print functionality. Reusing existing features like this reduces the burden on this application and keep it single-purpose.
+[[file:report-details-print.png]]
+*** Gemini Integration
+To make it easier to explore design alternatives, we provide gemini integration. You can view all the generated designs here and use any to talk with gemini.
+[[file:gemini-1.png]]
+After selecting a design, previous chats will load.
+[[file:gemini-2.png]]
+You can text to chat. It takes around 2-5s for gemini to reply.
+[[file:gemini-3.png]]
+*** Project Update and Deletion
+You can go back to project list by clicking on Project Hub in top left.
+[[file:go-back-project-list.png]]
+You can click on Create New Project in order to create an new project.
+[[file:create-new-project-button.png]]
+You can enter project name and description to create a new project. Note that multiple projects can have the same name, it is of no issue.
+[[file:create-project-layout.png]]
+And to modify project name/description or to delete a project, you can click Edit Project from Project Hub.
+[[file:edot-project-button.png]]
+You can modify project details or delete them here. After deletion, you will be redirected back to project list layout.
+[[file:edit-roject-layuot.png]]
+** User Authentication and Authorization
+Give username, password to login.
+[[file:login.png]]
+And complete the captcha.
+[[file:cptcha.png]]
+Finally, user can logout.
+[[file:logout.png]]
+As for registration, you can fill up username, organization and password. Password must be at least 6 characters. And username must be unique.
+[[file:registeration.png]]

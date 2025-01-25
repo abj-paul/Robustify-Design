@@ -1,11 +1,29 @@
 * About
-We are trying to convert state transition diagram to FSP format. Our end goal is to enable robustification of UML designs using Fortis tool.
+EnvGuard is a tool that presents a modern interface to robustify behavioral designs against environmental deviations. It includes a ~uml-to-ltl~ parser so agile developers can easily robustify their UML designs. Additionally, it integrates the power of ~Gemini~ to make exploration of design alternatives more intuitive.
 
-We need to convert UML to LTL. A parser would be hard. So we had this inspiration - as we saw in LTSA tool, every safety property can be expressed as a state transition diagram. Professor also confirmed that. So instead of complex parsing, I would instead bring the complexity to defining the requirements using UML diagrams. This way, we can easily use our system.
+[[https://drive.google.com/file/d/1xcbNcyl28vxtP1Sd_4nXU_PhNozx0Nl7/view?usp=sharing][You can find a demo on how to use it here.]] Additionally, the following 2 blogs can help put perspectives on how it works.
+1. [[https://abj-paul.github.io/blogs/Robustification%20of%20Behavioral%20Model%20against%20Environmental%20Deviation.html][Robustification of Behavioral Design against Environmental Deviation]]
+2. [[https://abj-paul.github.io/blogs/How%20can%20we%20use%20Fortis%20in%20software%20industry.html][How can we adapt Fortis for Agile?]]
 
-** Backend
-- [ ] Take LTL as input
-- [ ] Show output
-- [ ] Take UML as input
+** Features
++ [X] User Authentication & Authorization
++ [X] ReCaptchv2 to fight dictionary based attacks
++ [X] Converting UML to LTS
++ [X] UML Editor and Compilation
++ [X] Robustifying design
++ [X] Ranking designs using 5 metrics
++ [X] Report Generation and Sharing and Version Controlling
++ [X] Gemini integration
++ [X] Project Management
++ [X] Stress Testing
++ [X] Security Testing
++ [X] OOB
 
+** Installation
+
+** User Guide
+
+** Development Guide
+
+** Logs
 Prompt: https://chatgpt.com/share/44c07d0d-ef32-4595-9e79-474abdc61acf

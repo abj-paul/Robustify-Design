@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2025-01-25 শনি 19:16 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>User Guide of EnvGuard</title>
+<meta name="author" content="Abhijit Paul" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/readtheorg.css"/>
+<link rel="stylesheet" type="text/css" href="src/readtheorg_theme/css/search.css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/search.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/readtheorg.js"></script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">User Guide of EnvGuard</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgaed29a6">1. Project Management</a>
+<ul>
+<li><a href="#org914ced4">1.1. Project List</a></li>
+<li><a href="#orgafa57dd">1.2. Project Hub</a></li>
+<li><a href="#org4de63d7">1.3. Robustification</a></li>
+<li><a href="#org538a23c">1.4. Report</a></li>
+<li><a href="#org5d72b82">1.5. Gemini Integration</a></li>
+<li><a href="#org5f54a09">1.6. Project Update and Deletion</a></li>
+</ul>
+</li>
+<li><a href="#orgeb5649f">2. User Authentication and Authorization</a></li>
+</ul>
+</div>
+</div>
+<p>
+EnvGuard is a solution to protect a system from environmental deviation. It provides an intuitive view through which users can upload, modify, understand, robustify and explore design alternatives. We also provide gemini integration to make it easier to understand the generated designs.
+</p>
+<div id="outline-container-orgaed29a6" class="outline-2">
+<h2 id="orgaed29a6"><span class="section-number-2">1.</span> Project Management</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org914ced4" class="outline-3">
+<h3 id="org914ced4"><span class="section-number-3">1.1.</span> Project List</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+You can see existing lists of projects here. You can also create new project from here. We will look into it soon.
+<img src="project-list.png" alt="project-list.png" />
+Select on any project to open it.
+</p>
+</div>
+</div>
+<div id="outline-container-orgafa57dd" class="outline-3">
+<h3 id="orgafa57dd"><span class="section-number-3">1.2.</span> Project Hub</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Its a single-spot to manage details on the project, including requirements specification, robustification and exploration.
+<img src="project-dashboard-1.png" alt="project-dashboard-1.png" />
+You can upload and edit UML and LTL specifications here.
+<img src="env-spec-1.png" alt="env-spec-1.png" />
+You can also compile UML to visualize it. However, current version only compiles UML and does not consider LTL.
+<img src="sys-spec-1.png" alt="sys-spec-1.png" />
+You can similarly upload system specifications, as shown above. For safety property, LTL notation is the norm.
+<img src="safety-proeprty-1.png" alt="safety-proeprty-1.png" />
+And robustification process can be configured using a json format.
+<img src="configu-json.png" alt="configu-json.png" />
+</p>
+</div>
+</div>
+<div id="outline-container-org4de63d7" class="outline-3">
+<h3 id="org4de63d7"><span class="section-number-3">1.3.</span> Robustification</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+Finally, user can click on "Robustification" to robustify the behavioral model against environmental deviations.
+<img src="robustification-1.png" alt="robustification-1.png" />
+Robustification will take some time, typically around a minute.
+<img src="robustification-progress-2.png" alt="robustification-progress-2.png" />
+A success message will appear once it completes.
+<img src="robustification-complete.png" alt="robustification-complete.png" />
+</p>
+</div>
+</div>
+<div id="outline-container-org538a23c" class="outline-3">
+<h3 id="org538a23c"><span class="section-number-3">1.4.</span> Report</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+You can see the generated report here. Note that, all versions are stored here.
+<img src="report-versions-1.png" alt="report-versions-1.png" />
+Click on any report to see details on it. It will open an html page. You can share the html page across team members to easily communicate design alternatives.
+<img src="report-details-1.png" alt="report-details-1.png" />
+You can click on any to expand and see the designs. The collapsable view is presented to reduce the cognitive load as users explore the generated design alternatives.
+<img src="report-details-2.png" alt="report-details-2.png" />
+Observe that each design alternatives has complexity scores assigned to it. It ranks them based on simple to complex order. This way, its easier to explore design alternatives.
+<img src="report-details-3.png" alt="report-details-3.png" />
+For rare use cases, user can simply download the designs using browser's default print functionality. Reusing existing features like this reduces the burden on this application and keep it single-purpose.
+<img src="report-details-print.png" alt="report-details-print.png" />
+</p>
+</div>
+</div>
+<div id="outline-container-org5d72b82" class="outline-3">
+<h3 id="org5d72b82"><span class="section-number-3">1.5.</span> Gemini Integration</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+To make it easier to explore design alternatives, we provide gemini integration. You can view all the generated designs here and use any to talk with gemini.
+<img src="gemini-1.png" alt="gemini-1.png" />
+After selecting a design, previous chats will load.
+<img src="gemini-2.png" alt="gemini-2.png" />
+You can text to chat. It takes around 2-5s for gemini to reply.
+<img src="gemini-3.png" alt="gemini-3.png" />
+</p>
+</div>
+</div>
+<div id="outline-container-org5f54a09" class="outline-3">
+<h3 id="org5f54a09"><span class="section-number-3">1.6.</span> Project Update and Deletion</h3>
+<div class="outline-text-3" id="text-1-6">
+<p>
+You can go back to project list by clicking on Project Hub in top left.
+<img src="go-back-project-list.png" alt="go-back-project-list.png" />
+You can click on Create New Project in order to create an new project.
+<img src="create-new-project-button.png" alt="create-new-project-button.png" />
+You can enter project name and description to create a new project. Note that multiple projects can have the same name, it is of no issue.
+<img src="create-project-layout.png" alt="create-project-layout.png" />
+And to modify project name/description or to delete a project, you can click Edit Project from Project Hub.
+<img src="edot-project-button.png" alt="edot-project-button.png" />
+You can modify project details or delete them here. After deletion, you will be redirected back to project list layout.
+<img src="edit-roject-layuot.png" alt="edit-roject-layuot.png" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgeb5649f" class="outline-2">
+<h2 id="orgeb5649f"><span class="section-number-2">2.</span> User Authentication and Authorization</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Give username, password to login.
+<img src="login.png" alt="login.png" />
+And complete the captcha.
+<img src="cptcha.png" alt="cptcha.png" />
+Finally, user can logout.
+<img src="logout.png" alt="logout.png" />
+As for registration, you can fill up username, organization and password. Password must be at least 6 characters. And username must be unique.
+<img src="registeration.png" alt="registeration.png" />
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2025-01-25 শনি 00:00</p>
+<p class="author">Author: Abhijit Paul</p>
+<p class="date">Created: 2025-01-25 শনি 19:16</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

@@ -37,20 +37,24 @@ export class EditProjectComponent implements OnInit{
   }
 
   loadProjectDetails() {
-    const userId = this.constantService.getUser().userid;
-    this.http.get(`${this.backendService.apiUrl}/projects/${this.projectId}?user_id=${userId}`)
-      .subscribe({
-        next: (project: any) => {
-          this.projectForm.patchValue({
-            name: project.name,
-            description: project.description
-          });
-        },
-        error: (error) => {
-          console.error('Error loading project:', error);
-          this.router.navigate(['/project-list']);
-        }
-      });
+    // const userId = this.constantService.getUser().userid;
+    // this.http.get(`${this.backendService.apiUrl}/projects/${this.projectId}?user_id=${userId}`)
+    //   .subscribe({
+    //     next: (project: any) => {
+    //       this.projectForm.patchValue({
+    //         name: project.name,
+    //         description: project.description
+    //       });
+    //     },
+    //     error: (error) => {
+    //       console.error('Error loading project:', error);
+    //       this.router.navigate(['/project-list']);
+    //     }
+    //   });
+    this.projectForm.patchValue({
+              name: this.constantService.getProject().name,
+              description: this.constantService.getProject().description
+            });
   }
 
   updateProject() {

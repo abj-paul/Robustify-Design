@@ -1,37 +1,47 @@
 <div class="login-container">
-    <h2>Login</h2>
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input
-          type="text"
-          id="username"
-          formControlName="username"
-          placeholder="Enter your username"
-          class="form-control"
-        />
-        <div class="error" *ngIf="loginForm.get('username')?.touched && loginForm.get('username')?.invalid">
-          Username is required.
-        </div>
+  <h2>Login</h2>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input
+        type="text"
+        id="username"
+        formControlName="username"
+        placeholder="Enter your username"
+        class="form-control"
+      />
+      <div class="error" *ngIf="loginForm.get('username')?.touched && loginForm.get('username')?.invalid">
+        Username is required.
       </div>
-  
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          formControlName="password"
-          placeholder="Enter your password"
-          class="form-control"
-        />
-        <div class="error" *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
-          Password is required.
-        </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        formControlName="password"
+        placeholder="Enter your password"
+        class="form-control"
+      />
+      <div class="error" *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+        Password is required.
       </div>
-  
-      <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid">
-        Login
-      </button>
-    </form>
-  </div>
-  
+    </div>
+
+    <!-- reCAPTCHA -->
+    <div class="form-group">
+      <ngx-recaptcha2
+        [siteKey]="siteKey"
+        (success)="onCaptchaResolved($event)"
+      ></ngx-recaptcha2>
+      <div class="error" *ngIf="!captchaVerified && loginForm.touched">
+        Please complete the CAPTCHA.
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid || !captchaVerified">
+      Login
+    </button>
+  </form>
+</div>

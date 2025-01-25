@@ -54,6 +54,7 @@ Today, I will do the following tasks.
 ng serve
 uvicorn main:app --reload --port 3000
 uvicorn server:app --reload
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
 
 *** Techs
 - cache-busting 

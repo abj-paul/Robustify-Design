@@ -160,7 +160,7 @@ def generate_html(project_folder, output_path):
     ranked_designs = rank_designs(project_folder)
     os.chdir(project_folder)
 
-    for design in ranked_designs:
+    for index,design in enumerate(ranked_designs):
         print(f"Ranking now {design['solution']}")
         solution_path = design['solution']
         title = f"Solution: {os.path.basename(solution_path)}"
@@ -180,7 +180,7 @@ def generate_html(project_folder, output_path):
         html += f'<p><strong>Jaccard Redundancy:</strong> {design["jaccard_redundancy"]}</p>'
         html += f'<p><strong>Laplacian Spectral Complexity:</strong> {design["laplacian_spectral_complexity"]}</p>'
         html += f'<p><strong>Eigen Symmetry:</strong> {design["eigen_symmetry"]}</p>'
-        
+        html += f'<a href="http://localhost:8000/projects/Voting-2/solution_{index+1}.xml" target="_blank">Download Design </a> <br>'
         # Close the panel for the current design
         html += '</div>'
     

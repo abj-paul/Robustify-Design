@@ -159,3 +159,10 @@
 .project-card {
   animation: fadeIn 0.3s ease-out;
 }
+.logout-button {
+  background-color: #ef4444;
+  margin-left: 1rem;
+}
+.logout-button:hover {
+  background-color: #dc2626;
+}

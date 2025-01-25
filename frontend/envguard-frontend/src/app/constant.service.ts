@@ -24,6 +24,10 @@ export class ConstantService {
     return this.currUser;
   }
 
+  clearUser():void{
+    this.currUser = new User();
+  }
+
   setProject(project: Project){
     this.currProject = project;
   }

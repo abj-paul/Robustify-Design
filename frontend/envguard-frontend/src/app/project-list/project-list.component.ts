@@ -50,5 +50,14 @@ export class ProjectListComponent implements OnInit {
       )
       .subscribe((projects) => (this.projects = projects));
   }
-  
+  logout(): void {
+    // Clear access token from local storage
+    localStorage.removeItem('access_token');
+    
+    // Clear any user-related data from constant service
+    this.constantService.clearUser();
+    
+    // Navigate back to login page
+    this.router.navigate(['/login']);
+  }
 }

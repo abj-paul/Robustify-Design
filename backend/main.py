@@ -36,7 +36,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app.middleware("http")(authenticate_request)
+#app.middleware("http")(authenticate_request)
 
 
 # Routes
@@ -370,9 +370,9 @@ async def handle_specification_upload(project, file, content, spec_filename):
         if response.status_code != 200:
             raise HTTPException(status_code=response.status_code, detail="Failed to upload specification")
 
-    #return {"message": "System spec updated successfully in database and file"}
+    return {"message": "System spec updated successfully in database and file"}
 
-    return {"message": f"{spec_filename} spec saved successfully in {project_folder}."}
+    #return {"message": f"{spec_filename} spec saved successfully in {project_folder}."}
 
 
 

@@ -92,7 +92,7 @@ async def test_stress_spec_upload():
 
         headers = {"Authorization": f"Bearer {token}"}
 
-        # Upload specifications concurrently
+        # Upload specifications concurrentl
         tasks = []
         for i in range(10):
             project_id = i + 1  # Assume projects with these IDs exist

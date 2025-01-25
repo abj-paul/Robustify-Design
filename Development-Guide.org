@@ -55,8 +55,8 @@ ng serve
 uvicorn main:app --reload --port 3000
 uvicorn server:app --reload
 fastapi run --workers 4 main.py --port 3000
+http-server --port 4201
 
-curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
 
 *** Techs
 - cache-busting 

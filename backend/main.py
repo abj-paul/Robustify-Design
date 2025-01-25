@@ -36,7 +36,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-#app.middleware("http")(authenticate_request)
+app.middleware("http")(authenticate_request)
 
 
 # Routes
@@ -44,7 +44,10 @@ app.add_middleware(
 def register(user: UserCreate, db: Session = Depends(get_db)):
     if crud.get_user_by_username(db, user.username):
         raise HTTPException(status_code=400, detail="User already registered")
-    return crud.create_user(db, user)
+    return {
+        "access_token": create_access_token({"sub": user.username}),
+        "user": crud.create_user(db, user)
+    }
 
 
 @app.post("/login")

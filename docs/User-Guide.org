@@ -1,68 +1,113 @@
-
 #+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
 #+Title: User Guide of EnvGuard
 #+Author: Abhijit Paul
 #+Date: <2025-01-25 শনি>
 
-EnvGuard is a solution to protect a system from environmental deviation. It provides an intuitive view through which users can upload, modify, understand, robustify and explore design alternatives. We also provide gemini integration to make it easier to understand the generated designs.
-** Project Management
+EnvGuard is a robust solution designed to protect systems from environmental deviations. It provides an intuitive interface that allows users to upload, modify, understand, robustify, and explore various design alternatives. The platform also integrates with Gemini, enabling users to communicate with the system and get more detailed explanations about the generated designs. This guide will walk you through all the essential features and functionalities of EnvGuard.
+Note: You can alternatively view [[https://drive.google.com/file/d/1xcbNcyl28vxtP1Sd_4nXU_PhNozx0Nl7/view?usp=sharing][a tutorial video on how it works from here.]]
+
+** Project Management Overview
+The Project Management feature in EnvGuard is designed to simplify the organization of your design projects. It offers a centralized location where users can manage their projects and associated specifications. Users can create new projects, access existing ones, and track the status of their work with ease. The project management section ensures that you stay organized and efficient as you work through multiple design iterations.
+
 *** Project List
-You can see existing lists of projects here. You can also create new project from here. We will look into it soon.
+In this section, you can view all the existing projects stored within EnvGuard. Each project is listed with its name and associated details, allowing you to easily select and open them. If you want to create a new project, there is an option to do so right here. Once a project is selected, you are directed to the project’s detailed management page.
+
 [[file:project-list.png]]
-Select on any project to open it.
+
+By clicking on any project, you will open its specific page, where you can view and manage the project's content.
+
 *** Project Hub
-Its a single-spot to manage details on the project, including requirements specification, robustification and exploration.
+The Project Hub serves as a central location for managing all aspects of a project. It provides a one-stop dashboard where users can manage the project’s requirements, robustification settings, and design exploration features. Here, you can upload your UML and LTL specifications, configure system parameters, and visualize how the system’s behavior is represented. The Project Hub simplifies the process of coordinating and managing your work.
+
 [[file:project-dashboard-1.png]]
-You can upload and edit UML and LTL specifications here.
+
+You can easily upload and edit UML and LTL specifications here, providing the flexibility to define your system's behavior precisely.
+
+** System Configuration and Robustification
+The configuration and robustification sections are essential for ensuring that your design can withstand environmental deviations. Through these features, you can upload system specifications, define safety properties using LTL notation, and customize the robustification process using JSON format. This allows users to adapt and configure the system to meet their specific requirements and safety standards.
+
+*** System Specifications and Safety Properties
+In this section, users can upload system specifications that define the behavior of the system being modeled. For the safety property, LTL notation is commonly used to describe the desired behavior and rules for the system. This step ensures that all potential environmental changes and disruptions are considered when designing the system. System specifications play a vital role in the robustification process.
+
 [[file:env-spec-1.png]]
-You can also compile UML to visualize it. However, current version only compiles UML and does not consider LTL.
+
 [[file:sys-spec-1.png]]
-You can similarly upload system specifications, as shown above. For safety property, LTL notation is the norm.
+
 [[file:safety-proeprty-1.png]]
-And robustification process can be configured using a json format.
-[[file:configu-json.png]]
-*** Robustification
-Finally, user can click on "Robustification" to robustify the behavioral model against environmental deviations.
+
+Users can upload different types of system configurations and refine them as necessary to fit the specific needs of their design.
+
+*** Robustification Process
+The robustification process is the core feature that strengthens the behavioral model against environmental deviations. Once you have uploaded your system specifications, you can initiate robustification by clicking the “Robustification” button. This process may take up to a minute, depending on the complexity of the design. During this time, the system analyzes the design and applies the necessary adjustments to ensure robustness. A success message will notify you once the process has completed.
+
 [[file:robustification-1.png]]
-Robustification will take some time, typically around a minute.
+
 [[file:robustification-progress-2.png]]
-A success message will appear once it completes.
+
 [[file:robustification-complete.png]]
-*** Report
-You can see the generated report here. Note that, all versions are stored here.
+
+This feature is critical to ensure that the system remains stable and functions correctly in various environmental scenarios.
+
+** Report Generation and Design Alternatives
+EnvGuard generates comprehensive reports after the robustification process is completed. These reports not only show the final robustified design but also provide a detailed comparison of alternative design configurations. Each design alternative is assigned a complexity score, helping users evaluate the most efficient and optimal designs. This section ensures that you can analyze and select the best design solution based on your needs.
+
+*** Report Overview
+The report section is where you can access and review all the versions of your design. EnvGuard stores all versions of your reports, making it easy to track changes over time and explore different iterations of the design. Clicking on any report will open an HTML page that provides further details about that specific design. This feature helps you keep track of the progress of each design and compare alternatives efficiently.
+
 [[file:report-versions-1.png]]
-Click on any report to see details on it. It will open an html page. You can share the html page across team members to easily communicate design alternatives.
+
 [[file:report-details-1.png]]
-You can click on any to expand and see the designs. The collapsable view is presented to reduce the cognitive load as users explore the generated design alternatives.
+
+This section serves as a key tool for communication within the team, allowing easy sharing of designs with colleagues.
+
+*** Exploring Design Alternatives
+The design alternatives are presented in a collapsible view to reduce cognitive load while exploring. By expanding each design, you can see additional details and assess the complexity and feasibility of each one. This ranking system allows users to quickly navigate through the designs, from the simplest to the most complex. The interface is designed to make exploring different design configurations as intuitive and efficient as possible.
+
 [[file:report-details-2.png]]
-Observe that each design alternatives has complexity scores assigned to it. It ranks them based on simple to complex order. This way, its easier to explore design alternatives.
+
 [[file:report-details-3.png]]
-For rare use cases, user can simply download the designs using browser's default print functionality. Reusing existing features like this reduces the burden on this application and keep it single-purpose.
+
+Users can also download designs using the browser's default print functionality, providing a simple way to store or share designs outside the application.
+
 [[file:report-details-print.png]]
-*** Gemini Integration
-To make it easier to explore design alternatives, we provide gemini integration. You can view all the generated designs here and use any to talk with gemini.
+
+** Gemini Integration for Enhanced Interaction
+Gemini integration in EnvGuard makes exploring design alternatives even more intuitive. Through Gemini, users can select a design and initiate a conversation to better understand the design details or ask specific questions. This feature allows you to interact with the system in a more conversational manner, offering a unique way to engage with the design alternatives. It enables more personalized support and guidance when making decisions about the design.
+
 [[file:gemini-1.png]]
-After selecting a design, previous chats will load.
+
+After selecting a design, previous chats with Gemini will be loaded, providing context for your ongoing discussion.
+
 [[file:gemini-2.png]]
-You can text to chat. It takes around 2-5s for gemini to reply.
+
+You can easily text to chat and get responses within 2-5 seconds. This provides an interactive experience, helping you explore design alternatives more deeply.
+
 [[file:gemini-3.png]]
-*** Project Update and Deletion
-You can go back to project list by clicking on Project Hub in top left.
+
+** Project Management: Creating, Updating, and Deleting Projects
+EnvGuard allows users to easily create, modify, and delete projects from the Project Hub. If you need to create a new project, simply click the "Create New Project" button and enter the project name and description. Projects with the same name can coexist, so there are no restrictions on naming. You can also modify the project name and description as needed or delete a project entirely.
+
 [[file:go-back-project-list.png]]
-You can click on Create New Project in order to create an new project.
+
 [[file:create-new-project-button.png]]
-You can enter project name and description to create a new project. Note that multiple projects can have the same name, it is of no issue.
+
 [[file:create-project-layout.png]]
-And to modify project name/description or to delete a project, you can click Edit Project from Project Hub.
+
+Clicking "Edit Project" from the Project Hub will give you access to the modification options. If you decide to delete a project, the system will redirect you back to the Project List layout after successful deletion.
+
 [[file:edot-project-button.png]]
-You can modify project details or delete them here. After deletion, you will be redirected back to project list layout.
+
 [[file:edit-roject-layuot.png]]
-** User Authentication and Authorization
-Give username, password to login.
+
+** User Authentication and Registration
+EnvGuard ensures secure access to your projects through user authentication and authorization. To log in, simply provide your username and password, and complete the captcha verification to ensure security. Once logged in, you can start managing your projects. If you're new to EnvGuard, you can easily register by providing a unique username, your organization name, and a password that must be at least 6 characters long.
+
 [[file:login.png]]
-And complete the captcha.
+
 [[file:cptcha.png]]
-Finally, user can logout.
+
+Once logged in, you can logout any time. If you need to register, the process is straightforward and quick.
+
 [[file:logout.png]]
-As for registration, you can fill up username, organization and password. Password must be at least 6 characters. And username must be unique.
+
 [[file:registeration.png]]

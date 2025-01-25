@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-01-25 শনি 19:16 -->
+<!-- 2025-01-25 শনি 19:25 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>User Guide of EnvGuard</title>
@@ -25,135 +25,337 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgaed29a6">1. Project Management</a>
+<li><a href="#org42fbb0e">1. Project Management Overview</a>
 <ul>
-<li><a href="#org914ced4">1.1. Project List</a></li>
-<li><a href="#orgafa57dd">1.2. Project Hub</a></li>
-<li><a href="#org4de63d7">1.3. Robustification</a></li>
-<li><a href="#org538a23c">1.4. Report</a></li>
-<li><a href="#org5d72b82">1.5. Gemini Integration</a></li>
-<li><a href="#org5f54a09">1.6. Project Update and Deletion</a></li>
+<li><a href="#org28871b3">1.1. Project List</a></li>
+<li><a href="#org1aff71b">1.2. Project Hub</a></li>
 </ul>
 </li>
-<li><a href="#orgeb5649f">2. User Authentication and Authorization</a></li>
+<li><a href="#org3df9467">2. System Configuration and Robustification</a>
+<ul>
+<li><a href="#org13471ea">2.1. System Specifications and Safety Properties</a></li>
+<li><a href="#orgc2971f9">2.2. Robustification Process</a></li>
+</ul>
+</li>
+<li><a href="#org2acf3fe">3. Report Generation and Design Alternatives</a>
+<ul>
+<li><a href="#org2f74724">3.1. Report Overview</a></li>
+<li><a href="#org74e3ff0">3.2. Exploring Design Alternatives</a></li>
+</ul>
+</li>
+<li><a href="#org94fc6b2">4. Gemini Integration for Enhanced Interaction</a></li>
+<li><a href="#orgeda6b77">5. Project Management: Creating, Updating, and Deleting Projects</a></li>
+<li><a href="#orgf0d8ffd">6. User Authentication and Registration</a></li>
 </ul>
 </div>
 </div>
 <p>
-EnvGuard is a solution to protect a system from environmental deviation. It provides an intuitive view through which users can upload, modify, understand, robustify and explore design alternatives. We also provide gemini integration to make it easier to understand the generated designs.
+EnvGuard is a robust solution designed to protect systems from environmental deviations. It provides an intuitive interface that allows users to upload, modify, understand, robustify, and explore various design alternatives. The platform also integrates with Gemini, enabling users to communicate with the system and get more detailed explanations about the generated designs. This guide will walk you through all the essential features and functionalities of EnvGuard.
+Note: You can alternatively view <a href="https://drive.google.com/file/d/1xcbNcyl28vxtP1Sd_4nXU_PhNozx0Nl7/view?usp=sharing">a tutorial video on how it works from here.</a>
 </p>
-<div id="outline-container-orgaed29a6" class="outline-2">
-<h2 id="orgaed29a6"><span class="section-number-2">1.</span> Project Management</h2>
+
+<div id="outline-container-org42fbb0e" class="outline-2">
+<h2 id="org42fbb0e"><span class="section-number-2">1.</span> Project Management Overview</h2>
 <div class="outline-text-2" id="text-1">
+<p>
+The Project Management feature in EnvGuard is designed to simplify the organization of your design projects. It offers a centralized location where users can manage their projects and associated specifications. Users can create new projects, access existing ones, and track the status of their work with ease. The project management section ensures that you stay organized and efficient as you work through multiple design iterations.
+</p>
 </div>
-<div id="outline-container-org914ced4" class="outline-3">
-<h3 id="org914ced4"><span class="section-number-3">1.1.</span> Project List</h3>
+
+<div id="outline-container-org28871b3" class="outline-3">
+<h3 id="org28871b3"><span class="section-number-3">1.1.</span> Project List</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
-You can see existing lists of projects here. You can also create new project from here. We will look into it soon.
-<img src="project-list.png" alt="project-list.png" />
-Select on any project to open it.
+In this section, you can view all the existing projects stored within EnvGuard. Each project is listed with its name and associated details, allowing you to easily select and open them. If you want to create a new project, there is an option to do so right here. Once a project is selected, you are directed to the project’s detailed management page.
+</p>
+
+
+<div id="org42da771" class="figure">
+<p><img src="project-list.png" alt="project-list.png" />
+</p>
+</div>
+
+<p>
+By clicking on any project, you will open its specific page, where you can view and manage the project's content.
 </p>
 </div>
 </div>
-<div id="outline-container-orgafa57dd" class="outline-3">
-<h3 id="orgafa57dd"><span class="section-number-3">1.2.</span> Project Hub</h3>
+
+<div id="outline-container-org1aff71b" class="outline-3">
+<h3 id="org1aff71b"><span class="section-number-3">1.2.</span> Project Hub</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
-Its a single-spot to manage details on the project, including requirements specification, robustification and exploration.
-<img src="project-dashboard-1.png" alt="project-dashboard-1.png" />
-You can upload and edit UML and LTL specifications here.
-<img src="env-spec-1.png" alt="env-spec-1.png" />
-You can also compile UML to visualize it. However, current version only compiles UML and does not consider LTL.
-<img src="sys-spec-1.png" alt="sys-spec-1.png" />
-You can similarly upload system specifications, as shown above. For safety property, LTL notation is the norm.
-<img src="safety-proeprty-1.png" alt="safety-proeprty-1.png" />
-And robustification process can be configured using a json format.
-<img src="configu-json.png" alt="configu-json.png" />
+The Project Hub serves as a central location for managing all aspects of a project. It provides a one-stop dashboard where users can manage the project’s requirements, robustification settings, and design exploration features. Here, you can upload your UML and LTL specifications, configure system parameters, and visualize how the system’s behavior is represented. The Project Hub simplifies the process of coordinating and managing your work.
+</p>
+
+
+<div id="orga3695d1" class="figure">
+<p><img src="project-dashboard-1.png" alt="project-dashboard-1.png" />
 </p>
 </div>
-</div>
-<div id="outline-container-org4de63d7" class="outline-3">
-<h3 id="org4de63d7"><span class="section-number-3">1.3.</span> Robustification</h3>
-<div class="outline-text-3" id="text-1-3">
+
 <p>
-Finally, user can click on "Robustification" to robustify the behavioral model against environmental deviations.
-<img src="robustification-1.png" alt="robustification-1.png" />
-Robustification will take some time, typically around a minute.
-<img src="robustification-progress-2.png" alt="robustification-progress-2.png" />
-A success message will appear once it completes.
-<img src="robustification-complete.png" alt="robustification-complete.png" />
-</p>
-</div>
-</div>
-<div id="outline-container-org538a23c" class="outline-3">
-<h3 id="org538a23c"><span class="section-number-3">1.4.</span> Report</h3>
-<div class="outline-text-3" id="text-1-4">
-<p>
-You can see the generated report here. Note that, all versions are stored here.
-<img src="report-versions-1.png" alt="report-versions-1.png" />
-Click on any report to see details on it. It will open an html page. You can share the html page across team members to easily communicate design alternatives.
-<img src="report-details-1.png" alt="report-details-1.png" />
-You can click on any to expand and see the designs. The collapsable view is presented to reduce the cognitive load as users explore the generated design alternatives.
-<img src="report-details-2.png" alt="report-details-2.png" />
-Observe that each design alternatives has complexity scores assigned to it. It ranks them based on simple to complex order. This way, its easier to explore design alternatives.
-<img src="report-details-3.png" alt="report-details-3.png" />
-For rare use cases, user can simply download the designs using browser's default print functionality. Reusing existing features like this reduces the burden on this application and keep it single-purpose.
-<img src="report-details-print.png" alt="report-details-print.png" />
-</p>
-</div>
-</div>
-<div id="outline-container-org5d72b82" class="outline-3">
-<h3 id="org5d72b82"><span class="section-number-3">1.5.</span> Gemini Integration</h3>
-<div class="outline-text-3" id="text-1-5">
-<p>
-To make it easier to explore design alternatives, we provide gemini integration. You can view all the generated designs here and use any to talk with gemini.
-<img src="gemini-1.png" alt="gemini-1.png" />
-After selecting a design, previous chats will load.
-<img src="gemini-2.png" alt="gemini-2.png" />
-You can text to chat. It takes around 2-5s for gemini to reply.
-<img src="gemini-3.png" alt="gemini-3.png" />
-</p>
-</div>
-</div>
-<div id="outline-container-org5f54a09" class="outline-3">
-<h3 id="org5f54a09"><span class="section-number-3">1.6.</span> Project Update and Deletion</h3>
-<div class="outline-text-3" id="text-1-6">
-<p>
-You can go back to project list by clicking on Project Hub in top left.
-<img src="go-back-project-list.png" alt="go-back-project-list.png" />
-You can click on Create New Project in order to create an new project.
-<img src="create-new-project-button.png" alt="create-new-project-button.png" />
-You can enter project name and description to create a new project. Note that multiple projects can have the same name, it is of no issue.
-<img src="create-project-layout.png" alt="create-project-layout.png" />
-And to modify project name/description or to delete a project, you can click Edit Project from Project Hub.
-<img src="edot-project-button.png" alt="edot-project-button.png" />
-You can modify project details or delete them here. After deletion, you will be redirected back to project list layout.
-<img src="edit-roject-layuot.png" alt="edit-roject-layuot.png" />
+You can easily upload and edit UML and LTL specifications here, providing the flexibility to define your system's behavior precisely.
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-orgeb5649f" class="outline-2">
-<h2 id="orgeb5649f"><span class="section-number-2">2.</span> User Authentication and Authorization</h2>
+
+<div id="outline-container-org3df9467" class="outline-2">
+<h2 id="org3df9467"><span class="section-number-2">2.</span> System Configuration and Robustification</h2>
 <div class="outline-text-2" id="text-2">
 <p>
-Give username, password to login.
-<img src="login.png" alt="login.png" />
-And complete the captcha.
-<img src="cptcha.png" alt="cptcha.png" />
-Finally, user can logout.
-<img src="logout.png" alt="logout.png" />
-As for registration, you can fill up username, organization and password. Password must be at least 6 characters. And username must be unique.
-<img src="registeration.png" alt="registeration.png" />
+The configuration and robustification sections are essential for ensuring that your design can withstand environmental deviations. Through these features, you can upload system specifications, define safety properties using LTL notation, and customize the robustification process using JSON format. This allows users to adapt and configure the system to meet their specific requirements and safety standards.
 </p>
+</div>
+
+<div id="outline-container-org13471ea" class="outline-3">
+<h3 id="org13471ea"><span class="section-number-3">2.1.</span> System Specifications and Safety Properties</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+In this section, users can upload system specifications that define the behavior of the system being modeled. For the safety property, LTL notation is commonly used to describe the desired behavior and rules for the system. This step ensures that all potential environmental changes and disruptions are considered when designing the system. System specifications play a vital role in the robustification process.
+</p>
+
+
+<div id="org3dddf25" class="figure">
+<p><img src="env-spec-1.png" alt="env-spec-1.png" />
+</p>
+</div>
+
+
+<div id="org0280319" class="figure">
+<p><img src="sys-spec-1.png" alt="sys-spec-1.png" />
+</p>
+</div>
+
+
+<div id="orgd4d74a3" class="figure">
+<p><img src="safety-proeprty-1.png" alt="safety-proeprty-1.png" />
+</p>
+</div>
+
+<p>
+Users can upload different types of system configurations and refine them as necessary to fit the specific needs of their design.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc2971f9" class="outline-3">
+<h3 id="orgc2971f9"><span class="section-number-3">2.2.</span> Robustification Process</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+The robustification process is the core feature that strengthens the behavioral model against environmental deviations. Once you have uploaded your system specifications, you can initiate robustification by clicking the “Robustification” button. This process may take up to a minute, depending on the complexity of the design. During this time, the system analyzes the design and applies the necessary adjustments to ensure robustness. A success message will notify you once the process has completed.
+</p>
+
+
+<div id="orgfc77a87" class="figure">
+<p><img src="robustification-1.png" alt="robustification-1.png" />
+</p>
+</div>
+
+
+<div id="org97f9ca4" class="figure">
+<p><img src="robustification-progress-2.png" alt="robustification-progress-2.png" />
+</p>
+</div>
+
+
+<div id="org2430b3f" class="figure">
+<p><img src="robustification-complete.png" alt="robustification-complete.png" />
+</p>
+</div>
+
+<p>
+This feature is critical to ensure that the system remains stable and functions correctly in various environmental scenarios.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2acf3fe" class="outline-2">
+<h2 id="org2acf3fe"><span class="section-number-2">3.</span> Report Generation and Design Alternatives</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+EnvGuard generates comprehensive reports after the robustification process is completed. These reports not only show the final robustified design but also provide a detailed comparison of alternative design configurations. Each design alternative is assigned a complexity score, helping users evaluate the most efficient and optimal designs. This section ensures that you can analyze and select the best design solution based on your needs.
+</p>
+</div>
+
+<div id="outline-container-org2f74724" class="outline-3">
+<h3 id="org2f74724"><span class="section-number-3">3.1.</span> Report Overview</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+The report section is where you can access and review all the versions of your design. EnvGuard stores all versions of your reports, making it easy to track changes over time and explore different iterations of the design. Clicking on any report will open an HTML page that provides further details about that specific design. This feature helps you keep track of the progress of each design and compare alternatives efficiently.
+</p>
+
+
+<div id="orgb27b5c6" class="figure">
+<p><img src="report-versions-1.png" alt="report-versions-1.png" />
+</p>
+</div>
+
+
+<div id="org7fd641d" class="figure">
+<p><img src="report-details-1.png" alt="report-details-1.png" />
+</p>
+</div>
+
+<p>
+This section serves as a key tool for communication within the team, allowing easy sharing of designs with colleagues.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org74e3ff0" class="outline-3">
+<h3 id="org74e3ff0"><span class="section-number-3">3.2.</span> Exploring Design Alternatives</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+The design alternatives are presented in a collapsible view to reduce cognitive load while exploring. By expanding each design, you can see additional details and assess the complexity and feasibility of each one. This ranking system allows users to quickly navigate through the designs, from the simplest to the most complex. The interface is designed to make exploring different design configurations as intuitive and efficient as possible.
+</p>
+
+
+<div id="org7c2da96" class="figure">
+<p><img src="report-details-2.png" alt="report-details-2.png" />
+</p>
+</div>
+
+
+<div id="orgc304dbf" class="figure">
+<p><img src="report-details-3.png" alt="report-details-3.png" />
+</p>
+</div>
+
+<p>
+Users can also download designs using the browser's default print functionality, providing a simple way to store or share designs outside the application.
+</p>
+
+
+<div id="org5e6ea77" class="figure">
+<p><img src="report-details-print.png" alt="report-details-print.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org94fc6b2" class="outline-2">
+<h2 id="org94fc6b2"><span class="section-number-2">4.</span> Gemini Integration for Enhanced Interaction</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Gemini integration in EnvGuard makes exploring design alternatives even more intuitive. Through Gemini, users can select a design and initiate a conversation to better understand the design details or ask specific questions. This feature allows you to interact with the system in a more conversational manner, offering a unique way to engage with the design alternatives. It enables more personalized support and guidance when making decisions about the design.
+</p>
+
+
+<div id="org9676fc3" class="figure">
+<p><img src="gemini-1.png" alt="gemini-1.png" />
+</p>
+</div>
+
+<p>
+After selecting a design, previous chats with Gemini will be loaded, providing context for your ongoing discussion.
+</p>
+
+
+<div id="orgf0c6a63" class="figure">
+<p><img src="gemini-2.png" alt="gemini-2.png" />
+</p>
+</div>
+
+<p>
+You can easily text to chat and get responses within 2-5 seconds. This provides an interactive experience, helping you explore design alternatives more deeply.
+</p>
+
+
+<div id="orga7abdaa" class="figure">
+<p><img src="gemini-3.png" alt="gemini-3.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgeda6b77" class="outline-2">
+<h2 id="orgeda6b77"><span class="section-number-2">5.</span> Project Management: Creating, Updating, and Deleting Projects</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+EnvGuard allows users to easily create, modify, and delete projects from the Project Hub. If you need to create a new project, simply click the "Create New Project" button and enter the project name and description. Projects with the same name can coexist, so there are no restrictions on naming. You can also modify the project name and description as needed or delete a project entirely.
+</p>
+
+
+<div id="orgddbe926" class="figure">
+<p><img src="go-back-project-list.png" alt="go-back-project-list.png" />
+</p>
+</div>
+
+
+<div id="org98e9c8c" class="figure">
+<p><img src="create-new-project-button.png" alt="create-new-project-button.png" />
+</p>
+</div>
+
+
+<div id="orgdf77070" class="figure">
+<p><img src="create-project-layout.png" alt="create-project-layout.png" />
+</p>
+</div>
+
+<p>
+Clicking "Edit Project" from the Project Hub will give you access to the modification options. If you decide to delete a project, the system will redirect you back to the Project List layout after successful deletion.
+</p>
+
+
+<div id="orgd13bada" class="figure">
+<p><img src="edot-project-button.png" alt="edot-project-button.png" />
+</p>
+</div>
+
+
+<div id="orgb759fff" class="figure">
+<p><img src="edit-roject-layuot.png" alt="edit-roject-layuot.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf0d8ffd" class="outline-2">
+<h2 id="orgf0d8ffd"><span class="section-number-2">6.</span> User Authentication and Registration</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+EnvGuard ensures secure access to your projects through user authentication and authorization. To log in, simply provide your username and password, and complete the captcha verification to ensure security. Once logged in, you can start managing your projects. If you're new to EnvGuard, you can easily register by providing a unique username, your organization name, and a password that must be at least 6 characters long.
+</p>
+
+
+<div id="orgf246502" class="figure">
+<p><img src="login.png" alt="login.png" />
+</p>
+</div>
+
+
+<div id="orgfbdb831" class="figure">
+<p><img src="cptcha.png" alt="cptcha.png" />
+</p>
+</div>
+
+<p>
+Once logged in, you can logout any time. If you need to register, the process is straightforward and quick.
+</p>
+
+
+<div id="orga5ad93a" class="figure">
+<p><img src="logout.png" alt="logout.png" />
+</p>
+</div>
+
+
+<div id="orgb69d17f" class="figure">
+<p><img src="registeration.png" alt="registeration.png" />
+</p>
+</div>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: 2025-01-25 শনি 00:00</p>
 <p class="author">Author: Abhijit Paul</p>
-<p class="date">Created: 2025-01-25 শনি 19:16</p>
+<p class="date">Created: 2025-01-25 শনি 19:25</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

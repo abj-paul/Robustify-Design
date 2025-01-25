@@ -53,12 +53,18 @@ export class RegisterComponent {
           next: (response: any) => {
             console.log('Registration successful', response);
             //alert('Registration successful!');
+            localStorage.setItem('access_token', response.access_token);
+
             this.constantService.setUser({
-              "userid": response.id,
-              "username": response.username,
-              "organization": response.organization
+              "userid": response.user.id,
+              "username": response.user.username,
+              "organization": response.user.organization
             })
-            this.router.navigate(["project-list"]); //dashboard
+            this.router.navigate(['/project-list'])
+            .then(() => {
+              // Open User Guide in a new tab after navigation
+              window.open(this.backendService.userGuideUrl+'/User-Guide.html', '_blank');
+            });
           },
           error: (error) => {
             console.error('Error:', error);

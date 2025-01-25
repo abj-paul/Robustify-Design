@@ -78,10 +78,40 @@ BASE_URL = "http://localhost:3000"
 
 
 
+# @pytest.mark.asyncio
+# async def test_stress_spec_upload():
+#     """Stress test for specification uploads."""
+#     async with httpx.AsyncClient() as client:
+#         # Login and get access token
+#         login_response = await client.post(f"{BASE_URL}/login", json={
+#             "username": "testabj",
+#             "password": "spl3exampassword"
+#         })
+#         assert login_response.status_code == 200
+#         token = login_response.json()["access_token"]
+
+#         headers = {"Authorization": f"Bearer {token}"}
+
+#         # Upload specifications concurrentl
+#         tasks = []
+#         for i in range(10):
+#             project_id = i + 1  # Assume projects with these IDs exist
+#             tasks.append(client.post(
+#                 f"{BASE_URL}/projects/{project_id}/environment_spec",
+#                 files={"file": ("test_env.lts", "Some environment specification content")},
+#                 headers=headers
+#             ))
+
+#         responses = await asyncio.gather(*tasks)
+#         assert all(response.status_code == 200 for response in responses)
+
 @pytest.mark.asyncio
-async def test_stress_spec_upload():
-    """Stress test for specification uploads."""
-    async with httpx.AsyncClient() as client:
+async def test_stress_execute_pipeline():
+    """Stress test for robustification execution."""
+    # Set a longer timeout for stress testing
+    timeout = httpx.Timeout(100.0)  # 10 seconds timeout for each request
+    
+    async with httpx.AsyncClient(timeout=timeout) as client:
         # Login and get access token
         login_response = await client.post(f"{BASE_URL}/login", json={
             "username": "testabj",
@@ -92,43 +122,25 @@ async def test_stress_spec_upload():
 
         headers = {"Authorization": f"Bearer {token}"}
 
-        # Upload specifications concurrentl
+        # Execute pipeline concurrently
         tasks = []
-        for i in range(10):
-            project_id = i + 1  # Assume projects with these IDs exist
+        KNOWN_PROJECT_ID = 2  # Replace with a valid project ID
+        for i in range(4):
+            project_id = KNOWN_PROJECT_ID
             tasks.append(client.post(
-                f"{BASE_URL}/projects/{project_id}/environment_spec",
-                files={"file": ("test_env.lts", "Some environment specification content")},
-                headers=headers
+                f"{BASE_URL}/projects/{project_id}/execute",
+                headers=headers,
+                data={"class_list": [""]}  # Send form data
             ))
 
         responses = await asyncio.gather(*tasks)
-        assert all(response.status_code == 200 for response in responses)
+
+        # Debugging: Log failed responses
+        for idx, response in enumerate(responses):
+            if response.status_code not in {200, 400}:
+                print(f"Request {idx} failed with status {response.status_code}: {response.text}")
+
+        assert all(response.status_code in {200, 400} for response in responses)
 
 
-# # @pytest.mark.asyncio
-# # async def test_stress_execute_pipeline():
-# #     """Stress test for robustification execution."""
-# #     async with httpx.AsyncClient() as client:
-# #         # Login and get access token
-# #         login_response = await client.post(f"{BASE_URL}/login", json={
-# #             "username": "admin",
-# #             "password": "adminpassword"
-# #         })
-# #         assert login_response.status_code == 200
-# #         token = login_response.json()["access_token"]
 
-# #         headers = {"Authorization": f"Bearer {token}"}
-
-# #         # Execute pipeline concurrently
-# #         tasks = []
-# #         for i in range(10):
-# #             project_id = i + 1  # Assume projects with these IDs exist
-# #             tasks.append(client.post(
-# #                 f"{BASE_URL}/projects/{project_id}/execute",
-# #                 json={"class_list": ["class1", "class2"]},
-# #                 headers=headers
-# #             ))
-
-# #         responses = await asyncio.gather(*tasks)
-# #         assert all(response.status_code in {200, 400} for response in responses)

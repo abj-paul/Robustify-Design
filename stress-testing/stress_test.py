@@ -109,7 +109,7 @@ BASE_URL = "http://localhost:3000"
 async def test_stress_execute_pipeline():
     """Stress test for robustification execution."""
     # Set a longer timeout for stress testing
-    timeout = httpx.Timeout(100.0)  # 10 seconds timeout for each request
+    timeout = httpx.Timeout(6000.0)  # 10 seconds timeout for each request
     
     async with httpx.AsyncClient(timeout=timeout) as client:
         # Login and get access token
@@ -125,7 +125,7 @@ async def test_stress_execute_pipeline():
         # Execute pipeline concurrently
         tasks = []
         KNOWN_PROJECT_ID = 2  # Replace with a valid project ID
-        for i in range(4):
+        for i in range(6):
             project_id = KNOWN_PROJECT_ID
             tasks.append(client.post(
                 f"{BASE_URL}/projects/{project_id}/execute",

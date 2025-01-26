@@ -6,7 +6,7 @@ services:
       context: ./frontend/envguard-frontend
       dockerfile: Dockerfile
     ports:
-      - "4200:80"  # Map host port 4200 to container port 80
+      - "4200:4200"  # Map host port 4200 to container port 4200
     restart: unless-stopped
     depends_on:
       - backend
@@ -35,3 +35,14 @@ services:
       - DEBUG=True
     volumes:
       - ./pipeline:/app  # Mount the pipeline directory for development
+
+  docs:
+    image: node:18  # Use Node.js image for http-server
+    working_dir: /docs
+    volumes:
+      - ./docs:/docs  # Mount the docs directory
+    command: >
+      sh -c "npm install -g http-server && http-server --port 4201"
+    ports:
+      - "4201:4201"  # Map host port 4201 to container port 4201
+    restart: unless-stopped

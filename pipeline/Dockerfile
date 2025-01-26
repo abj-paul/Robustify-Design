@@ -16,10 +16,15 @@ WORKDIR /app
 
 # Copy requirements.txt
 COPY requirements.txt .
+RUN apt-get update && apt-get install -y graphviz
 
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install uvicorn fastapi pygraphviz reportlab numpy networkx scipy scikit-learn python-dotenv google-generativeai python-multipart
+
+# Set JAVA_HOME (optional but good practice)
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+ENV PATH="$JAVA_HOME/bin:$PATH"
 
 # Copy the rest of the application code
 COPY . .

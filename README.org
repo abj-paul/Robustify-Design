@@ -20,7 +20,11 @@ EnvGuard is a tool that presents a modern interface to robustify behavioral desi
 + [X] OOB
 
 ** Installation
-
+*** Environment Variables
+Create a ~.env~ file in the root directory with the following variables:
+- ~SERVER_URL~: The connection URL for your backend server.
+- ~GEMINI_API_KEY~: Your API key for gemini services.
+- ~DEBUG~: Set to ~True~ for development, ~False~ for production.
 ** User Guide
 
 ** Development Guide

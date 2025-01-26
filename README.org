@@ -19,7 +19,8 @@ EnvGuard is a tool that presents a modern interface to robustify behavioral desi
 + [X] Security Testing
 + [X] OOB
 
-** Installation
+** Installation & Update
+You can use the same installation script for both installation and update.
 *** Environment Variables
 Create a ~.env~ file in the root directory with the following variables:
 - ~SERVER_URL~: The connection URL for your backend server.

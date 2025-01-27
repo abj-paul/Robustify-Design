@@ -21,6 +21,7 @@ import json
 
 from libs.gemini_prompting import get_response_from_gemini
 from libs.output_to_uml import save_output_as_uml_single_file
+from dotenv import load_dotenv, set_key
 
 app = FastAPI()
 
@@ -242,3 +243,26 @@ async def gemini_talking(project_name: str, solution_name, user_query):
 
 # Run the application with the command:
 # uvicorn main:app --reload
+
+# Gemini api key update
+load_dotenv()
+
+class UpdateAPIKeyRequest(BaseModel):
+    api_key: str
+
+@app.post("/update-api-key")
+def update_api_key(request: UpdateAPIKeyRequest):
+    # Path to your .env file
+    env_file_path = ".env"
+
+    # Check if the GEMINI_API_KEY exists in the .env file
+    if not os.path.exists(env_file_path):
+        raise HTTPException(status_code=400, detail=".env file not found")
+
+    # Use python-dotenv to set the GEMINI_API_KEY in the .env file
+    try:
+        # Set the new API key in the .env file
+        set_key(env_file_path, "GEMINI_API_KEY", request.api_key)
+        return {"detail": "GEMINI_API_KEY updated successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to update .env file: {str(e)}")

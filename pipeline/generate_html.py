@@ -156,9 +156,11 @@ def generate_html(project_folder, output_path):
         html += '</div>'
     
     # Add solutions
+    
     os.chdir("../..")
     ranked_designs = rank_designs(project_folder)
     os.chdir(project_folder)
+    print(f"After ranking, there are {len(ranked_designs)} ranked designs.")
 
     for index,design in enumerate(ranked_designs):
         print(f"Ranking now {design['solution']}")

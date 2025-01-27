@@ -196,6 +196,7 @@ def compute_laplacian_spectral_complexity(adjacency_matrix):
 # Pareto optimality check
 def pareto_optimal(evaluations, metrics):
     pareto_front = []
+    last_part = []
     for solution_a in evaluations:
         is_dominated = False
         for solution_b in evaluations:
@@ -207,9 +208,11 @@ def pareto_optimal(evaluations, metrics):
                 break
         if not is_dominated:
             pareto_front.append(solution_a)
-    return pareto_front
+        else :
+            last_part.append(solution_a)
+    return pareto_front + last_part
 
-# Ranking function for Pareto optimal solutions
+#Ranking function for Pareto optimal solutions
 def rank_solutions(evaluations, metrics):
     # Step 1: Find Pareto optimal solutions
     pareto_front = pareto_optimal(evaluations, metrics)
@@ -241,6 +244,7 @@ def rank_designs(project_directory):
                 "laplacian_spectral_complexity": compute_laplacian_spectral_complexity(temp[0]),
                 "gpt_comments": "GPT Comments on design"
             })
+    print(f"During ranking, there are {len(generated_design_evaluations)} designs.")
 
     metrics = ["albin_complexity", "girvan_newman_modularity", "jaccard_redundancy", "eigen_symmetry", "state_length", "laplacian_spectral_complexity"]
     ranked_designs = rank_solutions(generated_design_evaluations, metrics)

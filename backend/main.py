@@ -20,7 +20,7 @@ from schemas import ChatStateCreate, ChatStateResponse
 import models
 from fastapi.middleware.cors import CORSMiddleware
 
-PIPELINE_SERVER_ADDRESS = "http://pipeline:8000"
+PIPELINE_SERVER_ADDRESS = "http://localhost:8000"
 BASE_PROJECT_FOLDER = "projects"
 
 

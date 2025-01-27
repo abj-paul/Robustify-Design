@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  frontend:
+    image: abj-paul/robustify-design-frontend:latest
+    ports:
+      - "4200:4200"
+    restart: unless-stopped
+    depends_on:
+      - backend
+      - pipeline
+
+  backend:
+    image: abj-paul/robustify-design-backend:latest
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+  pipeline:
+    image: abj-paul/robustify-design-pipeline:latest
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  docs:
+    image: abj-paul/robustify-design-docs:latest  # Use the Docker Hub image
+    ports:
+      - "4201:4201"
+    restart: unless-stopped

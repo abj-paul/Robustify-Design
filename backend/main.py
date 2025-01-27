@@ -7,7 +7,7 @@ import crud
 from fastapi import FastAPI, UploadFile, Form, HTTPException, Depends
 from typing import Optional
 import json
-from fastapi import HTTPException
+from fastapi import HTTPException, Request
 import httpx
 from typing import List
 from fastapi.responses import JSONResponse
@@ -19,6 +19,7 @@ from crud import create_or_update_chat_state, get_chat_state
 from schemas import ChatStateCreate, ChatStateResponse
 import models
 from fastapi.middleware.cors import CORSMiddleware
+from auth import blacklisted_tokens, create_access_token, authenticate_request
 
 PIPELINE_SERVER_ADDRESS = "http://localhost:8000"
 BASE_PROJECT_FOLDER = "projects"
@@ -59,6 +60,19 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
         "access_token": create_access_token({"sub": request.username}),
         "user": user
     }
+
+@app.post("/logout")
+def logout(request: Request):
+    auth_header = request.headers.get("Authorization")
+    if not auth_header:
+        raise HTTPException(status_code=401, detail="No authorization token")
+
+    try:
+        token = auth_header.split(" ")[1]
+        blacklisted_tokens.add(token)  # Add the token to the blacklist
+        return {"message": "Successfully logged out"}
+    except IndexError:
+        raise HTTPException(status_code=401, detail="Invalid token")
 
 @app.get("/projects", response_model=list[Project])
 def get_user_projects(user_id: int, db: Session = Depends(get_db)):

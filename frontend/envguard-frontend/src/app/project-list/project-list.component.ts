@@ -51,13 +51,31 @@ export class ProjectListComponent implements OnInit {
       .subscribe((projects) => (this.projects = projects));
   }
   logout(): void {
-    // Clear access token from local storage
-    localStorage.removeItem('access_token');
-    
-    // Clear any user-related data from constant service
-    this.constantService.clearUser();
-    
-    // Navigate back to login page
-    this.router.navigate(['/login']);
+    this.http.post(`${this.backendService.apiUrl}/logout`, {}).subscribe({
+      next: (response) => {
+        console.log('Logout successful', response);
+        
+        // Clear user data from the constant service
+        this.constantService.clearUser();
+        
+        // Remove the access token from local storage
+        localStorage.removeItem('access_token');
+        
+        // Navigate to the login page
+        this.router.navigate(['/login']);
+      },
+      error: (error) => {
+        console.error('Logout failed', error);
+      },
+    });
   }
+    // // Clear access token from local storage
+    // localStorage.removeItem('access_token');
+    
+    // // Clear any user-related data from constant service
+    // this.constantService.clearUser();
+    
+    // // Navigate back to login page
+    // this.router.navigate(['/login']);
+  //}
 }

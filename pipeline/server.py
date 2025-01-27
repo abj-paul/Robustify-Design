@@ -25,6 +25,8 @@ from dotenv import load_dotenv, set_key
 
 app = FastAPI()
 
+HOST_ADDRESS = "http://192.168.0.106"
+
 # Allow CORS
 app.add_middleware(
     CORSMiddleware,
@@ -162,7 +164,7 @@ async def generateImage(xmlContent: str):
     file.write(xmlContent)
     file.close()
     convert_xml_to_image(f"{PUBLIC_FOLDER}/images/","running_uml_code.xml")
-    return {"imageUrl":"http://localhost:8000/images/running_uml_code.png"}
+    return {"imageUrl":f"{HOST_ADDRESS}:8000/images/running_uml_code.png"}
 
 @app.get("/service/lts-to-png")
 async def generateImage(ltlContent: str):
@@ -171,7 +173,7 @@ async def generateImage(ltlContent: str):
     file.close()
     #save_output_as_uml_single_file("","",f"{PUBLIC_FOLDER}/images/running_lts_code.lts")
     #convert_xml_to_image(f"{PUBLIC_FOLDER}/images/","running_uml_code.xml")
-    return {"imageUrl":"http://localhost:8000/images/running_uml_code.png"}
+    return {"imageUrl":f"{HOST_ADDRESS}:8000/images/running_uml_code.png"}
 
 @app.get("/service/projects/{project_name}/")
 async def list_project_files(project_name: str):

@@ -19,8 +19,8 @@ import { NgxCaptchaModule } from 'ngx-captcha';
 export class LoginComponent {
   loginForm: FormGroup;
   siteKey = environment.recaptchaKey_v2; // Your reCAPTCHA site key from environment.ts
-  captchaVerified = false;
-  captchaResponse: string | null = null;
+  // captchaVerified = false;
+  // captchaResponse: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -35,14 +35,14 @@ export class LoginComponent {
     });
   }
 
-  onCaptchaResolved(response: string): void {
-    this.captchaResponse = response;
-    this.captchaVerified = !!response;
-    console.log('CAPTCHA resolved:', response);
-  }
+  // onCaptchaResolved(response: string): void {
+  //   this.captchaResponse = response;
+  //   this.captchaVerified = !!response;
+  //   console.log('CAPTCHA resolved:', response);
+  // }
 
   onSubmit(): void {
-    if (this.loginForm.valid && this.captchaVerified) {
+    if (this.loginForm.valid /*&& this.captchaVerified*/) {
       const { username, password } = this.loginForm.value;
 
       // Optionally pass the CAPTCHA token to your backend for verification

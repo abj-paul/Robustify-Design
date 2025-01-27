@@ -19,7 +19,7 @@ def add_image_to_html(html, image_path, project_folder, title):
         new_width = int(img_width * ratio)
         new_height = int(img_height * ratio)
     html += f"<h2>{title}</h2>\n"
-    html += f'<img src="http://localhost:8000/{project_folder}/{image_path}" width="{new_width}" height="{new_height}"><br>\n'
+    html += f'<img src="http://192.168.0.106:8000/{project_folder}/{image_path}" width="{new_width}" height="{new_height}"><br>\n'
     return html
 
 def add_text_annotation_html(html, text):

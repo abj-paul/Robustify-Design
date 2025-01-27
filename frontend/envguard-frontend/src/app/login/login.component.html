@@ -30,7 +30,7 @@
     </div>
 
     <!-- reCAPTCHA -->
-    <div class="form-group">
+    <!-- <div class="form-group">
       <ngx-recaptcha2
         [siteKey]="siteKey"
         (success)="onCaptchaResolved($event)"
@@ -38,9 +38,9 @@
       <div class="error" *ngIf="!captchaVerified && loginForm.touched">
         Please complete the CAPTCHA.
       </div>
-    </div>
+    </div> -->
 
-    <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid || !captchaVerified">
+    <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid"> <!--|| !captchaVerified-->
       Login
     </button>
   </form>

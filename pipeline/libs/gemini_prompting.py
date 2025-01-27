@@ -1,14 +1,16 @@
 from dotenv import load_dotenv
 import os
 import google.generativeai as genai
-import json
 import numpy as np
 
 # Load environment variables
 load_dotenv()
 
+FUNDAMENTAL_PROMPT = '''
+Fortis is a system that takes the behavioral model of a system and robustifies it against environmental deviations to satisfy the safety property. The systems are mostly cyber-physical in nature. So the generated redesigns may be interpreted as hardware, software, sensor etc changes. Cost is also a concern. Note that, the user does not want to know code implementation, rather how the design can be implemented from a high level view - changes can be in hardware, software, sensor, interaction etc.
+'''
 
-def get_response_from_gemini(sys, env, p, redesign, user_query):
+def get_response_from_gemini(sys, env, p, redesign, system_description, user_query):
     # Configure the API
     genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
@@ -38,69 +40,23 @@ def get_response_from_gemini(sys, env, p, redesign, user_query):
     )
 
     # Prepare the query as a single string
-    query = (
-        "You are a behavioral system design analyzer. Given a design, you will return "
-        "insights on that design, highlighting changes and any significant observations.\n\n"
-        f"Here is the design data:\n"
-        f"- System behavioral model: {sys}\n"
-        f"- Environment model: {env}\n"
-        f"- Safety property: {p}\n"
-        f"- Generated robust design (using Fortis): {redesign}\n\n"
-        "Please answer the user's question based on this information.\n\n"
-        f"User Query: {user_query}"
-    )
+    prompt = f"""
+**Role**: You are a behavioral system design analyzer. Your task is to help user in design comprehension task. User explores the designs to understand how the generated robust wokrs with respect to original system behavioral design.
 
+**Context**:
+- System Behavioral Design: {sys}
+- Environment Model: {env}
+- Safety Property: {p}
+- Generated Robust Design (using Fortis): {redesign}
+- System Description: {system_description}
+
+**Fundamental Principles**:
+{FUNDAMENTAL_PROMPT}
+
+**User Query**: {user_query}
+"""
+    print(prompt)
     # Get response
-    response = model.generate_content([query])  # Ensure the query is passed as a list
+    response = model.generate_content([prompt])  # Ensure the query is passed as a list
     return response.text  # Return only the text of the response
 
-
-# # Example usage
-# if __name__ == "__main__":
-#     example_design = {
-#         "solution": "solution_file_path.aut",
-#         "numeric": np.array([[1, 0], [0, 1]], dtype=np.int64),  # Example numpy array
-#         "labeled": np.array(["State A", "State B"], dtype=object),  # Example numpy array
-#         "albin_complexity": 3.5,
-#         "girvan_newman_modularity": 0.75,
-#         "jaccard_redundancy": 0.15,
-#         "eigen_symmetry": 0.9,
-#         "state_length": 2,
-#         "laplacian_spectral_complexity": 1.25,
-#         "gpt_comments": "GPT Comments on design"
-#     }
-
-#     response = get_response_from_gemini(example_design)
-#     print(response)
-
-
-# # Get ranked designs
-# project_folder = "../projects/Voting-2"
-# ranked_designs = rank_designs(project_folder)
-
-# # Process each design
-# for design in ranked_designs:
-#     f = open(f"{project_folder}/sys.lts")
-#     sys = f.read()
-#     f.close()
-
-#     f = open(f"{project_folder}/env.lts")
-#     env = f.read()
-#     f.close()
-
-#     f = open(f"{project_folder}/p.lts")
-#     p = f.read()
-#     f.close()
-
-#     f = open(f"{project_folder}/solutions/{design['solution']}")
-#     redesign = f.read()
-#     f.close()
-
-#     print(sys)
-#     print(env)
-#     print(p)
-#     print(redesign)
-
-#     response = get_response_from_gemini(sys, env, p, redesign, "What is the meaning of life?")
-#     print(response)
-#     break  # Process only the first design for demonstration

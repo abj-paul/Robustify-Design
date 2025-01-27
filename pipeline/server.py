@@ -222,6 +222,10 @@ async def gemini_talking(project_name: str, solution_name, user_query):
     p = f.read()
     f.close()
 
+    f = open(f"{base_dir}/description.txt")
+    system_description = f.read()
+    f.close()
+
     f = open(f"{base_dir}/solutions/{solution_name}")
     redesign = f.read()
     f.close()
@@ -231,7 +235,7 @@ async def gemini_talking(project_name: str, solution_name, user_query):
     print(p)
     print(redesign)
 
-    response = get_response_from_gemini(sys, env, p, redesign, user_query)
+    response = get_response_from_gemini(sys, env, p, redesign,system_description, user_query)
     return response
 
 

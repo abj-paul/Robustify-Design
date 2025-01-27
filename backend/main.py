@@ -104,7 +104,11 @@ async def upload_environment_spec(
     project.environment_spec = (await file.read()).decode("utf-8") if file else content
     db.commit()
 
-    spec_filename = "env.lts" if file and file.filename.endswith("lts") else "env.xml"
+    spec_filename = "env.lts"  # Default to LTS
+    if file:
+        spec_filename = "env.lts" if file.filename.endswith(".lts") else "env.xml"
+    else:
+        spec_filename = "env.xml" if (content and "uml" in content) else "env.lts"
     return await handle_specification_upload(project, file, content, spec_filename)
 
 
@@ -120,9 +124,15 @@ async def update_environment_spec(project_id: int, file: UploadFile = None, cont
     project.environment_spec = (await file.read()).decode("utf-8") if file else content
     db.commit()
     
-    spec_filename = "env.lts" if file and file.filename.endswith("lts") else "env.xml"
-    return await handle_specification_upload(project, file, content, spec_filename)
+    # Determine the spec filename based on file or content
 
+    spec_filename = "env.lts"  # Default to LTS
+    if file:
+        spec_filename = "env.lts" if file.filename.endswith(".lts") else "env.xml"
+    else:
+        spec_filename = "env.xml" if (content and "uml" in content) else "env.lts"
+    
+    return await handle_specification_upload(project, file, content, spec_filename)
 
 
 # System Specification Endpoints
@@ -350,6 +360,9 @@ async def talk_to_gemini(project_id: int, solution_name: str, user_query: str, d
 
 async def handle_specification_upload(project, file, content, spec_filename):
     project_folder = f"{BASE_PROJECT_FOLDER}/{project.name}-{project.id}"
+    print("Project Name:", f"{project.name}-{project.id}")
+    print("Project Description:", project.description)
+
     async with httpx.AsyncClient() as client:
         response = await client.post(f"{PIPELINE_SERVER_ADDRESS}/create_project/", data={"project_name":f"{project.name}-{project.id}", "project_description": project.description})
 

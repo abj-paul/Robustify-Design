@@ -4,7 +4,7 @@ services:
     build:
       context: ./frontend/envguard-frontend
       dockerfile: Dockerfile
-    image: abj-paul/robustify-design-frontend:latest
+    image: abjpaul/robustify-design-frontend:latest
     ports:
       - "4200:4200"
     restart: unless-stopped
@@ -20,7 +20,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    image: abj-paul/robustify-design-backend:latest
+    image: abjpaul/robustify-design-backend:latest
     ports:
       - "3000:3000"
     restart: unless-stopped
@@ -34,7 +34,7 @@ services:
     build:
       context: ./pipeline
       dockerfile: Dockerfile
-    image: abj-paul/robustify-design-pipeline:latest
+    image: abjpaul/robustify-design-pipeline:latest
     ports:
       - "8000:8000"
     restart: unless-stopped
@@ -48,7 +48,7 @@ services:
     build:
       context: ./docs
       dockerfile: Dockerfile
-    image: abj-paul/robustify-design-docs:latest
+    image: abjpaul/robustify-design-docs:latest
     ports:
       - "4201:4201"
     restart: unless-stopped

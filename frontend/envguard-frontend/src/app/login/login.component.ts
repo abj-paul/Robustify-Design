@@ -21,7 +21,7 @@ export class LoginComponent {
   siteKey = environment.recaptchaKey_v2; // Your reCAPTCHA site key from environment.ts
   // captchaVerified = false;
   // captchaResponse: string | null = null;
-
+  
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
@@ -33,6 +33,7 @@ export class LoginComponent {
       username: ['', Validators.required],
       password: ['', Validators.required],
     });
+    console.log("Server Address: "+this.backendService.apiUrl);
   }
 
   // onCaptchaResolved(response: string): void {
@@ -42,6 +43,8 @@ export class LoginComponent {
   // }
 
   onSubmit(): void {
+    console.log("Server Address: "+this.backendService.apiUrl);
+
     if (this.loginForm.valid /*&& this.captchaVerified*/) {
       const { username, password } = this.loginForm.value;
 

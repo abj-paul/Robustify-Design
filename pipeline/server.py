@@ -25,8 +25,10 @@ from dotenv import load_dotenv, set_key
 
 app = FastAPI()
 
-HOST_ADDRESS = "http://192.168.0.106"
+import os
 
+HOST_ADDRESS = "http://"+os.getenv("HOST_ADDRESS", "localhost")
+print(f"Host Address: {HOST_ADDRESS}")
 # Allow CORS
 app.add_middleware(
     CORSMiddleware,

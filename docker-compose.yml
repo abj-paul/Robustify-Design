@@ -11,6 +11,10 @@ services:
     depends_on:
       - backend
       - pipeline
+    environment:
+      - HOST_ADDRESS=${HOST_ADDRESS}  # Default to 'localhost' if not provided
+    command: >
+      sh -c "echo $HOST_ADDRESS && node set-env.js  && npm run start -- --host 0.0.0.0"
 
   backend:
     build:
@@ -21,6 +25,7 @@ services:
     restart: unless-stopped
     environment:
       - DEBUG=True
+      - HOST_ADDRESS=${HOST_ADDRESS:-localhost}  # Default to 'localhost' if not provided
     volumes:
       - ./backend:/app  # Mount the backend directory for development
 
@@ -33,6 +38,7 @@ services:
     restart: unless-stopped
     environment:
       - DEBUG=True
+      - HOST_ADDRESS=${HOST_ADDRESS:-localhost}  # Default to 'localhost' if not provided
     volumes:
       - ./pipeline:/app  # Mount the pipeline directory for development
 
@@ -46,3 +52,5 @@ services:
     ports:
       - "4201:4201"  # Map host port 4201 to container port 4201
     restart: unless-stopped
+    environment:
+      - HOST_ADDRESS=${HOST_ADDRESS:-localhost}  # Default to 'localhost' if not provided

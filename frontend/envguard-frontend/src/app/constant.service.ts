@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { User } from './models/User';
 import { Project } from './models/Project';
+import { BackendService } from './backend.service';
 import { environment } from '../environments/environment';
 
 @Injectable({
@@ -11,7 +12,7 @@ export class ConstantService {
   private currProject: Project = new Project();
   private activeTab: string = 'environment';
 
-  constructor() {
+  constructor(private backendService: BackendService) {
     this.loadEnv();
    }
 
@@ -50,7 +51,7 @@ export class ConstantService {
   private loadEnv() {
     // Load environment variables from .env file
     this.env = {
-      API_URL: environment.apiUrl,
+      API_URL: this.backendService.apiUrl,
       RECAPTCHA_KEY: environment.recaptchaKey_v2,
     };
   }

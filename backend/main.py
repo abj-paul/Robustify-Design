@@ -21,7 +21,11 @@ import models
 from fastapi.middleware.cors import CORSMiddleware
 from auth import blacklisted_tokens, create_access_token, authenticate_request
 
-PIPELINE_SERVER_ADDRESS = "http://192.168.0.106:8000"
+import os
+
+HOST_ADDRESS = os.getenv("HOST_ADDRESS", "localhost")
+print(f"Host Address: {HOST_ADDRESS}")
+PIPELINE_SERVER_ADDRESS = f"http://{HOST_ADDRESS}:8000"
 BASE_PROJECT_FOLDER = "projects"
 
 

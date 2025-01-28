@@ -15,6 +15,6 @@ COPY . .
 
 # Expose the development server port
 EXPOSE 4200
-
+RUN node set-env.js
 # Start the Angular development server
 CMD ["npm", "run", "start", "--", "--host", "0.0.0.0"]

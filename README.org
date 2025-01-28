@@ -49,4 +49,5 @@ After installing docker, download the EnvGuard orchestration script and simply s
 If you prefer a shell based installation script for ubuntu and windows, checkout ~installation/~ folder for beta version of installation scripts. Additionally, check ~docs/User-Manual.org~ to get started on how to use this tool.
 
 ** Logs
-Prompt: https://chatgpt.com/share/44c07d0d-ef32-4595-9e79-474abdc61acf
+1. Prompt: https://chatgpt.com/share/44c07d0d-ef32-4595-9e79-474abdc61acf
+2. Tamp: https://docs.google.com/document/d/1-lNB2U_R3mR4Hsns2J_igtHuQWho7Pww0f_sQRr95tM/edit?usp=sharing

@@ -1,9 +1,7 @@
 version: "3.8"
+
 services:
   frontend:
-    build:
-      context: ./frontend/envguard-frontend
-      dockerfile: Dockerfile
     image: abjpaul/robustify-design-frontend:latest
     ports:
       - "4200:4200"
@@ -17,9 +15,6 @@ services:
       sh -c "echo $HOST_ADDRESS && node set-env.js && npm run start -- --host 0.0.0.0"
 
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
     image: abjpaul/robustify-design-backend:latest
     ports:
       - "3000:3000"
@@ -27,13 +22,8 @@ services:
     environment:
       - DEBUG=True
       - HOST_ADDRESS=${HOST_ADDRESS:-localhost}
-    volumes:
-      - ./backend:/app
 
   pipeline:
-    build:
-      context: ./pipeline
-      dockerfile: Dockerfile
     image: abjpaul/robustify-design-pipeline:latest
     ports:
       - "8000:8000"
@@ -41,18 +31,11 @@ services:
     environment:
       - DEBUG=True
       - HOST_ADDRESS=${HOST_ADDRESS:-localhost}
-    volumes:
-      - ./pipeline:/app
 
   docs:
-    build:
-      context: ./docs
-      dockerfile: Dockerfile
     image: abjpaul/robustify-design-docs:latest
     ports:
       - "4201:4201"
     restart: unless-stopped
     environment:
       - HOST_ADDRESS=${HOST_ADDRESS:-localhost}
-    volumes:
-      - ./docs:/docs

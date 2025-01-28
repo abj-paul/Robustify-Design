@@ -1,5 +1,8 @@
 * About
+| Make Your System Robust          | Do it Fast  | LLM is here to help you                   |
+| Mathematically proven robustness | >39% faster | Don't understand the designs? Simply Ask. |
 EnvGuard is a tool that presents a modern interface to robustify behavioral designs against environmental deviations. It includes a ~uml-to-ltl~ parser so agile developers can easily robustify their UML designs. Additionally, it integrates the power of ~Gemini~ to make exploration of design alternatives more intuitive.
+[[file:logo-project.png]]
 
 [[https://drive.google.com/file/d/1xcbNcyl28vxtP1Sd_4nXU_PhNozx0Nl7/view?usp=sharing][You can find a demo on how to use it here.]] Additionally, the following 2 blogs can help put perspectives on how it works.
 1. [[https://abj-paul.github.io/blogs/Robustification%20of%20Behavioral%20Model%20against%20Environmental%20Deviation.html][Robustification of Behavioral Design against Environmental Deviation]]
@@ -20,15 +23,30 @@ EnvGuard is a tool that presents a modern interface to robustify behavioral desi
 + [X] OOB
 
 ** Installation & Update
-You can use the same installation script for both installation and update.
-*** Environment Variables
-Create a ~.env~ file in the root directory with the following variables:
-- ~SERVER_URL~: The connection URL for your backend server.
-- ~GEMINI_API_KEY~: Your API key for gemini services.
-- ~DEBUG~: Set to ~True~ for development, ~False~ for production.
-** User Guide
+We recommend using the docker for compatibility with all OS and cloud infrastructures. First, install docker following the instructions in docs.docker.com.
+#+begin_src sh
+  # Add Docker's official GPG key:
+  sudo apt-get update
+  sudo apt-get install ca-certificates curl
+  sudo install -m 0755 -d /etc/apt/keyrings
+  sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+  sudo chmod a+r /etc/apt/keyrings/docker.asc
 
-** Development Guide
+  # Add the repository to Apt sources:
+  echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  sudo apt-get update
+  sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+#+end_src
+After installing docker, download the EnvGuard orchestration script and simply start the docker. Note that, you should replace ~0.0.0.0~ with your cloud host server or remote server, as appropriate.
+#+begin_src sh
+  wget https://raw.githubusercontent.com/abj-paul/Robustify-Design/refs/heads/main/installation/docker-compose.yml 
+  HOST_ADDRESS=0.0.0.0 sudo -E docker compose up
+#+end_src
+
+If you prefer a shell based installation script for ubuntu and windows, checkout ~installation/~ folder for beta version of installation scripts. Additionally, check ~docs/User-Manual.org~ to get started on how to use this tool.
 
 ** Logs
 Prompt: https://chatgpt.com/share/44c07d0d-ef32-4595-9e79-474abdc61acf

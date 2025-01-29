@@ -1,124 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <uml:Model xmlns:uml="http://www.omg.org/spec/UML/20090901">
-<uml:State name="ENV"/>
-<uml:State name="VOTER"/>
-<uml:State name="EO"/>
+<uml:State name="P2"/>
+<uml:State name="P1"/>
+<uml:State name="P3"/>
+<uml:State name="EM"/>
 
-	<uml:Transition>
-    	<uml:Source>
-        	<uml:State name="ENV"/>
-    	</uml:Source>
-    	<uml:Target>
-        	<uml:State name="VOTER"/>
-    	</uml:Target>
-    	<uml:Effect name="v.enter"/>
-	</uml:Transition>
-	<uml:Transition>
-    	<uml:Source>
-        	<uml:State name="ENV"/>
-    	</uml:Source>
-    	<uml:Target>
-        	<uml:State name="EO"/>
-    	</uml:Target>
-    	<uml:Effect name="eo.enter"/>
-	</uml:Transition>
-	<uml:Transition>
-    	<uml:Source>
-        	<uml:State name="VOTER"/>
-    	</uml:Source>
-    	<uml:Target>
-        	<uml:State name="VOTER"/>
-    	</uml:Target>
-    	<uml:Effect name="password"/>
-	</uml:Transition>
-	<uml:Transition>
-    	<uml:Source>
-        	<uml:State name="VOTER"/>
-    	</uml:Source>
-    	<uml:Target>
-        	<uml:State name="VOTER"/>
-    	</uml:Target>
-    	<uml:Effect name="select"/>
-	</uml:Transition>
-	<uml:Transition>
-    	<uml:Source>
-        	<uml:State name="VOTER"/>
-    	</uml:Source>
-    	<uml:Target>
-        	<uml:State name="VOTER"/>
-    	</uml:Target>
-    	<uml:Effect name="vote"/>
-	</uml:Transition>
-	<uml:Transition>
-    	<uml:Source>
-        	<uml:State name="VOTER"/>
-    	</uml:Source>
-    	<uml:Target>
-        	<uml:State name="VOTER"/>
-    	</uml:Target>
-    	<uml:Effect name="confirm"/>
-	</uml:Transition>
-	<uml:Transition>
-    	<uml:Source>
-        	<uml:State name="VOTER"/>
-    	</uml:Source>
-    	<uml:Target>
-        	<uml:State name="VOTER"/>
-    	</uml:Target>
-    	<uml:Effect name="back"/>
-	</uml:Transition>
-	<uml:Transition>
-    	<uml:Source>
-        	<uml:State name="VOTER"/>
-    	</uml:Source>
-    	<uml:Target>
-        	<uml:State name="ENV"/>
-    	</uml:Target>
-    	<uml:Effect name="v.exit"/>
-	</uml:Transition>
-	<uml:Transition>
-    	<uml:Source>
-        	<uml:State name="EO"/>
-    	</uml:Source>
-    	<uml:Target>
-        	<uml:State name="EO"/>
-    	</uml:Target>
-    	<uml:Effect name="select"/>
-	</uml:Transition>
-	<uml:Transition>
-    	<uml:Source>
-        	<uml:State name="EO"/>
-    	</uml:Source>
-    	<uml:Target>
-        	<uml:State name="EO"/>
-    	</uml:Target>
-    	<uml:Effect name="vote"/>
-	</uml:Transition>
-	<uml:Transition>
-    	<uml:Source>
-        	<uml:State name="EO"/>
-    	</uml:Source>
-    	<uml:Target>
-        	<uml:State name="EO"/>
-    	</uml:Target>
-    	<uml:Effect name="confirm"/>
-	</uml:Transition>
-	<uml:Transition>
-    	<uml:Source>
-        	<uml:State name="EO"/>
-    	</uml:Source>
-    	<uml:Target>
-        	<uml:State name="EO"/>
-    	</uml:Target>
-    	<uml:Effect name="back"/>
-	</uml:Transition>
-	<uml:Transition>
-    	<uml:Source>
-        	<uml:State name="EO"/>
-    	</uml:Source>
-    	<uml:Target>
-        	<uml:State name="ENV"/>
-    	</uml:Target>
-    	<uml:Effect name="eo.exit"/>
-	</uml:Transition>
+    <uml:Transition>
+        <uml:Source>
+            <uml:State name="EM"/>
+        </uml:Source>
+        <uml:Target>
+            <uml:State name="P1"/>
+        </uml:Target>
+        <uml:Effect name="password"/>
+    </uml:Transition>
+    <uml:Transition>
+        <uml:Source>
+            <uml:State name="P1"/>
+        </uml:Source>
+        <uml:Target>
+            <uml:State name="P2"/>
+        </uml:Target>
+        <uml:Effect name="select"/>
+    </uml:Transition>
+    <uml:Transition>
+        <uml:Source>
+            <uml:State name="P2"/>
+        </uml:Source>
+        <uml:Target>
+            <uml:State name="P3"/>
+        </uml:Target>
+        <uml:Effect name="vote"/>
+    </uml:Transition>
+    <uml:Transition>
+        <uml:Source>
+            <uml:State name="P2"/>
+        </uml:Source>
+        <uml:Target>
+            <uml:State name="P1"/>
+        </uml:Target>
+        <uml:Effect name="back"/>
+    </uml:Transition>
+    <uml:Transition>
+        <uml:Source>
+            <uml:State name="P3"/>
+        </uml:Source>
+        <uml:Target>
+            <uml:State name="EM"/>
+        </uml:Target>
+        <uml:Effect name="confirm"/>
+    </uml:Transition>
+    <uml:Transition>
+        <uml:Source>
+            <uml:State name="P3"/>
+        </uml:Source>
+        <uml:Target>
+            <uml:State name="P2"/>
+        </uml:Target>
+        <uml:Effect name="back"/>
+    </uml:Transition>
 </uml:Model>

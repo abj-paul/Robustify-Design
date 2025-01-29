@@ -29,6 +29,8 @@ export class SpecTemplateComponent implements OnInit {
   compiledImageSafeUrl: SafeUrl = '';
   isSaved = false;
   isUploading = false; 
+  invalidCodeFormat = false;
+  compilationError = false;
 
   constructor(private backendService: BackendService, private http: HttpClient, private sanitizer: DomSanitizer, private constantService: ConstantService) {}
 
@@ -79,22 +81,57 @@ ltl property {
       this.onCodeChange();
     });
   }
-
   onCodeChange(): void {
     const content = this.fileContent;
+    this.invalidCodeFormat = true; // Assume invalid by default
+    
     if (this.fileContent.includes("uml:Model")) {
       this.editorMode = 'uml';
+      this.invalidCodeFormat = false;
     }
     else if (content.includes('= (')) {
       this.editorMode = 'ltl';
-      this.aceEditor.session.setMode('ace/mode/text'); // Since LTL mode isn't built-in
+      this.invalidCodeFormat = false;
+      this.aceEditor.session.setMode('ace/mode/text');
     } else if (content.includes('@startuml')) {
       this.editorMode = 'uml';
-      this.aceEditor.session.setMode('ace/mode/text'); // Since UML mode isn't built-in
+      this.invalidCodeFormat = false;
+      this.aceEditor.session.setMode('ace/mode/text');
     } else {
-      this.editorMode = 'text';
+      // Check if content is valid JSON
+      try {
+        JSON.parse(content);
+        this.editorMode = 'text';
+        this.invalidCodeFormat = false;
+      } catch (e) {
+        // If not JSON and not UML/LTL, mark as invalid
+        this.editorMode = 'text';
+        this.invalidCodeFormat = true;
+      }
       this.aceEditor.session.setMode('ace/mode/text');
     }
+  }
+
+  compileUMLAndGeneratePNG(): void {
+    this.compilationError = false; // Reset error state
+    console.log(this.fileContent);
+    this.http.get<any>(`${this.backendService.apiUrl}/service/uml-to-png`, { params: { "umlContent": this.fileContent } })
+      .subscribe({
+        next: (response) => {
+          if (response.imageUrl) {
+            this.compiledImageUrl = response.imageUrl;
+            const timestamp = new Date().getTime();
+            this.compiledImageSafeUrl = this.sanitizer.bypassSecurityTrustUrl(`${response.imageUrl}?t=${timestamp}`);
+            console.log(this.compiledImageSafeUrl);
+          } else {
+            this.compilationError = true;
+          }
+        },
+        error: (error) => {
+          console.error('Compilation failed:', error);
+          this.compilationError = true;
+        }
+      });
   }
   
   handleFileInput(event: Event): void {
@@ -218,16 +255,6 @@ updateSystemSpecService(projectId: number, content: string): Observable<any> {
     }
   }
 
-  compileUMLAndGeneratePNG(): void {
-    console.log(this.fileContent);
-    this.http.get<any>(`${this.backendService.apiUrl}/service/uml-to-png`, { params: { "umlContent": this.fileContent } })
-      .subscribe(response => {
-        this.compiledImageUrl = response.imageUrl;
-        const timestamp = new Date().getTime(); // Current timestamp
-        this.compiledImageSafeUrl = this.sanitizer.bypassSecurityTrustUrl(`${response.imageUrl}?t=${timestamp}`);
-        console.log(this.compiledImageSafeUrl);
-      });
-  }
 
   compileLTLAndGeneratePNG(): void {
     this.http.get<any>(`${this.backendService.apiUrl}/service/lts-to-png`, { params: { "ltlContent": this.fileContent } })

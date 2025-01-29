@@ -5,33 +5,45 @@
       <span class="mode-badge">{{ editorMode.toUpperCase() }}</span>
     </div>
     <div class="header-actions">
-      <input 
-        #fileInput 
-        type="file" 
-        multiple 
-        (change)="handleFileInput($event)" 
+      <input
+        #fileInput
+        type="file"
+        multiple
+        (change)="handleFileInput($event)"
         style="display: none"
         accept=".txt,.uml,.ltl"
       >
       <button (click)="triggerFileInput()" class="upload-button" [disabled]="isUploading">
         📁 {{ isUploading ? 'Uploading...' : 'Upload Files' }}
       </button>
-      <button (click)="compileContent()" class="submit-button">
+      <button (click)="compileContent()" class="submit-button" [disabled]="invalidCodeFormat">
         Compile & View Image
       </button>
     </div>
   </div>
+  
+  <div *ngIf="invalidCodeFormat" class="warning-message">
+    ⚠️ Warning: Content must be valid JSON, UML, or LTL format
+  </div>
+  
   <div class="editor-wrapper">
     <div #editor class="ace-editor"></div>
   </div>
+  
   <div class="editor-footer">
     <div class="status">
       Mode: {{ editorMode.toUpperCase() }} | Auto-detection enabled
     </div>
   </div>
+  
+  <div *ngIf="compilationError" class="error-message">
+    ❌ Unable to compile and generate image. Please check your code format.
+  </div>
+  
   <div *ngIf="compiledImageSafeUrl" class="image-preview">
     <img [src]="compiledImageSafeUrl" alt="Compiled Image" />
   </div>
+  
   <div class="save-container">
     <button (click)="updateSpec()" class="save-button">💾 Save</button>
     <span *ngIf="isSaved" class="saved-message">✔ Saved</span>

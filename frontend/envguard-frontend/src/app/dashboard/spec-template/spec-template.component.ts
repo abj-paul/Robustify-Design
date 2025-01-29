@@ -9,7 +9,7 @@ import { BackendService } from '../../backend.service';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { ConstantService } from '../../constant.service';
 
 @Component({
@@ -21,12 +21,14 @@ import { ConstantService } from '../../constant.service';
 })
 export class SpecTemplateComponent implements OnInit {
   @ViewChild('editor') private editor!: ElementRef<HTMLElement>;
+  @ViewChild('fileInput') private fileInput!: ElementRef<HTMLInputElement>;
   private aceEditor: any;
   fileContent: string = '';
   editorMode: string = 'text';
   compiledImageUrl: string = '';
   compiledImageSafeUrl: SafeUrl = '';
   isSaved = false;
+  isUploading = false; 
 
   constructor(private backendService: BackendService, private http: HttpClient, private sanitizer: DomSanitizer, private constantService: ConstantService) {}
 
@@ -94,14 +96,91 @@ ltl property {
       this.aceEditor.session.setMode('ace/mode/text');
     }
   }
+  
+  handleFileInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const files = input.files;
+    
+    if (!files || files.length === 0) return;
 
-  updateSystemSpecService(projectId: number, xmlContent: string): Observable<any> {
-    const url = `${this.backendService.apiUrl}/projects/${this.constantService.getProject().id}/${this.constantService.getActiveTab()}_spec`;
-    console.log("Ahh URL OK? "+url);
-    const formData = new FormData();
-    formData.append('content', xmlContent);
+    this.isUploading = true;
+    let combinedContent = '';
+    const fileReadPromises: Promise<{ name: string, content: string }>[] = [];
 
-    return this.http.post(url, formData);
+    // Create array of promises for reading files
+    Array.from(files).forEach(file => {
+      const promise = new Promise<{ name: string, content: string }>((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e: ProgressEvent<FileReader>) => {
+          const content = e.target?.result as string;
+          resolve({ name: file.name, content });
+        };
+        reader.readAsText(file);
+      });
+      fileReadPromises.push(promise);
+    });
+
+    // Process all files
+    Promise.all(fileReadPromises).then(async (fileResults) => {
+      // Combine content for editor
+      combinedContent = fileResults.map(f => f.content).join('\n\n');
+      this.fileContent = combinedContent;
+      this.aceEditor.session.setValue(this.fileContent);
+      this.onCodeChange();
+
+      // Save individual files and update spec
+      await this.saveUploadedFiles(fileResults);
+      this.isUploading = false;
+    });
+  }
+
+  async saveUploadedFiles(fileResults: { name: string, content: string }[]): Promise<void> {
+    const project = this.constantService.getProject();
+    const projectFolder = `projects/${project.name}-${project.id}`;
+    
+    // Create an array of observables for file upload requests
+    const uploadRequests = fileResults.map(fileResult => {
+      const formData = new FormData();
+      formData.append('filename', fileResult.name);
+      formData.append('specification', fileResult.content); // Now using individual file content
+      formData.append('project_folder', projectFolder);
+      
+      return this.http.post(
+        `${this.backendService.secondApiUrl}/upload/specification/`,
+        formData
+      );
+    });
+
+    // Add the spec update request with combined content
+    uploadRequests.push(
+      this.updateSystemSpecService(
+        project.id, 
+        fileResults.map(f => f.content).join('\n\n')
+      )
+    );
+
+    try {
+      const results = await forkJoin(uploadRequests).toPromise();
+      console.log('All files uploaded successfully:', results);
+      
+      this.isSaved = true;
+      setTimeout(() => (this.isSaved = false), 4000);
+    } catch (error) {
+      console.error('Error uploading files:', error);
+    }
+  }
+
+triggerFileInput(): void {
+  this.fileInput.nativeElement.click();
+}
+
+updateSystemSpecService(projectId: number, content: string): Observable<any> {
+  const url = `${this.backendService.apiUrl}/projects/${projectId}/${this.constantService.getActiveTab()}_spec`;
+  
+  const formData = new FormData();
+  formData.append('content', content);
+
+  return this.http.post(url, formData);
 }
 
   updateSpec() {

@@ -58,6 +58,7 @@ async def upload_files(files: List[UploadFile] = File(...), project_folder: str 
 
 @app.post("/upload/specification/")
 async def upload_specification(filename: str = Form(...), specification: str = Form(...), project_folder: str = Form(...)):
+    print("Received file "+filename+" for project "+project_folder)
     file_location = os.path.join(project_folder, filename)
     with open(file_location, "w") as f:
         f.write(specification)

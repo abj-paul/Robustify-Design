@@ -187,7 +187,7 @@ def generate_html(project_folder, output_path):
         html += f'<p><strong>Jaccard Redundancy:</strong> {design["jaccard_redundancy"]}</p>'
         html += f'<p><strong>Laplacian Spectral Complexity:</strong> {design["laplacian_spectral_complexity"]}</p>'
         html += f'<p><strong>Eigen Symmetry:</strong> {design["eigen_symmetry"]}</p>'
-        html += f'<a href="http://localhost:8000/projects/Voting-2/solution_{index+1}.xml" target="_blank">Download Design </a> <br>'
+        html += f'<a href="http://{HOST_ADDRESS}:8000/projects/Voting-2/solution_{index+1}.xml" target="_blank">Download Design </a> <br>'
         # Close the panel for the current design
         html += '</div>'
     

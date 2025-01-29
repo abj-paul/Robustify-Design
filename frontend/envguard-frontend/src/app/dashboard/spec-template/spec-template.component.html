@@ -4,9 +4,22 @@
       <h2>System Specification Editor</h2>
       <span class="mode-badge">{{ editorMode.toUpperCase() }}</span>
     </div>
-    <button (click)="compileContent()" class="submit-button">
-      Compile & View Image
-    </button>
+    <div class="header-actions">
+      <input 
+        #fileInput 
+        type="file" 
+        multiple 
+        (change)="handleFileInput($event)" 
+        style="display: none"
+        accept=".txt,.uml,.ltl"
+      >
+      <button (click)="triggerFileInput()" class="upload-button" [disabled]="isUploading">
+        📁 {{ isUploading ? 'Uploading...' : 'Upload Files' }}
+      </button>
+      <button (click)="compileContent()" class="submit-button">
+        Compile & View Image
+      </button>
+    </div>
   </div>
   <div class="editor-wrapper">
     <div #editor class="ace-editor"></div>
@@ -19,11 +32,8 @@
   <div *ngIf="compiledImageSafeUrl" class="image-preview">
     <img [src]="compiledImageSafeUrl" alt="Compiled Image" />
   </div>
-
   <div class="save-container">
     <button (click)="updateSpec()" class="save-button">💾 Save</button>
     <span *ngIf="isSaved" class="saved-message">✔ Saved</span>
   </div>
-    
-  
 </div>
